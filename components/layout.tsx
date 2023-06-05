@@ -58,7 +58,7 @@ export default function Layout({children, title, className}: LayoutProps) {
                     Kontakt: "#contact"
                 }} />
                 <LoadingIndicator />
-                <div className={`px-12 pt-8 md:pt-28 ${className ?? ""}`}>
+                <div className={`px-4 md:px-12 pt-8 md:pt-28 ${className ?? ""}`}>
                     {title ? <p className="text-white text-4xl text-center pb-8">{title}</p> : null}
                     {children}
                 </div>
