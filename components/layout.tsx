@@ -51,7 +51,7 @@ export default function Layout({children, title, className}: LayoutProps) {
     return (
         <>
             <DefaultHead />
-            <LayoutWrapper className={`${interLight.className}`}>
+            <LayoutWrapper className={`${interLight.className} min-h-screen`}>
                 <Navbar links={{
                     Domov: "/",
                     Blog: "/blog",

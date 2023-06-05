@@ -6,6 +6,8 @@ import Image from "next/image";
 import {faSquareGithub} from "@fortawesome/free-brands-svg-icons";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
+import {useRouter} from "next/router";
+import {MouseEventHandler} from "react";
 
 export type Repository = {
     name: string,
@@ -42,8 +44,14 @@ function LanguageCircle({language}: {language: string}) {
 
 export function RepositoryComponent({repository, icon}: RepositoryComponentProps) {
     const {stargazers_count, forks_count, name, full_name, description, language} = repository;
+
+    const handleClick: MouseEventHandler<HTMLDivElement> = async (e) => {
+        e.preventDefault();
+        window.open(`https://github.com/${full_name}`, '_blank');
+    }
+
     return (
-        <div className="w-full border border-solid border-gray-900 rounded-2xl p-6 sm:p-8 space-y-5">
+        <div className="w-full border border-solid border-gray-900 rounded-2xl p-6 sm:p-8 space-y-5 hover:bg-black" role="button" onClick={handleClick}>
             <div className="flex flex-row flex-wrap sm:space-x-5">
                 <Badge><FontAwesomeIcon icon={faStar} className="w-4 h-4" /><p>{stargazers_count}</p></Badge>
                 <Badge><FontAwesomeIcon icon={faCodeFork} className="w-3 h-3" /><p>{forks_count}</p></Badge>
