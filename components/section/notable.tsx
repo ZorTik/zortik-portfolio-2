@@ -10,17 +10,22 @@ export type NotableWorkSectionProps = {
 }
 
 export function NotableWorkComponent({work}: {work: NotableWork}) {
+    const {timeframe, title, description} = work;
     return (
-        <div>
-
+        <div className="rounded-2xl p-6 w-full" style={{backgroundColor: "#090e09"}}>
+            <p className="text-[12px] text-green-500">{timeframe}</p>
+            <p className="text-2xl text-white">{title}</p>
+            <p className="text-sm text-gray-300">{description}</p>
         </div>
     )
 }
 
 export default function NotableWorkSection({works}: NotableWorkSectionProps) {
     return (
-        <Section title={"Moje Úspěchy"}>
-            {works.map((work, index) => <NotableWorkComponent work={work} key={index} />)}
+        <Section title={"My Successes"}>
+            <div className="space-y-5 md:columns-2 md:flex-row md:space-y-0 md:space-x-5">
+                {works.map((work, index) => <NotableWorkComponent work={work} key={index} />)}
+            </div>
         </Section>
     )
 }
