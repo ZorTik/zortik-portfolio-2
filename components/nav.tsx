@@ -1,0 +1,42 @@
+import {PropsWithChildren, useState} from "react";
+import Link from "next/link";
+import {useRouter} from "next/router";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faBars} from "@fortawesome/free-solid-svg-icons";
+
+export type NavbarLinkMeta = string;
+
+export type NavbarProps = PropsWithChildren & {
+    links: { [name: string]: NavbarLinkMeta }
+};
+
+function Navbar({children, links}: NavbarProps) {
+    const {pathname} = useRouter();
+    const [shown, setShown] = useState<boolean>(false);
+
+    const handleBurgerClick = () => {
+        setShown(!shown);
+    }
+
+    return (
+        <>
+            <div className={`w-full border-solid border-b border-b-zinc-900 px-12 md:hidden`}>
+                <button className="w-20 h-20 hover:-translate-y-0.5" onClick={handleBurgerClick}><FontAwesomeIcon className="text-white w-6 h-6" icon={faBars} /></button>
+            </div>
+            <div className={`w-full border-solid border-b border-b-gray-800 px-12 ${!shown ? "hidden" : "block"} md:block`}>
+                <div className="container mx-auto flex flex-col text-center md:text-left md:flex-row py-9">
+                    <Link href={"/"} className={`text-white text-2xl hidden md:block`}>ZorTik</Link>
+                    <div className="md:ml-auto space-x-10">
+                        {Object.entries(links).map(([key, link], index) => {
+                            const active = (link !== "/" && pathname.startsWith(link)) || (link === "/" && (pathname.match(/\//)?.length ?? 0) < 2)
+                            return <Link className={`text-xl hover:text-emerald-500 ${active ? `text-emerald-400` : `text-white`}`} href={link} key={index}>{key}</Link>
+                        })}
+                        {children}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default Navbar;
