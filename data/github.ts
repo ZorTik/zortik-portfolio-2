@@ -1,5 +1,5 @@
 import {Octokit} from "octokit";
-import {Repository} from "@/components/section/repositories";
+import {Repository} from "@/components/home/repositories";
 
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,

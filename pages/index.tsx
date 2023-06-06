@@ -1,8 +1,8 @@
-import WelcomeJumbotron from "@/components/welcome-jumbotron";
-import TechnologiesSection from "@/components/section/technologies";
-import NotableWorkSection from "@/components/section/notable";
+import WelcomeJumbotron from "@/components/home/welcome";
+import TechnologiesSection from "@/components/home/technologies";
+import NotableWorkSection from "@/components/home/notable";
 import Layout from "@/components/layout";
-import RepositoriesSection, {Repository} from "@/components/section/repositories";
+import RepositoriesSection, {Repository} from "@/components/home/repositories";
 import {technologies, works} from "@/data/local";
 import {GetServerSideProps} from "next";
 import {fetchRepositories} from "@/data/github";

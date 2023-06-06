@@ -1,5 +1,5 @@
-import {Technology} from "@/components/section/technologies";
-import {NotableWork} from "@/components/section/notable";
+import {Technology} from "@/components/home/technologies";
+import {NotableWork} from "@/components/home/notable";
 
 const technologies: Technology[] = [
     { icon: "/javalang.png", name: "Java", level: "Expert" },

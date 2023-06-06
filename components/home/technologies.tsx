@@ -1,5 +1,6 @@
 import Section from "@/components/section";
 import Image from "next/image";
+import Card from "@/components/card";
 
 export type TechnologyLevel = "Beginner" | "Experienced" | "Expert"
 export type Technology = {
@@ -28,9 +29,9 @@ export function TechnologyComponent({technology}: {technology: Technology}) {
 export default function TechnologiesSection({technologies}: TechnologiesProps) {
     return (
         <Section title="Fluent in Languages">
-            <div className="p-8 border border-solid border-zinc-900 rounded-2xl space-y-8 flex flex-col lg:flex-row lg:justify-between lg:space-y-0">
+            <Card className="lg:flex-row lg:justify-between lg:space-y-0">
                 {technologies.map((technology, index) => <TechnologyComponent technology={technology} key={index} />)}
-            </div>
+            </Card>
         </Section>
     )
 }
