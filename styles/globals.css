@@ -5,6 +5,7 @@
 :root {
   --background-color: #060606;
   --color-white: #ffffff;
+  --nav-max-height: 102px;
 }
 
 body {

@@ -13,7 +13,7 @@ export default function ArticleCard({article}: BlogCardProps) {
         <Card href={`/blog/${article.id}`}>
             <p className="text-3xl text-white">{article.title}</p>
             <p className="text-md text-gray-300">{article.description}</p>
-            <p className="text-md text-green-600">{duration(-(new Date(Date.now()).getTime() - new Date(article.createdAt).getTime()), 'milliseconds').humanize()}</p>
+            <p className="text-md text-green-600">{duration(-(new Date(Date.now()).getTime() - new Date(article.createdAt).getTime()), 'milliseconds').humanize()} ago</p>
         </Card>
     )
 }

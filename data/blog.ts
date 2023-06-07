@@ -1,5 +1,6 @@
 import prismaClient from "@/data/prisma";
-import {BlogArticle} from "@/components/blog/articlecard";
+import {BlogArticle} from "@/components/blog_home/articlecard";
+import createCache, {Cached} from "@/util/cache";
 
 export type FindBlogPostsOptionsOrder = 'createdAt' | 'updatedAt';
 export type FindBlogPostsOptions = {
@@ -9,32 +10,16 @@ export type FindBlogPostsOptions = {
     cache?: boolean,
 }
 
-type CachedReturnType<T extends (...args: any) => any> = {
-    value: ReturnType<T>,
-    cachedAt: number,
-}
+const cache = createCache();
 
-const cache: { [code: string]: CachedReturnType<typeof findBlogPosts> } = {};
-const cacheTimeout = 1000 * 30;
-
-export function findBlogPosts(options?: FindBlogPostsOptions): Promise<{ articles: BlogArticle[], cachedAt: number}>  {
+export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<BlogArticle[]>>  {
     const _options = options ?? {};
     const per_page = _options.per_page ?? 10;
+    return cache.get(_options, async () => prismaClient.article.findMany({
+        skip: (_options.page ?? 0) * per_page, take: per_page, orderBy: { [_options.sort ?? 'createdAt']: 'desc' },
+    }));
+}
 
-    let cachedResult = cache[JSON.stringify(_options)];
-    if (!cachedResult || Date.now() - cachedResult.cachedAt > cacheTimeout) {
-        cachedResult = cache[JSON.stringify(_options)] = {
-            cachedAt: Date.now(),
-            value: prismaClient.article.findMany({
-                skip: (_options.page ?? 0) * per_page,
-                take: per_page,
-                orderBy: { [_options.sort ?? 'createdAt']: 'desc' },
-            }).then(articles => {
-                return {
-                    articles: articles, cachedAt: Date.now()
-                }
-            }),
-        }
-    }
-    return cachedResult.value;
+export function findBlogPost(id: number): Promise<Cached<BlogArticle|null>> {
+    return cache.get(id, async () => prismaClient.article.findUnique({ where: { id: id } }));
 }

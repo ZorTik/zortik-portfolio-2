@@ -6,7 +6,6 @@ import Image from "next/image";
 import {faSquareGithub} from "@fortawesome/free-brands-svg-icons";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
-import {useRouter} from "next/router";
 import {MouseEventHandler} from "react";
 
 export type Repository = {
