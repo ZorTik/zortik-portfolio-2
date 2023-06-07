@@ -6,7 +6,9 @@ import Image from "next/image";
 import {faSquareGithub} from "@fortawesome/free-brands-svg-icons";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
-import {MouseEventHandler} from "react";
+import {MouseEventHandler, useState} from "react";
+import useSWR from "swr";
+import {fetcher} from "@/data/swr";
 
 export type Repository = {
     name: string,
@@ -24,10 +26,6 @@ export type Repository = {
 export type RepositoryComponentProps = {
     repository: Repository,
     icon?: string,
-}
-
-export type RepositoriesSectionProps = {
-    repositories: Repository[]
 }
 
 function LanguageCircle({language}: {language: string}) {
@@ -67,11 +65,12 @@ export function RepositoryComponent({repository, icon}: RepositoryComponentProps
     )
 }
 
-export default function RepositoriesSection({repositories}: RepositoriesSectionProps) {
+export default function RepositoriesSection() {
+    const {data, error, isLoading} = useSWR<Repository[]>("/api/repos", fetcher);
     return (
         <Section title={"My GitHub Projects"}>
             <div className="space-y-8 lg:columns-2">
-                {repositories.map((repository, index) => <RepositoryComponent repository={repository} key={index} />)}
+                {data ? data.map((repository, index) => <RepositoryComponent repository={repository} key={index} />) : null}
             </div>
         </Section>
     )
