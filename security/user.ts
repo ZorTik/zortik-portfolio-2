@@ -1,12 +1,15 @@
 import LocalUserTenant from "@/security/tenant/local";
 import {User} from "@/security/user.types";
 import GoogleUserTenant from "@/security/tenant/google";
-import {getUserRepository} from "@/data/user";
+import {getUserRepository, UserRepository} from "@/data/user";
 import {randomBytes} from "crypto";
 
+export type TenantUserProvider = UserRepository;
+
 export interface UserTenant {
-    // Authorize a user in the tenant with authorization code and return his data.
-    authorize(code: string): Promise<User|undefined>
+    // Authorize a user in the tenant with authorization code, register if not locally present and return his data.
+    // Throws an error if remote user is not found.
+    authorize(code: string, userProvider: TenantUserProvider): Promise<User|undefined>;
 }
 
 const tenants: { [key: string]: UserTenant } = {

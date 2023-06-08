@@ -1,4 +1,7 @@
 export type User = {
-    username: string,
-    encodedPassword: string,
+    username: string;
+}
+
+export type UserGenerationRequirements = {
+    username: string;
 }

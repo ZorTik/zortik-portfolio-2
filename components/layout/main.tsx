@@ -16,8 +16,11 @@ const LayoutWrapper = styled("main")`
 `;
 
 export type LayoutProps = PropsWithChildren & {
-    title?: string,
-    className?: string
+    title?: string, className?: string
+}
+
+export const links: { [name: string]: string } = {
+    Domov: '/', Blog: '/blog', Kontakt: '#contact', Login: '/auth/login'
 }
 
 export default function MainLayout({children, title, className}: LayoutProps) {
@@ -25,9 +28,7 @@ export default function MainLayout({children, title, className}: LayoutProps) {
         <>
             <DefaultHead />
             <LayoutWrapper className={`${interLight.className} min-h-screen`}>
-                <Navbar links={{
-                    Domov: "/", Blog: "/blog", Kontakt: "#contact"
-                }} />
+                <Navbar links={links} />
                 <LoadingIndicator />
                 <div className="flex flex-col min-h-[calc(100vh-var(--nav-max-height))]">
                     <div className={`container mx-auto py-8 md:py-24 px-8 md:px-12 ${className ?? ""}`}>

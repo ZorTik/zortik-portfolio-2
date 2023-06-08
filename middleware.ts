@@ -22,7 +22,7 @@ export async function middleware({cookies, nextUrl, headers}: NextRequest) {
     if (!user && nextUrl.pathname.startsWith('/api')) {
         return NextResponse.json({status: '401', message: 'Unauthorized'}, {status: 401});
     } else if (!user) {
-        return NextResponse.redirect('/login');
+        return NextResponse.redirect('/auth/login');
     }
 
     headers.set(USER_HEADER_NAME, JSON.stringify(user));

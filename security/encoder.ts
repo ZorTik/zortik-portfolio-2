@@ -1,3 +1,4 @@
+import CryptoJS from "crypto-js";
 import sha256 from 'crypto-js/sha256';
 
 export type PasswordEncoder = (password: string) => string;

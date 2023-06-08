@@ -3,6 +3,7 @@ import {getUserPrivateKey, getUserTenant} from "@/security/user";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
 import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
+import {generateUser, getUserRepository} from "@/data/user";
 
 export default async function handler(
     {query}: NextApiRequest,
@@ -16,7 +17,7 @@ export default async function handler(
         res.status(400).json({status: '400', message: 'Code not found'});
         return;
     }
-    const user = await tenant.authorize(query.code as string);
+    const user = await tenant.authorize(query.code as string, getUserRepository());
     if (!user) {
         res.status(401).json({status: '401', message: 'Unauthorized'});
         return;
