@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {generateCode} from "@/security/server";
 
 // Authentication form handler for /auth/** routes.
-// Entrypoint for local tenant.
 export default async function handler(
     {method, body, query}: NextApiRequest,
     res: NextApiResponse

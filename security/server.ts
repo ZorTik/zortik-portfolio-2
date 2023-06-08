@@ -1,4 +1,4 @@
-// Local authorization server, to use in /api/oauth/authorize
+// Local authorization server, to use in /api/auth and /api/oauth/authorize
 
 import {generateUser, getUserRepository} from "@/data/user";
 import encoder from "@/security/encoder";
@@ -23,7 +23,7 @@ async function generateCode(principal: AuthorizationPrincipal, {createUser}: Gen
     if (!credentialsValid && !createUser) {
         throw new Error('Invalid credentials provided');
     } else if (!credentialsValid && createUser) {
-        await generateUser(username);
+        await generateUser({ username });
         await getUserRepository().saveUserPassword(username, encoder(password));
     }
 

@@ -3,7 +3,7 @@ import {getUserPrivateKey, getUserTenant} from "@/security/user";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
 import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
-import {generateUser, getUserRepository} from "@/data/user";
+import {getUserRepository} from "@/data/user";
 
 export default async function handler(
     {query}: NextApiRequest,
