@@ -6,7 +6,7 @@ import Image from "next/image";
 import {faSquareGithub} from "@fortawesome/free-brands-svg-icons";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
-import {MouseEventHandler, useState} from "react";
+import {MouseEventHandler} from "react";
 import useSWR from "swr";
 import {fetcher} from "@/data/swr";
 
@@ -41,7 +41,6 @@ function LanguageCircle({language}: {language: string}) {
 
 export function RepositoryComponent({repository, icon}: RepositoryComponentProps) {
     const {stargazers_count, forks_count, name, full_name, description, language} = repository;
-
     const handleClick: MouseEventHandler<HTMLDivElement> = async (e) => {
         e.preventDefault();
         window.open(`https://github.com/${full_name}`, '_blank');
