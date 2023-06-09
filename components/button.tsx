@@ -14,5 +14,5 @@ export default function Button(props: ButtonProps) {
             window.open(href, props.target ?? "_self");
         }
     }
-    return <button {...props} onClick={handleClick} className={`text-white border border-solid rounded-3xl border-gray-950 px-3 py-1 hover:bg-black hover:text-emerald-500 ${props.className}`}>{props.children}</button>
+    return <button {...props} onClick={handleClick} className={`${props.className} text-white border border-solid rounded-3xl border-gray-950 px-3 py-1 hover:bg-black hover:text-emerald-500`}>{props.children}</button>
 }

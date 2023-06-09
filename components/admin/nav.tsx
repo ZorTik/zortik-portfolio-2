@@ -43,7 +43,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
                     {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 </div>
             </div>
-            <div className={`flex flex-col justify-center min-h-screen max-w-fit px-3 py-8 ${className ?? ""} bg-black hidden md:inline-flex`}>
+            <div className={`sticky flex flex-col justify-center min-h-screen max-w-fit px-3 py-8 ${className ?? ""} bg-black hidden md:inline-flex`}>
                 <NavProfile />
                 {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 <Button className="mt-auto" href="/api/logout">Logout</Button>

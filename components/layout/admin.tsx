@@ -25,6 +25,7 @@ export default function AdminLayout({title, children, nav}: AdminLayoutProps) {
             <AdminNav className="w-3/12" nav={navItems ?? []} />
             <div className="w-full">
                 <LoadingIndicator />
+                <PopupAlert />
                 <div className="px-14 pb-14 mt-14">
                     <h1 className="text-gray-200 text-4xl">{title}</h1>
                     {children}

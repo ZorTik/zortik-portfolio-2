@@ -36,5 +36,5 @@ export default async function handler(
             httpOnly: true, path: '/',
         })
     ]);
-    res.redirect(`/?msg=Logged in using ${query.tenant}`);
+    res.redirect(`/admin?msg=Logged in using ${query.tenant}`);
 }

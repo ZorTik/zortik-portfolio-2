@@ -10,7 +10,7 @@ export default function PopupAlert() {
 
     const handleCrossClick = () => setShown(false);
 
-    return query['msg'] && shown ? (
+    return query['msg'] !== undefined && shown ? (
         <div className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center`}>
             <p>{query['msg']}</p><Button onClick={handleCrossClick}><FontAwesomeIcon className="text-gray-400" icon={faXmark} width={14} height={14} /></Button>
         </div>
