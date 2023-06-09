@@ -11,6 +11,11 @@ function createCache() {
                 cachedResult = cache.data[JSON.stringify(options)] = { cachedAt: Date.now(), value: await orFetch(), }
             }
             return cachedResult;
+        },
+        remove(pred: (key: string, value: Cached<any>) => boolean) {
+            for (const key in cache.data) {
+                if (pred(key, cache.data[key])) delete cache.data[key];
+            }
         }
     }
     return cache;

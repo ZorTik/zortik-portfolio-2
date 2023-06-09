@@ -26,7 +26,7 @@ export default function AdminLayout({title, children, nav}: AdminLayoutProps) {
             <div className="w-full">
                 <LoadingIndicator />
                 <PopupAlert />
-                <div className="px-14 pb-14 mt-14">
+                <div className="px-14 pb-14 mt-14 space-y-10">
                     <h1 className="text-gray-200 text-4xl">{title}</h1>
                     {children}
                 </div>

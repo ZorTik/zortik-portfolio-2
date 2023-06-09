@@ -10,7 +10,7 @@ export default function Dropdown(props: DropdownProps) {
     const {label} = props;
     return (
         <div>
-            <Button className={props.className}>{label}</Button>
+            <Button className={`${props.className} border-0`}>{label}</Button>
         </div>
     )
 }

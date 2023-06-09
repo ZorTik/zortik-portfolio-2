@@ -7,10 +7,11 @@ import {LoadingIndicator} from "@/components/loading";
 
 export type CenterLayoutProps = PropsWithChildren & {
     title: string,
-    className?: string
+    className?: string,
+    backHref?: string,
 }
 
-export default function CenterLayout({title, children, className}: CenterLayoutProps) {
+export default function CenterLayout({title, children, className, backHref}: CenterLayoutProps) {
     return (
         <>
             <DefaultHead />
@@ -21,7 +22,7 @@ export default function CenterLayout({title, children, className}: CenterLayoutP
                 <Card className={`text-gray-200 ${className ?? ""}`}>
                     {children}
                 </Card>
-                <Button className="mt-12 animate-fade-in-top" onClick={(e) => window.open("/", "_self")}>Go Back</Button>
+                <Button className="mt-12 animate-fade-in-top" href={backHref ?? "/"}>Go Back</Button>
             </div>
         </>
     )

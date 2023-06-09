@@ -23,3 +23,11 @@ export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<Bl
 export function findBlogPost(id: number): Promise<Cached<BlogArticle|null>> {
     return cache.get(id, async () => prismaClient.article.findUnique({ where: { id: id } }));
 }
+
+export async function deleteBlogPost(id: number) {
+    const post = await findBlogPost(id);
+    if (!post) return false;
+    await prismaClient.article.delete({ where: { id: id } });
+    cache.remove((key) => key === id.toString());
+    return true;
+}

@@ -13,7 +13,7 @@ export function FormInput(props: FormInputProps) {
 }
 
 export function FormSubmitButton(props: ButtonProps) {
-    return <Button {...props} className={`${props.className} bg-green-950`}>Login</Button>;
+    return <Button variant="none" {...props} className={`${props.className} bg-green-950 hover:bg-black hover:text-emerald-600`}>Login</Button>;
 }
 
 export default function Form(props: FormHTMLAttributes<HTMLFormElement>) {
