@@ -1,19 +1,22 @@
-import {createContext, useContext} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {User} from "@/security/user.types";
-import {getCookie} from "cookies-next";
-import {USER_COOKIE_NAME} from "@/data/constants";
+import {CookieValueTypes} from "cookies-next";
 
 export type UserContextType = User|null;
 
 const Context = createContext<UserContextType>(null);
 
-function UserProvider({children}: {children: any}) {
-    let cookie: any = getCookie(USER_COOKIE_NAME);
-    if (cookie == null || !cookie || typeof cookie !== "string") {
-        cookie = null;
-    } else {
-        cookie = JSON.parse(cookie);
-    }
+function UserProvider({children, userCookie}: {children: any, userCookie: CookieValueTypes}) {
+    const [cookie, setCookie] = useState<any>(null);
+    useEffect(() => {
+        let thatCookie: any = userCookie;
+        if (thatCookie == null || !thatCookie || typeof thatCookie !== "string") {
+            thatCookie = null;
+        } else {
+            thatCookie = JSON.parse(thatCookie);
+        }
+        setCookie(thatCookie);
+    }, [userCookie])
     return <Context.Provider value={cookie}>{children}</Context.Provider>
 }
 

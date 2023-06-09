@@ -17,7 +17,7 @@ export default function CenterLayout({title, children, className}: CenterLayoutP
                 <Card className={`text-gray-200 ${className ?? ""}`}>
                     {children}
                 </Card>
-                <Button className="mt-12" onClick={(e) => window.open("/", "_self")}>Go Back</Button>
+                <Button className="mt-12 animate-fade-in-top" onClick={(e) => window.open("/", "_self")}>Go Back</Button>
             </div>
         </>
     )

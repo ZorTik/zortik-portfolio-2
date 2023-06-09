@@ -7,8 +7,7 @@ class LocalUserTenant implements UserTenant {
     async authorize(code: string, {saveUserPassword, getUser}: TenantUserProvider, ctx: TenantRequestContext): Promise<User | undefined> {
         const credentials = codes[code];
         if (!credentials) return undefined;
-        let user = await getUser(credentials.username);
-        if (!user) user = await generateUser({username: credentials.username});
+        const user = await getUser(credentials.username) ?? await generateUser({username: credentials.username});
         await saveUserPassword(user.username, credentials.password);
         return user;
     }

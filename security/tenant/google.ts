@@ -10,11 +10,9 @@ class GoogleUserTenant implements UserTenant {
             code: code,
             redirect_uri: ctx.getCallbackUrl('google'),
         });
-        if (!credentials) return undefined;
-        if (!credentials.tokens || !credentials.tokens.access_token) return undefined;
+        if (!credentials || !credentials.tokens || !credentials.tokens.access_token) return undefined;
         const {name} = await fetchUserInfo(credentials.tokens.access_token);
-        let user = await getUser(name);
-        if (!user) user = await generateUser({username: name});
+        let user = await getUser(name) ?? await generateUser({username: name});
         // TODO: Update and save the user with data from Google APIs.
         return user;
     }
