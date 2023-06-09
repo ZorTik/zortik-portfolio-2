@@ -1,34 +1,36 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import {TOKEN_COOKIE_NAME, USER_HEADER_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
-import jwt from "jsonwebtoken";
-import {getUserPrivateKey} from "@/security/user";
+import {TOKEN_COOKIE_NAME, USER_COOKIE_NAME, USER_HEADER_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 import {User} from "@/security/user.types";
 
-export async function middleware({cookies, nextUrl, headers}: NextRequest) {
-    let user: User|null = null;
-    if (cookies.has(TOKEN_COOKIE_NAME) && cookies.has(USER_NAME_COOKIE_NAME)) {
-        try {
-            const token = cookies.get(TOKEN_COOKIE_NAME)!!.value;
-            const privateKey = await getUserPrivateKey(cookies.get(USER_NAME_COOKIE_NAME)!!.value, {generate: false});
-            if (privateKey) {
-                jwt.verify(token, privateKey);
-                user = jwt.decode(token, {json: true}) as User;
-            }
-        } catch(e) {
-            // Ignored
+export async function middleware(request: NextRequest) {
+    const {nextUrl, cookies, headers} = request;
+    const user: User|undefined = (await fetch(`${nextUrl.origin}/api/user`, {
+        headers: {
+            'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
+            'X-Z-Username': cookies.get(USER_NAME_COOKIE_NAME)?.value ?? "",
         }
+    })
+        .then(res => res.json())).user;
+
+    if (user && request.nextUrl.pathname.startsWith('/auth')) {
+        return NextResponse.redirect(`${nextUrl.origin}/admin`);
+    } else if (!user && request.nextUrl.pathname.startsWith('/auth')) {
+        return NextResponse.next();
     }
-    if (!user && nextUrl.pathname.startsWith('/api')) {
+
+    if (!user && nextUrl.pathname.startsWith(`${nextUrl.origin}/api`)) {
         return NextResponse.json({status: '401', message: 'Unauthorized'}, {status: 401});
     } else if (!user) {
-        return NextResponse.redirect('/auth/login');
+        return NextResponse.redirect(`${nextUrl.origin}/auth/login`);
     }
 
     headers.set(USER_HEADER_NAME, JSON.stringify(user));
-    return NextResponse.next();
+    const next = NextResponse.next();
+    next.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { path: '/', });
+    return next;
 }
 
 export const config = {
-    matcher: ['/api/user', '/api/user/:path*'],
+    matcher: ['/admin/:path*', '/auth/:path*'],
 };

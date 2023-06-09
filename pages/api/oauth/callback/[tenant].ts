@@ -4,11 +4,13 @@ import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
 import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 import {getUserRepository} from "@/data/user";
+import absoluteUrl from "next-absolute-url";
 
 export default async function handler(
-    {query}: NextApiRequest,
+    req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const {query} = req;
     const tenant = getUserTenant(query.tenant as string);
     if (!tenant) {
         res.status(404).json({status: '404', message: 'Tenant not found'});
@@ -17,7 +19,10 @@ export default async function handler(
         res.status(400).json({status: '400', message: 'Code not found'});
         return;
     }
-    const user = await tenant.authorize(query.code as string, getUserRepository());
+    const user = await tenant.authorize(query.code as string, getUserRepository(), {
+        req, res,
+        getCallbackUrl: (tenant: string) => `${absoluteUrl(req).origin}/api/oauth/callback/${tenant}`
+    });
     if (!user) {
         res.status(401).json({status: '401', message: 'Unauthorized'});
         return;
@@ -31,5 +36,5 @@ export default async function handler(
             httpOnly: true, path: '/',
         })
     ]);
-    res.redirect('/');
+    res.redirect(`/?msg=Logged in using ${query.tenant}`);
 }

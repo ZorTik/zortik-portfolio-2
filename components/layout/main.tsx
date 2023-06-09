@@ -5,6 +5,7 @@ import {DefaultHead} from "@/components/head";
 import Navbar from "@/components/nav";
 import {Footer} from "@/components/footer";
 import {LoadingIndicator} from "@/components/loading";
+import PopupAlert from "@/components/popupalert";
 
 const interBold = Poppins({ weight: '600', subsets: ['latin'] });
 const interLight = Poppins({ weight: '300', subsets: ['latin'] });
@@ -28,6 +29,7 @@ export default function MainLayout({children, title, className}: LayoutProps) {
         <>
             <DefaultHead />
             <LayoutWrapper className={`${interLight.className} min-h-screen`}>
+                <PopupAlert />
                 <Navbar links={links} />
                 <LoadingIndicator />
                 <div className="flex flex-col min-h-[calc(100vh-var(--nav-max-height))]">

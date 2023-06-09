@@ -9,7 +9,7 @@ export default async function handler(
     const fallback = query.fallback_url ?? '/auth/login';
     const redirectFallback = (err: Error|string) => {
         const errorMessage = typeof err === "string" ? err : ((err as Error).message);
-        res.redirect(`${fallback}?error=${errorMessage}`);
+        res.redirect(`${fallback}?msg=${errorMessage}`);
     }
     if (!method || method.toLowerCase() !== "post") {
         res.status(405).json({status: '405', message: 'Method not allowed.'});
