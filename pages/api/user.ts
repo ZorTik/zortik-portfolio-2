@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {User} from "@/security/user.types";
 import {getUserPrivateKey} from "@/security/user";
 import jwt from "jsonwebtoken";
+import {getUserRepository} from "@/data/user";
 
 export default async function handler(
     {headers, cookies}: NextApiRequest,
@@ -22,7 +23,7 @@ export default async function handler(
             // Ignored
         }
     }
-    if (user) {
+    if (user && await getUserRepository().getUserById(user.userId)) {
         res.status(200).json({ user });
     } else {
         res.status(401).json({status: '401', message: 'Unauthorized'});

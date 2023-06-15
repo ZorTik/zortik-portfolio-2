@@ -18,7 +18,7 @@ export default function CenterLayout({title, children, className, backHref}: Cen
             <LoadingIndicator />
             <PopupAlert />
             <div className="absolute left-1/2 top-1/3 transform -translate-x-1/2 -translate-y-1/2 w-fit h-fit flex flex-col justify-center">
-                <h1 className="text-gray-200 text-5xl font-bold mb-12 text-center">{title}</h1>
+                <h1 className="text-gray-200 text-5xl font-bold mb-12 text-center invisible lg:visible">{title}</h1>
                 <Card className={`text-gray-200 ${className ?? ""}`}>
                     {children}
                 </Card>

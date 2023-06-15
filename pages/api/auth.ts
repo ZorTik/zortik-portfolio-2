@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {generateCode} from "@/security/server";
+import {generateUserId} from "@/security/user";
 
 // Authentication form handler for /auth/** routes.
 export default async function handler(
@@ -34,8 +35,12 @@ export default async function handler(
             redirectFallback(e as Error);
         }
     } else if (action === "register") {
-        const code = await generateCode(principal, { createUser: true });
-        res.redirect(`/api/oauth/callback/local?code=${code}`);
+        try {
+            const code = await generateCode(principal, { createUser: generateUserId() });
+            res.redirect(`/api/oauth/callback/local?code=${code}`);
+        } catch(e) {
+            redirectFallback(e as Error);
+        }
     } else {
         res.status(400).json({status: '400', message: 'Invalid action.'});
     }

@@ -2,23 +2,53 @@ export type Cached<T> = {
     value: T, cachedAt: number,
 }
 
-function createCache() {
-    const cache = {
-        data: {} as { [key: string]: Cached<any> },
-        async get<T>(options: any, orFetch: () => Promise<T>): Promise<Cached<T>> {
-            let cachedResult = cache.data[JSON.stringify(options)];
-            if (!cachedResult || Date.now() - cachedResult.cachedAt > 1000 * 30) {
-                cachedResult = cache.data[JSON.stringify(options)] = { cachedAt: Date.now(), value: await orFetch(), }
-            }
-            return cachedResult;
-        },
-        remove(pred: (key: string, value: Cached<any>) => boolean) {
-            for (const key in cache.data) {
-                if (pred(key, cache.data[key])) delete cache.data[key];
+class Cache {
+    readonly data: { [key: string]: Cached<any> } = {};
+    lastCleanup: number = 0;
+
+    async get<T>(options: any, orFetch: () => Promise<T>): Promise<Cached<T>> {
+        return this.getIfPresent(options) ?? this.set(options, await orFetch());
+    }
+
+    getIfPresent<T>(options: any, { remove }: { remove?: boolean } = {}): Cached<T> | undefined {
+        const cached = this.data[JSON.stringify(options)];
+        if (!cached) return undefined;
+        const isInvalid = (cached: Cached<any>) => Date.now() - cached.cachedAt > 30000;
+        const invalid = isInvalid(cached);
+        if (invalid || remove) {
+            delete this.data[JSON.stringify(options)];
+            if (invalid) return undefined;
+        }
+        const now = new Date(Date.now()).getTime();
+        if (now - this.lastCleanup > 10000) {
+            this.remove((_, value) => isInvalid(value));
+            this.lastCleanup = now;
+        }
+        return cached;
+    }
+
+    set<T>(options: any, value: T): Cached<T> {
+        return this.data[JSON.stringify(options)] = { cachedAt: Date.now(), value: value, }
+    }
+
+    remove(pred: (key: string, value: Cached<any>) => boolean) {
+        for (const key in this.data) {
+            if (pred(key, this.data[key])) {
+                delete this.data[key];
             }
         }
     }
-    return cache;
+}
+
+function createCache(id: string) {
+    const cacheGlobal = global as unknown as {
+        __zcaches?: { [id: string]: Cache },
+    }
+    if (process.env.NODE_ENV === 'production') return new Cache();
+
+    if (!cacheGlobal.__zcaches) cacheGlobal.__zcaches = {};
+    if (!cacheGlobal.__zcaches[id]) cacheGlobal.__zcaches[id] = new Cache();
+    return cacheGlobal.__zcaches[id];
 }
 
 export default createCache;

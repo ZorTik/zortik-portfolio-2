@@ -1,7 +1,14 @@
 export type User = {
-    username: string;
+    userId: string,
+    username: string,
 }
 
 export type UserGenerationRequirements = {
-    username: string;
+    userId: string,
+    username: string,
+}
+
+export type UserGenerationOptions = {
+    tenantId?: string,
+    tenantUserId?: string,
 }

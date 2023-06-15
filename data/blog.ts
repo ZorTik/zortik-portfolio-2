@@ -10,7 +10,7 @@ export type FindBlogPostsOptions = {
     cache?: boolean,
 }
 
-const cache = createCache();
+const cache = createCache('blogs-cache');
 
 export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<BlogArticle[]>>  {
     const _options = options ?? {};

@@ -1,15 +1,12 @@
 import {TenantRequestContext, TenantUserProvider, UserTenant} from "@/security/user";
 import {User} from "@/security/user.types";
-import {codes} from "@/security/server";
-import {generateUser} from "@/data/user";
+import {verifyCode} from "@/security/server";
 
 class LocalUserTenant implements UserTenant {
-    async authorize(code: string, {saveUserPassword, getUser}: TenantUserProvider, ctx: TenantRequestContext): Promise<User | undefined> {
-        const credentials = codes[code];
+    async authorize(code: string, userProvider: TenantUserProvider, ctx: TenantRequestContext): Promise<User | undefined> {
+        const credentials = verifyCode(code);
         if (!credentials) return undefined;
-        const user = await getUser(credentials.username) ?? await generateUser({username: credentials.username});
-        await saveUserPassword(user.username, credentials.password);
-        return user;
+        return await userProvider.userRepository.getUserByCredentials(credentials);
     }
 }
 

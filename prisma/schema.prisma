@@ -20,15 +20,23 @@ model Article {
 }
 
 model User {
-  username String @id
+  user_id  String @id
+  username String
+}
+
+model UserTenantLink {
+  user_id        String @id
+  tenant_user_id String
+  tenant_id      String
 }
 
 model PrivateKey {
-  username String @id
-  key String
+  user_id String @id
+  key     String
 }
 
 model Credentials {
-  username String @id
+  user_id  String @id
+  username String @unique
   password String
 }
