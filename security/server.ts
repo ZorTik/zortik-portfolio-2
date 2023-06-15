@@ -1,8 +1,9 @@
 // Local authorization server, to use in /api/auth and /api/oauth/authorize
 
-import {generateUser, getUserRepository} from "@/data/user";
+import {getUserRepository} from "@/data/user";
 import encoder from "@/security/encoder";
 import cache from "@/util/cache";
+import {generateUser} from "@/security/user";
 
 // Authorization principal, username:password encoded in base64.
 // The password hash uses SHA-256.
@@ -42,6 +43,5 @@ export async function verifyPrincipal(username: string, password: string): Promi
 }
 
 export function verifyCode(code: string) {
-    const cached = codes.getIfPresent<Credentials>(code, { remove: true });
-    return cached?.value;
+    return codes.getIfPresent<Credentials>(code, { remove: true })?.value;
 }

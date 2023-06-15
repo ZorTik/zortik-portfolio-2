@@ -1,13 +1,13 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {User} from "@/security/user.types";
+import {ApiEndpointUser} from "@/security/user.types";
 import {CookieValueTypes} from "cookies-next";
 
-export type UserContextType = User|null;
+export type UserContextType = { user: ApiEndpointUser|null };
 
-const Context = createContext<UserContextType>(null);
+const Context = createContext<UserContextType>({ user: null });
 
 function UserProvider({children, userCookie}: {children: any, userCookie: CookieValueTypes}) {
-    const [cookie, setCookie] = useState<any>(null);
+    const [userCookieState, setUserCookieState] = useState<any>(null);
     useEffect(() => {
         let thatCookie: any = userCookie;
         if (thatCookie == null || !thatCookie || typeof thatCookie !== "string") {
@@ -15,9 +15,9 @@ function UserProvider({children, userCookie}: {children: any, userCookie: Cookie
         } else {
             thatCookie = JSON.parse(thatCookie);
         }
-        setCookie(thatCookie);
+        setUserCookieState(thatCookie);
     }, [userCookie])
-    return <Context.Provider value={cookie}>{children}</Context.Provider>
+    return <Context.Provider value={{ user: userCookieState }}>{children}</Context.Provider>
 }
 
 function useUser() {

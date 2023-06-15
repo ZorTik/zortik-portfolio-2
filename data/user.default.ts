@@ -8,17 +8,22 @@ class DefaultUserRepository implements UserRepository {
     async saveUser(user: User): Promise<User> {
         const payload = toPrismaUser(user);
         return fromPrismaUser(await prismaClient.user.upsert({
-            create: { ...payload }, update: { ...payload }, where: { user_id: payload.user_id },
+            create: { ...payload, scopes: payload.scopes || [] },
+            update: { ...payload, scopes: payload.scopes || [] },
+            where: { user_id: payload.user_id },
         }))!!;
     }
 
     async getUserById(userId: string): Promise<User | undefined> {
-        return await prismaClient.user.findUnique({ where: { user_id: userId } }).then(fromPrismaUser);
+        return await prismaClient.user.findUnique({ where: { user_id: userId } })
+            .then(fromPrismaUser);
     }
 
     async savePrivateKey(userId: string, privateKey: string): Promise<void> {
         await prismaClient.privateKey.upsert({
-            create: { user_id: userId, key: privateKey }, update: { key: privateKey }, where: { user_id: userId },
+            create: { user_id: userId, key: privateKey },
+            update: { key: privateKey },
+            where: { user_id: userId },
         })
     }
 
@@ -29,7 +34,9 @@ class DefaultUserRepository implements UserRepository {
     async saveUserCredentials(credentials: Credentials): Promise<void> {
         const payload = toPrismaCredentials(credentials);
         await prismaClient.credentials.upsert({
-            create: payload, update: payload, where: { user_id: payload.user_id },
+            create: payload,
+            update: payload,
+            where: { user_id: payload.user_id },
         })
     }
 
@@ -45,16 +52,20 @@ class DefaultUserRepository implements UserRepository {
             );
     }
 
+    async getUserCount(): Promise<number> {
+        return prismaClient.user.count();
+    }
+
 }
 
 const defaultUserRepository: UserRepository = new DefaultUserRepository();
 
 function fromPrismaUser(prismaUser: PrismaUser|null): User|undefined {
-    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, } : undefined;
+    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, scopes: prismaUser.scopes as string[] } : undefined;
 }
 
-function toPrismaUser(user: User): PrismaUser {
-    return { user_id: user.userId, username: user.username };
+function toPrismaUser({userId, username, scopes}: User): PrismaUser {
+    return { user_id: userId, username, scopes: scopes as string[] };
 }
 
 function fromPrismaCredentials(prismaCredentials: PrismaCredentials|null): Credentials|undefined {

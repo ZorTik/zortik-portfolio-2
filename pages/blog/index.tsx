@@ -11,7 +11,7 @@ export async function getServerSideProps() {
 
 export default function Blog({articles}: {articles: BlogArticle[]}) {
     return (
-        <MainLayout title="Blog" className="flex flex-col items-center">
+        <MainLayout title="Blog" className="flex flex-col items-center space-y-5">
             {articles.map((article, index) => <ArticleCard article={article} key={index} />)}
             {articles.length == 0 ? <Badge><p>No Blogs yet</p></Badge> : null}
         </MainLayout>

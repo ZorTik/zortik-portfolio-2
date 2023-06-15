@@ -10,7 +10,7 @@ export type FindBlogPostsOptions = {
     cache?: boolean,
 }
 
-const cache = createCache('blogs-cache');
+const cache = createCache('blogs-cache', 50000);
 
 export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<BlogArticle[]>>  {
     const _options = options ?? {};
@@ -22,6 +22,12 @@ export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<Bl
 
 export function findBlogPost(id: number): Promise<Cached<BlogArticle|null>> {
     return cache.get(id, async () => prismaClient.article.findUnique({ where: { id: id } }));
+}
+
+export async function createBlogPost(article: BlogArticle): Promise<BlogArticle> {
+    const created = await prismaClient.article.create({ data: article });
+    cache.set(created.id, created);
+    return created;
 }
 
 export async function deleteBlogPost(id: number) {

@@ -1,10 +1,11 @@
 import LocalUserTenant from "@/security/tenant/local";
-import {User} from "@/security/user.types";
+import {User, UserGenerationOptions, UserGenerationRequirements} from "@/security/user.types";
 import GoogleUserTenant from "@/security/tenant/google";
 import {getUserRepository, UserRepository} from "@/data/user";
 import {randomBytes, randomUUID} from "crypto";
 import {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/data/prisma";
+import {allScopes, defaultScopes} from "@/security/scope";
 
 export class TenantUserProvider {
     constructor(public readonly tenantId: string,
@@ -52,6 +53,24 @@ export async function getUserPrivateKey(userId: string, options?: {generate?: bo
         await getUserRepository().savePrivateKey(userId, privateKey);
     }
     return privateKey;
+}
+
+export async function generateUser({ userId, username }: UserGenerationRequirements, options?: UserGenerationOptions): Promise<User> {
+    const {tenantUserId, tenantId} = options ?? {};
+    const userRepo = getUserRepository();
+    const userCount = await userRepo.getUserCount();
+    let user = await userRepo.getUserById(userId);
+    if (user) throw new Error(`User ${userId} already exists.`);
+    user = {
+        userId, username, scopes: userCount > 0 ? defaultScopes() : allScopes(), // First user is admin
+    }
+    user = await userRepo.saveUser(user);
+    if (tenantId && tenantUserId) {
+        await prisma.userTenantLink.create({
+            data: {user_id: user.userId, tenant_user_id: tenantUserId, tenant_id: tenantId,}
+        });
+    }
+    return user;
 }
 
 export function generateUserId() {

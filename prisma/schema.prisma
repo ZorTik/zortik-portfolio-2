@@ -19,9 +19,17 @@ model Article {
   content     String   @db.Text
 }
 
+model ArticleView {
+  id         Int      @id @default(autoincrement())
+  article_id Int
+  user_id    String?
+  date       DateTime @default(now())
+}
+
 model User {
   user_id  String @id
   username String
+  scopes   Json   @default("[]")
 }
 
 model UserTenantLink {

@@ -33,7 +33,7 @@ export default async function handler(
         fallback('User not found or unauthorized access.');
         return;
     }
-    const token = jwt.sign(user, (await getUserPrivateKey(user.userId, {generate: true}))!!, { expiresIn: '1h' });
+    const token = jwt.sign({ user_id: user.userId }, (await getUserPrivateKey(user.userId, {generate: true}))!!, { expiresIn: '1h' });
     res.setHeader('Set-Cookie', [
         serialize(TOKEN_COOKIE_NAME, token, { httpOnly: true, path: '/', }),
         serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: true, path: '/', })

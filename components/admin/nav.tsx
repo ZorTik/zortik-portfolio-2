@@ -8,6 +8,7 @@ import Image from "next/image";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleDown, faBars, faBurger} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
+import Protected from "@/components/protected";
 
 export type AdminNavProps = {
     nav: AdminPathNode[],
@@ -15,7 +16,7 @@ export type AdminNavProps = {
 }
 
 function NavProfile() {
-    const user = useUser();
+    const { user } = useUser();
     return user ? (
         <div className="mb-12 px-8 flex flex-row justify-center items-center">
             <Image src={"/logo.png"} alt={"Picture"} width={30} height={30} className="rounded-full w-[30px] h-[30px]" />
@@ -30,7 +31,11 @@ function NavButton({node}: {node: AdminPathNode}) {
     const {pathname} = useRouter();
     const modifiedPathName = !pathname.endsWith("/") ? pathname + "/" : pathname;
     const active = modifiedPathName.startsWith(`/admin/${node.path.substring(1)}`) && (node.path !== "/" || modifiedPathName === "/admin/");
-    return <Link className={`w-full text-[#D6D6D6] px-4 md:px-8 py-2.5 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>{node.name}</Link>
+    return (
+        <Protected scopes={node.scopes ?? []}>
+            <Link className={`w-full text-[#D6D6D6] px-4 md:px-8 py-2.5 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>{node.name}</Link>
+        </Protected>
+    )
 }
 
 export default function AdminNav({nav, className}: AdminNavProps) {
@@ -43,7 +48,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
                     {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 </div>
             </div>
-            <div className={`sticky flex flex-col justify-center max-h-screen min-h-screen max-w-fit px-3 py-8 ${className ?? ""} bg-black hidden md:inline-flex`}>
+            <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-3 py-8 ${className ?? ""} bg-black hidden md:inline-flex`}>
                 <NavProfile />
                 {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 <Button className="mt-auto" href="/api/logout">Logout</Button>

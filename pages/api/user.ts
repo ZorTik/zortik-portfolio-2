@@ -1,31 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import {User} from "@/security/user.types";
-import {getUserPrivateKey} from "@/security/user";
-import jwt from "jsonwebtoken";
-import {getUserRepository} from "@/data/user";
+import {ApiEndpointUser, User} from "@/security/user.types";
+import prisma from "@/data/prisma";
+import {requireUser} from "@/security/api";
 
-export default async function handler(
-    {headers, cookies}: NextApiRequest,
-    res: NextApiResponse
-) {
+const handler = requireUser(async (req, res, user) => {
+    const link = await prisma.userTenantLink.findUnique({ where: { user_id: user!!.userId } }) || undefined;
+    const responseUser: ApiEndpointUser = { ...(user!!), tenant_used: link?.tenant_id }
+    res.status(200).json({ user: responseUser });
+});
 
-    let user: User|null = null;
-    const token = headers['x-z-token'] as string|undefined;
-    const username = headers['x-z-username'] as string|undefined;
-    if (token && username) {
-        try {
-            const privateKey = await getUserPrivateKey(username, {generate: false});
-            if (privateKey) {
-                jwt.verify(token, privateKey);
-                user = jwt.decode(token, {json: true}) as User;
-            }
-        } catch(e) {
-            // Ignored
-        }
-    }
-    if (user && await getUserRepository().getUserById(user.userId)) {
-        res.status(200).json({ user });
-    } else {
-        res.status(401).json({status: '401', message: 'Unauthorized'});
-    }
-}
+export default handler;

@@ -17,14 +17,17 @@ const LayoutWrapper = styled("main")`
 `;
 
 export type LayoutProps = PropsWithChildren & {
-    title?: string, className?: string
+    title?: string,
+    className?: string,
 }
 
 export const links: { [name: string]: string } = {
     Domov: '/', Blog: '/blog', Kontakt: '#contact', Login: '/auth/login'
 }
 
-export default function MainLayout({children, title, className}: LayoutProps) {
+export default function MainLayout(
+    {children, title, className}: LayoutProps
+) {
     return (
         <>
             <DefaultHead />

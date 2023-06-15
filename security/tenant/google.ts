@@ -1,8 +1,7 @@
-import {TenantRequestContext, TenantUserProvider, UserTenant} from "@/security/user";
+import {generateUser, TenantRequestContext, TenantUserProvider, UserTenant} from "@/security/user";
 import {User} from "@/security/user.types";
 import {oAuth2Client} from "@/pages/api/login/google";
 import {fetchUserInfo} from "@/data/google";
-import {generateUser} from "@/data/user";
 
 class GoogleUserTenant implements UserTenant {
     async authorize(code: string, userProvider: TenantUserProvider, ctx: TenantRequestContext): Promise<User | undefined> {

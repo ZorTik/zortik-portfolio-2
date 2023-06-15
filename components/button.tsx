@@ -34,7 +34,7 @@ export default function Button(props: ButtonProps) {
 }
 
 export function BigButton(props: ButtonProps) {
-    return <Button {...props} className={`${props.className} text-2xl aspect-square`}/>
+    return <Button {...props} className={`${props.className} text-2xl aspect-square px-6`}/>
 }
 
 export function TransparentButton(props: Omit<ButtonProps, "variant">) {

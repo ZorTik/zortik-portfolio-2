@@ -1,6 +1,7 @@
 export type User = {
     userId: string,
     username: string,
+    scopes: string[],
 }
 
 export type UserGenerationRequirements = {
@@ -11,4 +12,8 @@ export type UserGenerationRequirements = {
 export type UserGenerationOptions = {
     tenantId?: string,
     tenantUserId?: string,
+}
+
+export type ApiEndpointUser = User & {
+    tenant_used?: string,
 }
