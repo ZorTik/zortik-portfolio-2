@@ -5,5 +5,8 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Awaited<ReturnType<typeof findBlogPosts>>>
 ) {
-    res.status(200).json(await findBlogPosts());
+    const bodyString = req.body;
+    const body = bodyString ? JSON.parse(bodyString) : undefined;
+    const options = body?.options;
+    res.status(200).json(await findBlogPosts({ filters: options }));
 }

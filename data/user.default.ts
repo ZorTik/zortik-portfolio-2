@@ -61,11 +61,11 @@ class DefaultUserRepository implements UserRepository {
 const defaultUserRepository: UserRepository = new DefaultUserRepository();
 
 function fromPrismaUser(prismaUser: PrismaUser|null): User|undefined {
-    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, scopes: prismaUser.scopes as string[] } : undefined;
+    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, scopes: prismaUser.scopes as string[], avatar_url: prismaUser.avatar_url || undefined } : undefined;
 }
 
-function toPrismaUser({userId, username, scopes}: User): PrismaUser {
-    return { user_id: userId, username, scopes: scopes as string[] };
+function toPrismaUser({userId, username, scopes, avatar_url}: User): PrismaUser {
+    return { user_id: userId, username, scopes: scopes as string[], avatar_url: avatar_url ?? null };
 }
 
 function fromPrismaCredentials(prismaCredentials: PrismaCredentials|null): Credentials|undefined {

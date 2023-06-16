@@ -3,6 +3,9 @@ import {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/data/prisma";
 
 const strategies: { [name: string]: (req: NextApiRequest, res: NextApiResponse) => Promise<any> } = {
+    articleCount: async (req, res) => {
+        return prisma.article.count();
+    },
     viewsBetween: async (req, res) => {
         const { from, to } = JSON.parse(req.body);
         if (!from || !to) {

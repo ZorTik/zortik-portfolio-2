@@ -17,7 +17,7 @@ const handler = requireScopesEndpoint(
             const userId = user?.userId ?? "anonymous";
             const articleId = article.value.id;
             // Prevent double counting
-            if (!statStorageCache.getIfPresent({ userId, articleId })) {
+            if (!statStorageCache.getIfPresent({ userId, articleId }) && req.query.statisticsEnabled) {
                 statStorageCache.set({ userId, articleId }, true);
                 await prisma.articleView.create({
                     data: {

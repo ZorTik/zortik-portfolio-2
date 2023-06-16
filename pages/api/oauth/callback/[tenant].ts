@@ -38,5 +38,5 @@ export default async function handler(
         serialize(TOKEN_COOKIE_NAME, token, { httpOnly: true, path: '/', }),
         serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: true, path: '/', })
     ]);
-    res.redirect(`/admin?msg=Logged in using ${query.tenant}`);
+    res.redirect(`/admin?msg=Logged in as ${user.username}`);
 }

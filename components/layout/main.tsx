@@ -2,10 +2,11 @@ import {PropsWithChildren} from "react";
 import {Poppins} from "next/font/google";
 import styled from "styled-components";
 import {DefaultHead} from "@/components/head";
-import Navbar from "@/components/nav";
+import Navbar, {NavbarLink} from "@/components/nav";
 import {Footer} from "@/components/footer";
 import {LoadingIndicator} from "@/components/loading";
 import PopupAlert from "@/components/popupalert";
+import {useUser} from "@/hooks/user";
 
 const interBold = Poppins({ weight: '600', subsets: ['latin'] });
 const interLight = Poppins({ weight: '300', subsets: ['latin'] });
@@ -22,17 +23,20 @@ export type LayoutProps = PropsWithChildren & {
 }
 
 export const links: { [name: string]: string } = {
-    Domov: '/', Blog: '/blog', Kontakt: '#contact', Login: '/auth/login'
+    Domov: '/', Blog: '/blog', Kontakt: '#contact'
 }
 
 export default function MainLayout(
     {children, title, className}: LayoutProps
 ) {
+    const {user} = useUser();
     return (
         <>
             <DefaultHead />
             <LayoutWrapper className={`${interLight.className} min-h-screen`}>
-                <Navbar links={links} />
+                <Navbar links={links} >
+                    {user ? <NavbarLink href={"/admin"}>Panel</NavbarLink> : <NavbarLink href={"/auth/login"}>Login</NavbarLink>}
+                </Navbar>
                 <LoadingIndicator />
                 <PopupAlert />
                 <div className="flex flex-col min-h-[calc(100vh-var(--nav-max-height))]">

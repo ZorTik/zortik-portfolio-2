@@ -27,9 +27,10 @@ model ArticleView {
 }
 
 model User {
-  user_id  String @id
-  username String
-  scopes   Json   @default("[]")
+  user_id    String @id
+  username   String
+  scopes     Json   @default("[]")
+  avatar_url String?
 }
 
 model UserTenantLink {

@@ -3,20 +3,24 @@ import {BlogArticle} from "@/components/blog_home/articlecard";
 import createCache, {Cached} from "@/util/cache";
 
 export type FindBlogPostsOptionsOrder = 'createdAt' | 'updatedAt';
-export type FindBlogPostsOptions = {
+export type FindBlogPostsOptionsFilters = {
     per_page?: number,
     page?: number,
     sort?: FindBlogPostsOptionsOrder,
+}
+export type FindBlogPostsOptions = {
+    filters?: FindBlogPostsOptionsFilters,
     cache?: boolean,
 }
 
 const cache = createCache('blogs-cache', 50000);
 
-export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<BlogArticle[]>>  {
+export function findBlogPosts(options?: FindBlogPostsOptions): Promise<Cached<BlogArticle[]>> {
     const _options = options ?? {};
-    const per_page = _options.per_page ?? 10;
+    const filters = _options.filters ?? {};
+    const per_page = filters.per_page ?? 10;
     return cache.get(_options, async () => prismaClient.article.findMany({
-        skip: (_options.page ?? 0) * per_page, take: per_page, orderBy: { [_options.sort ?? 'createdAt']: 'desc' },
+        skip: (filters.page ?? 0) * per_page, take: per_page, orderBy: { [filters.sort ?? 'createdAt']: 'desc' },
     }));
 }
 

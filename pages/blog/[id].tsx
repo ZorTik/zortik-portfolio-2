@@ -11,11 +11,6 @@ import {MdPreview} from "md-editor-rt";
 
 import "md-editor-rt/lib/preview.css"
 
-export async function getServerSideProps({params}: GetServerSidePropsContext) {
-    const { value } = await findBlogPost(parseInt(params!!['id'] as string));
-    return { props: { article: prepareJsonRender(value) } }
-}
-
 export default function BlogArticlePage() {
     const [article, setArticle] = useState<BlogArticle|undefined>(undefined);
     const [fetching, setFetching] = useState<boolean>(true);
@@ -27,7 +22,7 @@ export default function BlogArticlePage() {
 
     useEffect(() => {
         setFetching(true)
-        fetchRestrictedApiUrl(`/api/blog/${query.id}`, { method: 'GET' })
+        fetchRestrictedApiUrl(`/api/blog/${query.id}?statisticsEnabled=true`, { method: 'GET' })
             .then(res => res.json())
             .then(res => setArticle(res))
             .finally(() => setFetching(false));

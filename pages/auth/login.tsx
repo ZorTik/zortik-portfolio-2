@@ -22,6 +22,9 @@ export default function Login({sitekey}: { sitekey: string }) {
     const handleGoogleLogin: MouseEventHandler<HTMLButtonElement> = () => {
         window.open('/api/login/google', '_self');
     }
+    const handleGitHubLogin: MouseEventHandler<HTMLButtonElement> = () => {
+        window.open('/api/login/github', '_self');
+    }
     const handleBasicLogin: FormClientSideSubmitHandler = async (e, finishProcess) => {
         e.preventDefault();
         if (!recaptchaRef.current) {
@@ -49,8 +52,11 @@ export default function Login({sitekey}: { sitekey: string }) {
                     <FormLabel htmlFor="password">Password</FormLabel>
                     <FormInput id="password" type="password" name="password" required />
                 </Form>
-                <Button onClick={handleGoogleLogin}>Login using Google</Button>
                 <Button onClick={() => window.open('/auth/register', '_self')}>Register Instead</Button>
+                <div className="flex flex-col space-y-3">
+                    <Button variant="none" onClick={handleGoogleLogin} className="bg-blue-900">Login using Google</Button>
+                    <Button variant="none" onClick={handleGitHubLogin} className="bg-neutral-900">Login Using GitHub</Button>
+                </div>
             </CenterLayout>
             <ReCAPTCHA
                 ref={recaptchaRef}

@@ -24,7 +24,7 @@ export function FormLabel(props: FormLabelProps) {
 }
 
 export function FormInput(props: FormInputProps) {
-    return <input {...props} className={`${props.className} bg-transparent border border-x-0 border-t-0 border-b-2 border-b-gray-800 focus:border-b-teal-400 my-0`} />
+    return <input {...props} className={`${props.className} bg-transparent border border-x-0 border-t-0 border-b-2 border-b-gray-800 focus:border-b-teal-400 my-0 !mb-2`} />
 }
 
 export function FormSubmitButton(props: ButtonProps) {

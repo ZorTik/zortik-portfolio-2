@@ -2,6 +2,7 @@ export type User = {
     userId: string,
     username: string,
     scopes: string[],
+    avatar_url?: string,
 }
 
 export type UserGenerationRequirements = {

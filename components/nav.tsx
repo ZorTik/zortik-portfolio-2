@@ -1,5 +1,5 @@
 import {PropsWithChildren, useState} from "react";
-import Link from "next/link";
+import Link, {LinkProps} from "next/link";
 import {useRouter} from "next/router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars} from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,11 @@ export type NavbarProps = PropsWithChildren & {
     links: { [name: string]: NavbarLinkMeta }
 };
 
-function Navbar({children, links}: NavbarProps) {
+export function NavbarLink(props: LinkProps & PropsWithChildren & { active?: boolean }) {
+    return <Link {...{...props, active: undefined }} className={`text-lg hover:text-emerald-500 ${(props.active ?? false) ? `text-emerald-400` : `text-white`}`}>{props.children}</Link>
+}
+
+export default function Navbar({children, links}: NavbarProps) {
     const {pathname} = useRouter();
     const [shown, setShown] = useState<boolean>(false);
 
@@ -30,7 +34,7 @@ function Navbar({children, links}: NavbarProps) {
                         {Object.entries(links).map(([key, link], index) => {
                             const path = pathname.substring(1);
                             const active = (link !== "/" && `/${path}`.startsWith(link)) || (link === "/" && (path.match(/\//)?.length ?? 0) < 2 && (path.startsWith("#") || path.startsWith("?") || path.length == 0))
-                            return <Link className={`text-lg hover:text-emerald-500 ${active ? `text-emerald-400` : `text-white`}`} href={link} key={index}>{key}</Link>
+                            return <NavbarLink href={link} key={index} active={active}>{key}</NavbarLink>
                         })}
                         {children}
                     </div>
@@ -39,5 +43,3 @@ function Navbar({children, links}: NavbarProps) {
         </>
     )
 }
-
-export default Navbar;

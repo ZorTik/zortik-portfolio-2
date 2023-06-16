@@ -24,6 +24,7 @@ const requireUser = (
         let user: User|null = null;
         const token = headers['x-z-token'] as string|undefined;
         const username = headers['x-z-username'] as string|undefined;
+        const optionallyExcluded = optionalUserScopes.includes(req.method!!.toLowerCase() as keyof RequireScopesEndpointScopes);
         if (token && username) {
             try {
                 const privateKey = await getUserPrivateKey(username, {generate: false});
@@ -35,11 +36,11 @@ const requireUser = (
             } catch(e) {
                 // Ignored
             }
-        } else {
+        } else if (!optionallyExcluded) {
             res.status(401).json({status: '401', message: 'Unauthorized, no x-z-token, x-z-username headers provided'});
             return;
         }
-        if ((user && await getUserRepository().getUserById(user.userId)) || optionalUserScopes.includes(req.method!!.toLowerCase() as keyof RequireScopesEndpointScopes)) {
+        if ((user && await getUserRepository().getUserById(user.userId)) || optionallyExcluded) {
             await handler(req, res, user);
         } else {
             res.status(401).json({status: '401', message: 'Unauthorized'});

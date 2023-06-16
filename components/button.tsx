@@ -16,7 +16,7 @@ export const buttonVariants: { [key in ButtonVariant]: string } = {
     info: "bg-teal-950 hover:bg-black text-white",
     light: "bg-gray-100 hover:bg-black text-black",
     dark: "bg-transparent hover:bg-black hover:text-emerald-500 text-white",
-    none: "",
+    none: "hover:bg-black text-white",
 }
 
 export default function Button(props: ButtonProps) {
@@ -30,7 +30,9 @@ export default function Button(props: ButtonProps) {
             window.open(href, props.target ?? "_self");
         }
     }
-    return <button {...props} onClick={handleClick} className={`${props.className} ${variantClassName} border border-solid rounded-3xl border-black px-3 py-1`}>{props.children}</button>
+    return <button {...{
+        ...props, href: undefined,
+    }} onClick={handleClick} className={`${props.className} ${variantClassName} border border-solid rounded-3xl border-black px-3 py-1`}>{props.children}</button>
 }
 
 export function BigButton(props: ButtonProps) {

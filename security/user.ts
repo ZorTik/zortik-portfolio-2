@@ -6,10 +6,30 @@ import {randomBytes, randomUUID} from "crypto";
 import {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/data/prisma";
 import {allScopes, defaultScopes} from "@/security/scope";
+import GitHubUserTenant from "@/security/tenant/github";
+
+export type TenantRequestContext = {req: NextApiRequest, res: NextApiResponse, getCallbackUrl: (tenant: string) => string};
+
+export interface UserTenant {
+    // Authorize a user in the tenant with authorization code, register if not locally present and return his data.
+    // Throws an error if remote user is not found.
+    authorize(code: string, userProvider: TenantUserProvider, ctx: TenantRequestContext): Promise<User|undefined>;
+}
 
 export class TenantUserProvider {
     constructor(public readonly tenantId: string,
                 public readonly userRepository: UserRepository) {}
+
+    async user(info: {
+        username: string,
+        tenantId: string,
+        tenantUserId: string,
+    }): Promise<User> {
+        const {userid} = await this.userid(info.tenantUserId);
+        return await this.userRepository.getUserById(userid) ?? await generateUser(
+            { userId: userid, username: info.username },
+            { tenantId: info.tenantId, tenantUserId: info.tenantUserId });
+    }
 
     // Function that returns a unique LOCAL user_id that is linked with provided tenant_user_id.
     // This should identify which user is linked to different tenant accounts.
@@ -25,17 +45,10 @@ export class TenantUserProvider {
     }
 }
 
-export type TenantRequestContext = {req: NextApiRequest, res: NextApiResponse, getCallbackUrl: (tenant: string) => string};
-
-export interface UserTenant {
-    // Authorize a user in the tenant with authorization code, register if not locally present and return his data.
-    // Throws an error if remote user is not found.
-    authorize(code: string, userProvider: TenantUserProvider, ctx: TenantRequestContext): Promise<User|undefined>;
-}
-
 const tenants: { [key: string]: UserTenant } = {
     local: new LocalUserTenant(),
     google: new GoogleUserTenant(),
+    github: new GitHubUserTenant(),
 };
 
 export function getUserTenant(id: string): UserTenant|undefined {

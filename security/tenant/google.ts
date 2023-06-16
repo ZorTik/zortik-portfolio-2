@@ -1,4 +1,4 @@
-import {generateUser, TenantRequestContext, TenantUserProvider, UserTenant} from "@/security/user";
+import {TenantRequestContext, TenantUserProvider, UserTenant} from "@/security/user";
 import {User} from "@/security/user.types";
 import {oAuth2Client} from "@/pages/api/login/google";
 import {fetchUserInfo} from "@/data/google";
@@ -11,10 +11,7 @@ class GoogleUserTenant implements UserTenant {
         });
         if (!credentials || !credentials.tokens || !credentials.tokens.access_token) return undefined;
         const { sub, name} = await fetchUserInfo(credentials.tokens.access_token);
-        const userId = (await userProvider.userid(sub)).userid;
-        let user = await userProvider.userRepository.getUserById(userId) ?? await generateUser(
-            { userId, username: name },
-            { tenantId: 'google', tenantUserId: sub });
+        const user = await userProvider.user({ tenantId: 'google', tenantUserId: sub, username: name });
         // TODO: Update and save the user with data from Google APIs.
         return user;
     }

@@ -1,9 +1,12 @@
-import {PropsWithChildren} from "react";
+import {PropsWithChildren, useEffect, useState} from "react";
 import AdminNav from "@/components/admin/nav";
 import {LoadingIndicator} from "@/components/loading";
 import PopupAlert from "@/components/popupalert";
 import {ScopeTypes} from "@/security/scope.types";
 import Protected from "@/components/protected";
+import {useRouter} from "next/router";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faHouse} from "@fortawesome/free-solid-svg-icons";
 
 export type AdminPathNode = {
     name: string,
@@ -15,11 +18,16 @@ export type AdminLayoutProps = PropsWithChildren & {
     title: string,
     path: string,
     nav?: AdminPathNode[],
+    className?: string,
 }
 
 const defaultNav: AdminPathNode[] = [
     { name: "Home", path: "/", },
-    { name: "Blog", path: "/blog", scopes: ["admin:blogs:edit"] }
+    { name: "Blog", path: "/blog", scopes: ["admin:blogs:edit"], children: [
+            { name: "Create Blog", path: "/blog/edit" },
+        ],
+    },
+    { name: "Users", path: "/users" },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
@@ -33,24 +41,47 @@ function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
     return [];
 }
 
+function AdminCarousel({nav}: { nav: AdminPathNode[] }) {
+    const {pathname} = useRouter();
+    const [value, setValue] = useState<string>("");
+    useEffect(() => {
+        const renderCarousel = (path: string, nodes: AdminPathNode[]) => {
+            path = path.endsWith("/") ? path : path + "/";
+            const pathArray: string[] = [];
+            nodes?.forEach(node => {
+                if ((path).startsWith("/admin" + node.path)) {
+                    pathArray.push(node.name);
+                    if (node.children) pathArray.push(...renderCarousel(path, node.children));
+                }
+            });
+            return pathArray;
+        }
+        setValue(renderCarousel(pathname, nav).join(" / "));
+    }, [nav, pathname]);
+    return <p className="text-neutral-700 mb-3"><FontAwesomeIcon icon={faHouse} /> {value}</p>
+}
+
 export default function AdminLayout(
-    {title, path, children, nav}: AdminLayoutProps
+    {title, path, children, nav, className}: AdminLayoutProps
 ) {
     const navItems = nav ?? defaultNav;
     return (
-        <div className="w-full flex flex-col md:flex-row">
+        <div className="w-full flex flex-col lg:flex-row">
             <AdminNav className="w-fit" nav={navItems ?? []} />
             <div className="w-full">
                 <LoadingIndicator />
                 <PopupAlert />
                 <Protected
                     scopes={findRequiredScopes(path, navItems)}
-                    or={<p>Restricted Access</p>}
+                    or={<p className="text-white">Restricted Access</p>}
                 >
-                    <div className="px-14 pb-14 mt-14 space-y-10">
+                    <div className="px-14 pb-14 mt-14 space-y-6">
                         <h1 className="text-gray-200 text-4xl">{title}</h1>
-                        <div className="flex flex-col xl:flex-row xl:space-x-6">
-                            {children}
+                        <div>
+                            <AdminCarousel nav={navItems ?? []} />
+                            <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0`}>
+                                {children}
+                            </div>
                         </div>
                     </div>
                 </Protected>
