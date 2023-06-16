@@ -5,45 +5,13 @@ import {fetcher} from "@/data/swr";
 import Button, {TransparentButton} from "@/components/button";
 import {CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChartSimple, faEye, faGear, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faBook, faChartSimple, faEye, faGear, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
 import {MouseEventHandler, useEffect, useState} from "react";
 import {BarLoader} from "react-spinners";
 import ConfirmDialog from "@/components/confirm";
 import Card from "@/components/card";
 import {StatisticCard} from "@/components/statistic_card";
 import {fetchRestrictedApiUrl} from "@/util/api";
-
-type PerformanceGraphStrategy = () => Promise<{ name: string, value: number }[]>;
-const pgs: { [id: string]: { name: string, strategy: PerformanceGraphStrategy } } = {
-    views: {
-        name: "Views",
-        strategy: async () => {
-            const fetchViewsByDay = async (dayRelative: number) => {
-                const from = new Date(Date.now());
-                from.setDate(from.getDate() + dayRelative - 1);
-                const to = new Date(Date.now());
-                to.setDate(to.getDate() + dayRelative);
-                return await fetchRestrictedApiUrl('/api/blog/statistics?strategy=viewsBetween', {
-                    method: "POST",
-                    body: JSON.stringify({ from, to })
-                })
-                    .then(res => res.json())
-                    .then(res => res.result)
-                    .catch(err => {
-                        console.error(err);
-                        return 0;
-                    });
-            }
-
-            return [
-                {name: '-3d', value: await fetchViewsByDay(-3)},
-                {name: '-2d', value: await fetchViewsByDay(-2)},
-                {name: '-1d', value: await fetchViewsByDay(-1)},
-                {name: 'Today', value: await fetchViewsByDay(0)},
-            ];
-        }
-    }
-}
 
 export default function AdminBlog() {
     const {data, isLoading, error} = useSWR<{value: BlogArticle[]}>('/api/blog/posts', fetcher, { refreshInterval: 1000, });
@@ -127,6 +95,38 @@ export default function AdminBlog() {
     )
 }
 
+type PerformanceGraphStrategy = () => Promise<{ name: string, value: number }[]>;
+const pgs: { [id: string]: { name: string, strategy: PerformanceGraphStrategy } } = {
+    views: {
+        name: "Views",
+        strategy: async () => {
+            const fetchViewsByDay = async (dayRelative: number) => {
+                const from = new Date(Date.now());
+                from.setDate(from.getDate() + dayRelative - 1);
+                const to = new Date(Date.now());
+                to.setDate(to.getDate() + dayRelative);
+                return await fetchRestrictedApiUrl('/api/blog/statistics?strategy=viewsBetween', {
+                    method: "POST",
+                    body: JSON.stringify({ from, to })
+                })
+                    .then(res => res.json())
+                    .then(res => res.result)
+                    .catch(err => {
+                        console.error(err);
+                        return 0;
+                    });
+            }
+
+            return [
+                {name: '-3d', value: await fetchViewsByDay(-3)},
+                {name: '-2d', value: await fetchViewsByDay(-2)},
+                {name: '-1d', value: await fetchViewsByDay(-1)},
+                {name: 'Today', value: await fetchViewsByDay(0)},
+            ];
+        }
+    }
+}
+
 function StatsCard() {
     const [graphStrategyIndex, setGraphStrategyIndex] = useState<number>(0);
     const [graphData, setGraphData] = useState<{ name: string, value: number }[]>([]);
@@ -156,6 +156,7 @@ function StatsCard() {
                 <h2 className="text-md text-neutral-500">Information about blog performance</h2>
             </div>
             <div className="flex flex-row space-x-8">
+                <StatisticCard faIcon={faBook} title={"Blogs"} value={`${audience}`} />
                 <StatisticCard faIcon={faChartSimple} title={"All Views"} value={`${allViews}`} />
                 <StatisticCard faIcon={faUser} title={"Audience"} value={`${audience}`} />
             </div>

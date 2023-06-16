@@ -37,6 +37,7 @@ const requireUser = (
             }
         } else {
             res.status(401).json({status: '401', message: 'Unauthorized, no x-z-token, x-z-username headers provided'});
+            return;
         }
         if ((user && await getUserRepository().getUserById(user.userId)) || optionalUserScopes.includes(req.method!!.toLowerCase() as keyof RequireScopesEndpointScopes)) {
             await handler(req, res, user);

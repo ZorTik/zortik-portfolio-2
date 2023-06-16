@@ -25,7 +25,7 @@ export default function PopupAlert() {
         setToggleStates({...toggleStates, [msg]: false});
     }
     return (
-        <>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-fit">
             {Object.entries(toggleStates).map(([msg, shown], index) => (
                 shown ? (
                     <div key={index} className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center`}>
@@ -33,6 +33,6 @@ export default function PopupAlert() {
                     </div>
                 ) : null
             ))}
-        </>
+        </div>
     )
 }

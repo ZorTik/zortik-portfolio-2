@@ -1,13 +1,22 @@
-import {FormHTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, MouseEventHandler, MouseEvent, useState} from "react";
+import {
+    FormHTMLAttributes,
+    InputHTMLAttributes,
+    LabelHTMLAttributes,
+    MouseEventHandler,
+    MouseEvent,
+    useState,
+    ClassAttributes, RefObject
+} from "react";
 import Button, {ButtonProps} from "@/components/button";
 import {BarLoader} from "react-spinners";
 
 export type FormLabelProps = LabelHTMLAttributes<HTMLLabelElement>;
 export type FormInputProps = InputHTMLAttributes<HTMLInputElement>;
 export type FormClientSideSubmitHandler = (e: MouseEvent<HTMLButtonElement>, finishProcess: () => void) => void;
-export type FormProps = FormHTMLAttributes<HTMLFormElement> & {
+export type FormProps = FormHTMLAttributes<HTMLFormElement> & ClassAttributes<HTMLFormElement> & {
     clientSideSubmit?: FormClientSideSubmitHandler,
     clientSideSubmitButtonName?: string,
+    innerRef?: RefObject<HTMLFormElement>,
 }
 
 export function FormLabel(props: FormLabelProps) {
@@ -30,7 +39,15 @@ export default function Form(props: FormProps) {
         props.clientSideSubmit(e, () => setCssInProgress(false));
     }
     return (
-        <form {...props} className={`flex flex-col space-y-3 ${props.className ?? ""}`}>
+        <form
+            {...{
+                ...props,
+                clientSideSubmit: undefined,
+                clientSideSubmitButtonName: undefined,
+            }}
+            ref={props.innerRef}
+            className={`flex flex-col space-y-3 ${props.className ?? ""}`}
+        >
             {props.children}
             {props.clientSideSubmit
                 ? <FormSubmitButton disabled={cssInProgress} onClick={handleClientSideSubmit}>{

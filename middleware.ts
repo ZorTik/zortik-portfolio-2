@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 import {
     TOKEN_COOKIE_NAME,
     USER_COOKIE_NAME,
-    USER_HEADER_NAME,
     USER_NAME_COOKIE_NAME
 } from "@/data/constants";
 import {User} from "@/security/user.types";
@@ -34,7 +33,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(`${nextUrl.origin}/auth/login`);
     }
 
-    headers.set(USER_HEADER_NAME, JSON.stringify(user));
+    //headers.set(USER_HEADER_NAME, JSON.stringify(user));
     const next = NextResponse.next();
     next.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { path: '/', });
     next.cookies.set(TOKEN_COOKIE_NAME, cookies.get(TOKEN_COOKIE_NAME)?.value ?? "", { path: '/', });

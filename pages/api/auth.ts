@@ -16,6 +16,18 @@ export default async function handler(
         res.status(405).json({status: '405', message: 'Method not allowed.'});
         return;
     }
+
+    const rcPassed = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${query.rc}`, {
+        method: 'POST',
+    })
+        .then(res => res.json())
+        .then(res => res.success);
+
+    if (typeof rcPassed !== "boolean" || !rcPassed) {
+        redirectFallback('reCAPTCHA failed.');
+        return;
+    }
+
     const username = body.username;
     const password = body.password;
     if (!username || !password) {

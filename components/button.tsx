@@ -1,6 +1,6 @@
-import {ButtonHTMLAttributes, MouseEventHandler} from "react";
+import {ButtonHTMLAttributes, ClassAttributes, MouseEventHandler} from "react";
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ClassAttributes<HTMLButtonElement> & {
     href?: string,
     target?: string,
     variant?: ButtonVariant,
