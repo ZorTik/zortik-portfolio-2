@@ -6,11 +6,13 @@ import {ScopeTypes} from "@/security/scope.types";
 import Protected from "@/components/protected";
 import {useRouter} from "next/router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHouse} from "@fortawesome/free-solid-svg-icons";
+import {faBook, faHouse, faTicket, faUser} from "@fortawesome/free-solid-svg-icons";
+import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
 export type AdminPathNode = {
     name: string,
     description?: string,
+    icon?: IconProp,
     path: string,
     scopes?: ScopeTypes[],
     children?: AdminPathNode[],
@@ -23,13 +25,13 @@ export type AdminLayoutProps = PropsWithChildren & {
 }
 
 export const defaultAdminNav: AdminPathNode[] = [
-    { name: "Home", description: "A Home page", path: "/", },
-    { name: "Blog", description: "Blogs Management", path: "/blog", scopes: ["admin:blogs:edit"], children: [
+    { icon: faHouse, name: "Home", description: "A Home page", path: "/", },
+    { icon: faBook, name: "Blog", description: "Blogs Management", path: "/blog", scopes: ["admin:blogs:edit"], children: [
             { name: "Create Blog", path: "/blog/edit" },
         ],
     },
-    { name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
-    { name: "Users", description: "Users Management", path: "/users" },
+    { icon: faTicket, name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
+    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read"] },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
@@ -77,7 +79,7 @@ export default function AdminLayout(
                     scopes={findRequiredScopes(path, navItems)}
                     or={<p className="text-white">Restricted Access</p>}
                 >
-                    <div className="px-14 pb-14 mt-14 space-y-6">
+                    <div className="px-14 pb-14 mt-10 space-y-6">
                         <h1 className="text-gray-200 text-4xl">{title}</h1>
                         <div>
                             <AdminCarousel nav={navItems ?? []} />

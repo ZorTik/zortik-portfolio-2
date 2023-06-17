@@ -1,6 +1,7 @@
 import {User} from "@/security/user.types";
 import {defaultUserRepository} from "@/data/user.default";
 import {Credentials} from "@/security/server";
+import {FindManyPageable} from "@/data/prisma";
 
 export interface UserRepository {
     getUserById(userId: string): Promise<User | undefined>;
@@ -11,6 +12,7 @@ export interface UserRepository {
     saveUserCredentials(credentials: Credentials): Promise<void>;
     getUserCredentials(username: string): Promise<Credentials | undefined>;
     getUserCount(): Promise<number>;
+    getUsers(pageable?: FindManyPageable): Promise<User[]>;
 }
 
 let userRepository: UserRepository = defaultUserRepository;

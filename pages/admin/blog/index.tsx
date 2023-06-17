@@ -108,15 +108,15 @@ export default function AdminBlog() {
                                             </Dropdown>
                                             <TransparentButton onClick={(e) => {
                                                 e.preventDefault();
-                                                setDeleteDialogShown(true);
-                                                setActionLatch({ latch: () => handleArticleDelete(e, article) });
-                                            }}><FontAwesomeIcon icon={faTrash} style={{
+                                                window.open(`/blog/${article.id}`, `_blank`);
+                                            }}><FontAwesomeIcon icon={faEye} style={{
                                                 width: "1.25em", height: "1.25em",
                                             }} /></TransparentButton>
                                             <TransparentButton onClick={(e) => {
                                                 e.preventDefault();
-                                                window.open(`/blog/${article.id}`, `_blank`);
-                                            }}><FontAwesomeIcon icon={faEye} style={{
+                                                setDeleteDialogShown(true);
+                                                setActionLatch({ latch: () => handleArticleDelete(e, article) });
+                                            }}><FontAwesomeIcon icon={faTrash} style={{
                                                 width: "1.25em", height: "1.25em",
                                             }} /></TransparentButton>
                                         </>)}

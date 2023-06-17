@@ -40,5 +40,5 @@ export function BigButton(props: ButtonProps) {
 }
 
 export function TransparentButton(props: Omit<ButtonProps, "variant">) {
-    return <Button {...props} variant="none" className={`${props.className} text-gray-400 hover:text-white bg-transparent border-0 p-0 m-0 py-0 px-0 pt-0 pb-0 pl-0 pr-0`} />
+    return <Button {...props} variant="none" className={`${props.className} text-white hover:text-emerald-400 bg-transparent border-0 p-0 m-0 py-0 px-0 pt-0 pb-0 pl-0 pr-0`} />
 }

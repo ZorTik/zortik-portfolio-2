@@ -11,6 +11,7 @@ import {useNotifications} from "@/hooks/notifications";
 import {GetServerSideProps} from "next";
 import {findBlogPost} from "@/data/blog";
 import {prepareJsonRender} from "@/util/json";
+import AdminLayout from "@/components/layout/admin";
 
 export const getServerSideProps: GetServerSideProps = async ({req, res, query}) => {
     const id = parseInt((query ?? {}).id as string);
@@ -46,8 +47,8 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
     }
 
     return (
-        <CenterLayout title={article ? 'Edit Blog' : 'Create Blog'} backHref="/admin/blog">
-            <Form clientSideSubmitButtonName={article ? "Edit" : "Create"} clientSideSubmit={handleBlogSubmit}>
+        <AdminLayout title={article ? 'Edit Blog' : 'Create Blog'} path="/blog/edit">
+            <Form clientSideSubmitButtonName={article ? "Edit" : "Create"} clientSideSubmit={handleBlogSubmit} className="w-full">
                 <FormLabel htmlFor="title">Title</FormLabel>
                 <FormInput id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
                 <FormLabel htmlFor="description">Description</FormLabel>
@@ -57,6 +58,6 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
                     width: "100%",
                 }} />
             </Form>
-        </CenterLayout>
+        </AdminLayout>
     )
 }

@@ -7,31 +7,23 @@ import {useNotifications} from "@/hooks/notifications";
 
 export default function PopupAlert() {
     const {query} = useRouter();
-    const [toggleStates, setToggleStates] = useState<{ [msg: string]: boolean }>({});
-    const {notifications} = useNotifications();
+    const {notifications, pushNotification, removeNotification} = useNotifications();
 
     useEffect(() => {
-        if (query['msg'] && !Object.keys(toggleStates).includes(query['msg'] as string)) {
-            setToggleStates({...toggleStates, [query['msg'] as string]: true});
+        if (query['msg'] && !notifications.includes(query['msg'] as string)) {
+            pushNotification(query['msg'] as string);
         }
-    }, [toggleStates, query]);
-    useEffect(() => {
-        notifications.forEach(notification => {
-            if (!Object.keys(toggleStates).includes(notification)) setToggleStates({...toggleStates, [notification]: true});
-        });
-    }, [toggleStates, notifications]);
+    }, [query]);
 
     const handleCrossClick = (msg: string) => {
-        setToggleStates({...toggleStates, [msg]: false});
+        removeNotification(msg);
     }
     return (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-fit">
-            {Object.entries(toggleStates).map(([msg, shown], index) => (
-                shown ? (
-                    <div key={index} className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center`}>
-                        <p>{query['msg']}</p><Button onClick={() => handleCrossClick(msg)}><FontAwesomeIcon className="text-gray-400" icon={faXmark} width={14} height={14} /></Button>
-                    </div>
-                ) : null
+            {notifications.map((msg, index) => (
+                <div key={index} className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center`}>
+                    <p>{msg}</p><Button onClick={() => handleCrossClick(msg)}><FontAwesomeIcon className="text-gray-400" icon={faXmark} width={14} height={14} /></Button>
+                </div>
             ))}
         </div>
     )

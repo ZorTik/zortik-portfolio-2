@@ -9,7 +9,7 @@ export type ProtectedProps = PropsWithChildren & {
 
 export default function Protected({scopes, children, or}: ProtectedProps) {
     const { user } = useUser();
-    return user != null && scopes.every(scope => user.scopes.includes(scope)) ? (
+    return user != null && (scopes.every(scope => user.scopes.includes(scope)) || user.scopes.includes('admin')) ? (
         <>{children}</>
     ) : or ?? null;
 }

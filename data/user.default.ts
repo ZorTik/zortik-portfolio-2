@@ -1,7 +1,7 @@
 import {UserRepository} from "@/data/user";
 import {User} from "@/security/user.types";
 import {User as PrismaUser, Credentials as PrismaCredentials} from "@prisma/client/index";
-import prismaClient from "@/data/prisma";
+import prismaClient, {FindManyPageable, findPage} from "@/data/prisma";
 import {Credentials} from "@/security/server";
 
 class DefaultUserRepository implements UserRepository {
@@ -54,6 +54,11 @@ class DefaultUserRepository implements UserRepository {
 
     async getUserCount(): Promise<number> {
         return prismaClient.user.count();
+    }
+
+    async getUsers(pageable?: FindManyPageable): Promise<User[]> {
+        const prismaUsers = await findPage<PrismaUser>(prismaClient.user, pageable);
+        return prismaUsers.map(fromPrismaUser) as User[];
     }
 
 }
