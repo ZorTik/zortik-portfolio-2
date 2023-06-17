@@ -3,6 +3,7 @@ import {User} from "@/security/user.types";
 import {User as PrismaUser, Credentials as PrismaCredentials} from "@prisma/client/index";
 import prismaClient, {FindManyPageable, findPage} from "@/data/prisma";
 import {Credentials} from "@/security/server";
+import {ScopeTypes} from "@/security/scope.types";
 
 class DefaultUserRepository implements UserRepository {
     async saveUser(user: User): Promise<User> {
@@ -63,6 +64,16 @@ class DefaultUserRepository implements UserRepository {
 
     async getUsers(pageable?: FindManyPageable): Promise<User[]> {
         const prismaUsers = await findPage<PrismaUser>(prismaClient.user, pageable);
+        return prismaUsers.map(fromPrismaUser) as User[];
+    }
+
+    async getUsersByScope(scope: ScopeTypes): Promise<User[]> {
+        const prismaUsers = await prismaClient.user.findMany({ where: { scopes: { array_contains: [scope] } } });
+        return prismaUsers.map(fromPrismaUser) as User[];
+    }
+
+    async getUsersByQuery(query: string, pageable?: FindManyPageable): Promise<User[]> {
+        const prismaUsers = await findPage<PrismaUser>(prismaClient.user, pageable, { where: { OR: [{ username: { contains: query } }, { user_id: { contains: query } }] } });
         return prismaUsers.map(fromPrismaUser) as User[];
     }
 
