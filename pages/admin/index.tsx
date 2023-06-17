@@ -13,7 +13,7 @@ export default function Admin() {
                     .map((node, i) => (
                         <Card key={i} href={"/admin" + node.path} className="!space-y-1">
                             <p className="text-2xl text-neutral-100">{node.name}</p>
-                            {node.description ? <p className="text-lg text-emerald-600">{node.description}</p> : null}
+                            {node.description ? <p className="text-md text-emerald-600">{node.description}</p> : null}
                         </Card>
                     ))}
             </div>

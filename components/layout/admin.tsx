@@ -60,7 +60,7 @@ function AdminCarousel({nav}: { nav: AdminPathNode[] }) {
         }
         setValue(renderCarousel(pathname, nav).join(" / "));
     }, [nav, pathname]);
-    return <p className="text-neutral-700 mb-3"><FontAwesomeIcon icon={faHouse} /> {value}</p>
+    return <p className="text-neutral-700 mb-3 flex items-center"><FontAwesomeIcon icon={faHouse} width={16} height={16} className="mr-1" /> {value}</p>
 }
 
 export default function AdminLayout(
