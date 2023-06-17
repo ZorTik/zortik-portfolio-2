@@ -13,13 +13,15 @@ const NotificationsContext = createContext<NotificationsContextProp>({
 });
 
 export function NotificationsProvider({children}: PropsWithChildren) {
-    const [notifications, setNotifications] = useState<string[]>([]);
+    const [notifications, setNotifications] = useState<{ [notification: string]: number }>({});
     return <NotificationsContext.Provider value={{
         pushNotification: (notification: string) => {
-            if (!notifications.includes(notification)) setNotifications([...notifications, notification]);
+            if (!Object.keys(notifications).includes(notification)) setNotifications({ ...notifications, [notification]: Date.now() });
         },
-        removeNotification: (notification: string) => setNotifications(notifications.filter(n => n !== notification)),
-        notifications,
+        removeNotification: (notification: string) => setNotifications({ ...notifications, [notification]: 0 }),
+        notifications: Object.entries(notifications)
+            .filter(([_, time]) => Date.now() - time < 5000)
+            .map(([notification, _]) => notification),
     }}>{children}</NotificationsContext.Provider>
 }
 

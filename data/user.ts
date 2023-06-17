@@ -5,6 +5,7 @@ import {FindManyPageable} from "@/data/prisma";
 
 export interface UserRepository {
     getUserById(userId: string): Promise<User | undefined>;
+    deleteUserById(userId: string): Promise<void>;
     getUserByCredentials(credentials: Credentials): Promise<User | undefined>;
     saveUser(user: User): Promise<User>;
     savePrivateKey(userId: string, privateKey: string): Promise<void>;

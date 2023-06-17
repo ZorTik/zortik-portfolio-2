@@ -13,5 +13,5 @@ export function TableBody(props: HTMLAttributes<HTMLTableSectionElement>) {
 }
 
 export function TableBodyRow(props: HTMLAttributes<HTMLTableRowElement>) {
-    return <tr {...props} className={`${props.className} text-white border-b border-b-gray-900`} />
+    return <tr {...props} className={`${props.className} text-white border-b border-b-neutral-900`} />
 }

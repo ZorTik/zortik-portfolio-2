@@ -25,7 +25,7 @@ const strategies: { [name: string]: (req: NextApiRequest, res: NextApiResponse) 
 
 const handler = requireScopesEndpoint(
     {
-        'post': ['admin:blogs:edit'],
+        'post': ['admin:blogs:edit', 'statistics'],
     }, async (req, res) => {
         if (!req.query.strategy) {
             res.status(400).json({ status: '400', message: 'Missing strategy query param' });

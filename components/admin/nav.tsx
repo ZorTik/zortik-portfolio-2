@@ -40,7 +40,7 @@ function NavButton({node, subnode}: {node: AdminPathNode, subnode?: boolean}) {
     </Link>;
     return (
         <Protected scopes={node.scopes ?? []}>
-            <div className="py-1.5">
+            <div className="py-2">
                 {link}
                 {node.children != undefined && node.children.length > 0 ? (
                     <>

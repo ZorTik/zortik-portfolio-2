@@ -56,7 +56,7 @@ const requireScopesEndpoint = (
     return requireUser(async (req, res, user) => {
         const method = req.method!!.toLowerCase() as keyof RequireScopesEndpointScopes;
         const candidateScopes = [ ...(scopes.all ?? []), ...(scopes[method] ?? [])];
-        if ((user && candidateScopes.every(s => user.scopes.includes(s))) || optionalUserScopes.includes(method) || (user && user.scopes.includes('admin'))) {
+        if ((user && candidateScopes.some(s => user.scopes.includes(s))) || optionalUserScopes.includes(method) || (user && user.scopes.includes('admin'))) {
             await handler(req, res, user);
         } else {
             res.status(401).json({status: '401', message: 'Unauthorized, insufficient scopes in provided user.'})

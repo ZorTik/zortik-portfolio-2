@@ -47,7 +47,7 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
     }
 
     return (
-        <AdminLayout title={article ? 'Edit Blog' : 'Create Blog'} path="/blog/edit">
+        <AdminLayout title={article ? 'Edit Article' : 'Create Article'} path="/blog/edit">
             <Form clientSideSubmitButtonName={article ? "Edit" : "Create"} clientSideSubmit={handleBlogSubmit} className="w-full">
                 <FormLabel htmlFor="title">Title</FormLabel>
                 <FormInput id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />

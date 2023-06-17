@@ -15,3 +15,12 @@ body {
 h1, h2 {
   color: var(--color-white);
 }
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

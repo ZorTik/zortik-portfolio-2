@@ -27,11 +27,11 @@ export type AdminLayoutProps = PropsWithChildren & {
 export const defaultAdminNav: AdminPathNode[] = [
     { icon: faHouse, name: "Home", description: "A Home page", path: "/", },
     { icon: faBook, name: "Blog", description: "Blogs Management", path: "/blog", scopes: ["admin:blogs:edit"], children: [
-            { name: "Create Blog", path: "/blog/edit" },
+            { name: "Create Article", path: "/blog/edit" },
         ],
     },
     { icon: faTicket, name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
-    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read"] },
+    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read", "users:write"] },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {

@@ -2,7 +2,7 @@ import {requireScopesEndpoint} from "@/security/api";
 import {getUserRepository} from "@/data/user";
 
 const handler = requireScopesEndpoint(
-    { get: ["users:read"] },
+    { get: ["users:read", "statistics"] },
     async (req, res) => {
         // TODO
         const type = ((req.query.type ?? "count") as string).toLowerCase();

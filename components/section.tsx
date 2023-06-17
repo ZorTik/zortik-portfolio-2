@@ -1,6 +1,6 @@
-import {PropsWithChildren} from "react";
+import {HTMLAttributes, PropsWithChildren} from "react";
 
-export type SectionProps = PropsWithChildren & {
+export type SectionProps = HTMLAttributes<HTMLDivElement> & {
     title: string
 }
 

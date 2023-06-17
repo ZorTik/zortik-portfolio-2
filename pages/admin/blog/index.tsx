@@ -65,8 +65,8 @@ export default function AdminBlog() {
             <Card className="2xl:w-7/12">
                 <div className="flex flex-col space-y-8 h-full">
                     <div>
-                        <h1 className="text-white text-xl">Published Blogs</h1>
-                        <h2 className="text-md text-neutral-500">General blog listing</h2>
+                        <h1 className="text-white text-xl">Published Articles</h1>
+                        <h2 className="text-md text-neutral-500">General article listing</h2>
                     </div>
                     <ConfirmDialog
                         title={"Delete Article?"} shown={deleteDialogShown}
@@ -80,7 +80,7 @@ export default function AdminBlog() {
                         }}
                     ><p>Are you sure you want to delete this article? You wont be able to restore it.</p></ConfirmDialog>
                     <div>
-                        <Button variant="success" href="/admin/blog/edit">Create Blog</Button>
+                        <Button variant="success" href="/admin/blog/edit">Create Article</Button>
                     </div>
                     {isLoading ? <p className="text-white">Loading...</p> : null}
                     {error ? <p className="text-white">Error: {error}</p> : null}
@@ -175,7 +175,7 @@ function StatsCard() {
                 <h1 className="text-white text-xl">Stats</h1>
                 <h2 className="text-md text-neutral-500">Information about blog performance</h2>
             </div>
-            <div className="flex flex-row space-x-8">
+            <div className="flex flex-row flex-wrap gap-8 sm:gap-0 sm:space-x-8">
                 <StatisticCard faIcon={faBook} title={"Blogs"} value={`${articles}`} />
                 <StatisticCard faIcon={faChartSimple} title={"All Views"} value={`${allViews}`} />
                 <StatisticCard faIcon={faUser} title={"Audience"} value={`${audience}`} />

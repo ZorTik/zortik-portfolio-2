@@ -19,6 +19,11 @@ class DefaultUserRepository implements UserRepository {
             .then(fromPrismaUser);
     }
 
+    async deleteUserById(userId: string): Promise<void> {
+        await prismaClient.user.delete({ where: { user_id: userId } });
+        await prismaClient.credentials.delete({ where: { user_id: userId } });
+    }
+
     async savePrivateKey(userId: string, privateKey: string): Promise<void> {
         await prismaClient.privateKey.upsert({
             create: { user_id: userId, key: privateKey },

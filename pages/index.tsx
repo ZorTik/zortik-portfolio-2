@@ -4,6 +4,7 @@ import NotableWorkSection from "@/components/home/notable";
 import MainLayout from "@/components/layout/main";
 import RepositoriesSection from "@/components/home/repositories";
 import {technologies, works} from "@/data/local";
+import ContactSection from "@/components/home/contact";
 
 export default function Home() {
     return (
@@ -12,6 +13,7 @@ export default function Home() {
             <TechnologiesSection technologies={technologies} />
             <NotableWorkSection works={works} />
             <RepositoriesSection />
+            <ContactSection />
         </MainLayout>
     )
 }
