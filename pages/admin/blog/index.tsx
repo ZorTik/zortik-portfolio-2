@@ -20,6 +20,7 @@ import ConfirmDialog from "@/components/confirm";
 import Card from "@/components/card";
 import {StatisticCard} from "@/components/statistic_card";
 import {fetchRestrictedApiUrl} from "@/util/api";
+import Dropdown, {DropdownButton} from "@/components/dropdown";
 
 export default function AdminBlog() {
     const [frozen, setFrozen] = useState<boolean>(false);
@@ -31,7 +32,7 @@ export default function AdminBlog() {
     const {data, isLoading, error} = useSWR<{value: BlogArticle[]}>('/api/blog/posts', (url) => {
         const fetchingPage = page;
         const resolvedData: {value: BlogArticle[]} = data ?? { value: [] };
-        if (fetchingPage != resolvedPage || resolvedPage == -1) {
+        if ((fetchingPage != resolvedPage || resolvedPage == -1) && !frozen) {
             setFrozen(true);
             return fetch(url, {
                 method: "POST",
@@ -100,9 +101,11 @@ export default function AdminBlog() {
                                     <td className="p-5 hidden md:table-cell">{article.description.substring(0, 80)}...</td>
                                     <td className="p-5 flex flex-row justify-center items-center space-x-1 h-[80px]">
                                         {frozen ? <BarLoader color="white" width="50px" /> : (<>
-                                            <TransparentButton><FontAwesomeIcon icon={faGear} style={{
+                                            <Dropdown button={<FontAwesomeIcon icon={faGear} style={{
                                                 width: "1.25em", height: "1.25em",
-                                            }} /></TransparentButton>
+                                            }} />} label={"Settings"}>
+                                                <DropdownButton href={`/admin/blog/edit?id=${article.id}`}>Edit Article</DropdownButton>
+                                            </Dropdown>
                                             <TransparentButton onClick={(e) => {
                                                 e.preventDefault();
                                                 setDeleteDialogShown(true);

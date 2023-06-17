@@ -10,14 +10,15 @@ import {BlogArticle} from "@/components/blog_home/articlecard";
 import {useNotifications} from "@/hooks/notifications";
 import {GetServerSideProps} from "next";
 import {findBlogPost} from "@/data/blog";
+import {prepareJsonRender} from "@/util/json";
 
-export const getServerSideProps: GetServerSideProps = async ({req, res, params}) => {
-    const id = parseInt((params ?? {}).id as string);
+export const getServerSideProps: GetServerSideProps = async ({req, res, query}) => {
+    const id = parseInt((query ?? {}).id as string);
     let article: BlogArticle|null = null;
     if (!isNaN(id)) {
         article = (await findBlogPost(id)).value;
     }
-    return { props: { article }}
+    return { props: { article: prepareJsonRender(article) }}
 }
 
 export default function CreateBlog({article}: { article?: BlogArticle }) {
@@ -26,7 +27,7 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
     const [content, setContent] = useState<string>(article?.content ?? "");
     const {pushNotification} = useNotifications();
 
-    const handleBlogCreate: FormClientSideSubmitHandler = (e, finishProcess) => {
+    const handleBlogSubmit: FormClientSideSubmitHandler = (e, finishProcess) => {
         e.preventDefault();
         if (title.length == 0 || description.length == 0 || content.length == 0) {
             pushNotification("You must fill in all the fields!");
@@ -35,23 +36,22 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
         }
 
         // @ts-ignore
-        const article: BlogArticle = { title, description, content };
-
-        fetchRestrictedApiUrl(`/api/blog`, {
-            method: `post`,
-            body: JSON.stringify(article)
+        const articleToSave: BlogArticle = { title, description, content };
+        fetchRestrictedApiUrl(`/api/blog${article ? `/${article.id}` : ""}`, {
+            method: article ? `put` : `post`,
+            body: JSON.stringify(articleToSave)
         })
-            .then(() => window.open(`/admin/blog?msg=Blog created!`, "_self"))
+            .then(() => window.open(`/admin/blog?msg=Blog ${article ? "edited" : "created"}!`, "_self"))
             .catch(() => pushNotification("Something went wrong!"));
     }
 
     return (
         <CenterLayout title={article ? 'Edit Blog' : 'Create Blog'} backHref="/admin/blog">
-            <Form clientSideSubmitButtonName="Create" clientSideSubmit={handleBlogCreate}>
+            <Form clientSideSubmitButtonName={article ? "Edit" : "Create"} clientSideSubmit={handleBlogSubmit}>
                 <FormLabel htmlFor="title">Title</FormLabel>
-                <FormInput id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
+                <FormInput id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
                 <FormLabel htmlFor="description">Description</FormLabel>
-                <FormInput id="description" name="description" onChange={(e) => setDescription(e.target.value)} required />
+                <FormInput id="description" name="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
                 <FormLabel>Content</FormLabel>
                 <MdEditor language="en-US" theme="dark" modelValue={content} onChange={setContent} style={{
                     width: "100%",

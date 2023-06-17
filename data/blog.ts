@@ -28,6 +28,10 @@ export function findBlogPost(id: number): Promise<Cached<BlogArticle|null>> {
     return cache.get(id, async () => prismaClient.article.findUnique({ where: { id: id } }));
 }
 
+export function saveBlogPost(article: BlogArticle): Promise<BlogArticle> {
+    return prismaClient.article.update({ where: { id: article.id }, data: article });
+}
+
 export async function createBlogPost(article: BlogArticle): Promise<BlogArticle> {
     const created = await prismaClient.article.create({ data: article });
     cache.set(created.id, created);

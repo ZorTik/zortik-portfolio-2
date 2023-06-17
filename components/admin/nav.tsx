@@ -35,22 +35,24 @@ function NavButton({node, subnode}: {node: AdminPathNode, subnode?: boolean}) {
     const modifiedPathName = !pathname.endsWith("/") ? pathname + "/" : pathname;
     const active = modifiedPathName.startsWith(`/admin/${node.path.substring(1)}`) && (node.path !== "/" || modifiedPathName === "/admin/");
     const [subnavShown, setSubnavShown] = useState<boolean>(active);
-    const link = <Link className={`${subnode ? "ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] pl-4 md:pl-8 py-2.5 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>{node.name}</Link>;
+    const link = <Link className={`${subnode ? "ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] pl-4 md:pl-6 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>{node.name}</Link>;
     return (
         <Protected scopes={node.scopes ?? []}>
-            {node.children?.length == 0 || node.children?.length == undefined ? link : (
-                <div>
-                    {link}
-                    <TransparentButton className="m-0 p-0" onClick={() => setSubnavShown(!subnavShown)}>
-                        <FontAwesomeIcon width={10} height={10} className="ml-1" icon={faAngleDown} />
-                    </TransparentButton>
-                    {subnavShown ? (
-                        <div className="animate-fade-in-top-tiny pt-2 flex flex-col">
-                            {node.children?.map((child, i) => <NavButton node={child} key={i} subnode />)}
-                        </div>
-                    ) : null}
-                </div>
-            )}
+            <div className="py-1.5">
+                {link}
+                {node.children != undefined && node.children.length > 0 ? (
+                    <>
+                        <TransparentButton className="m-0 p-0" onClick={() => setSubnavShown(!subnavShown)}>
+                            <FontAwesomeIcon width={10} height={10} className="ml-1" icon={faAngleDown} />
+                        </TransparentButton>
+                        {subnavShown ? (
+                            <div className="animate-fade-in-top-tiny pt-2 flex flex-col">
+                                {node.children?.map((child, i) => <NavButton node={child} key={i} subnode />)}
+                            </div>
+                        ) : null}
+                    </>
+                ) : null}
+            </div>
         </Protected>
     )
 }

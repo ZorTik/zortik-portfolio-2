@@ -10,6 +10,7 @@ import {faHouse} from "@fortawesome/free-solid-svg-icons";
 
 export type AdminPathNode = {
     name: string,
+    description?: string,
     path: string,
     scopes?: ScopeTypes[],
     children?: AdminPathNode[],
@@ -21,13 +22,14 @@ export type AdminLayoutProps = PropsWithChildren & {
     className?: string,
 }
 
-const defaultNav: AdminPathNode[] = [
-    { name: "Home", path: "/", },
-    { name: "Blog", path: "/blog", scopes: ["admin:blogs:edit"], children: [
+export const defaultAdminNav: AdminPathNode[] = [
+    { name: "Home", description: "A Home page", path: "/", },
+    { name: "Blog", description: "Blogs Management", path: "/blog", scopes: ["admin:blogs:edit"], children: [
             { name: "Create Blog", path: "/blog/edit" },
         ],
     },
-    { name: "Users", path: "/users" },
+    { name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
+    { name: "Users", description: "Users Management", path: "/users" },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
@@ -64,7 +66,7 @@ function AdminCarousel({nav}: { nav: AdminPathNode[] }) {
 export default function AdminLayout(
     {title, path, children, nav, className}: AdminLayoutProps
 ) {
-    const navItems = nav ?? defaultNav;
+    const navItems = nav ?? defaultAdminNav;
     return (
         <div className="w-full flex flex-col lg:flex-row">
             <AdminNav className="w-fit" nav={navItems ?? []} />
