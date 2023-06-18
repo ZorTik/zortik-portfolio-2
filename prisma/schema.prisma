@@ -49,3 +49,19 @@ model Credentials {
   username String @unique
   password String
 }
+
+model ChatRoom {
+  id           Int      @id @default(autoincrement())
+  title        String
+  createdAt    DateTime @default(now())
+  creator_id   String
+  participants Json     @default("[]")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  room_id   Int
+  user_id   String
+  content   String
+}

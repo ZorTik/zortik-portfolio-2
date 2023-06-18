@@ -1,7 +1,9 @@
+import {ScopeTypes} from "@/security/scope.types";
+
 export type User = {
     userId: string,
     username: string,
-    scopes: string[],
+    scopes: ScopeTypes[],
     avatar_url?: string,
 }
 

@@ -11,7 +11,7 @@ const handler = requireUser(async (req, res, apiUser) => {
             participants.push(...await getUserRepository().getUsersByQuery(query ?? "", filter));
         } else {
             participants.push(...await getUserRepository().getUsersByScope("admin"));
-            participants.push(...await getUserRepository().getUsersByScope("tickets:write"));
+            participants.push(...await getUserRepository().getUsersByScope("tickets:write:others"));
         }
         res.status(200).json(participants);
     } else {

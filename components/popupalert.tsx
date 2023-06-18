@@ -21,7 +21,7 @@ export default function PopupAlert() {
     return (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-fit">
             {notifications.map((msg, index) => (
-                <div key={index} className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center`}>
+                <div key={index} className={`w-full text-center py-4 text-white animate-fade-in-top flex flex-row justify-center z-50`}>
                     <p>{msg}</p><Button onClick={() => handleCrossClick(msg)}><FontAwesomeIcon className="text-gray-400" icon={faXmark} width={14} height={14} /></Button>
                 </div>
             ))}

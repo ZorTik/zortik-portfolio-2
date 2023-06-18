@@ -4,10 +4,12 @@ export type CardProps = PropsWithChildren & {
     className?: string,
     href?: string,
     useBlank?: boolean,
+    onClick?: MouseEventHandler<HTMLDivElement>,
 }
 
-export default function Card({className, children, href, useBlank}: CardProps) {
+export default function Card({className, children, href, useBlank, onClick}: CardProps) {
     const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+        onClick?.(e);
         if (!href) return;
         e.preventDefault();
         window.open(href, useBlank && useBlank ? "_blank" : "_self");

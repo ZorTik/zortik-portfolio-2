@@ -15,6 +15,7 @@ export interface UserRepository {
     getUserCredentials(username: string): Promise<Credentials | undefined>;
     getUserCount(): Promise<number>;
     getUsers(pageable?: FindManyPageable): Promise<User[]>;
+    getUsersByIds(userIds: string[]): Promise<User[]>;
     getUsersByScope(scope: ScopeTypes): Promise<User[]>;
     getUsersByQuery(query: string, pageable?: FindManyPageable): Promise<User[]>;
 }

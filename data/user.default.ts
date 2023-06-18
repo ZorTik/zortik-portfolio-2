@@ -67,6 +67,11 @@ class DefaultUserRepository implements UserRepository {
         return prismaUsers.map(fromPrismaUser) as User[];
     }
 
+    async getUsersByIds(userIds: string[]): Promise<User[]> {
+        const prismaUsers = await prismaClient.user.findMany({ where: { user_id: { in: userIds } } });
+        return prismaUsers.map(fromPrismaUser) as User[];
+    }
+
     async getUsersByScope(scope: ScopeTypes): Promise<User[]> {
         const prismaUsers = await prismaClient.user.findMany({ where: { scopes: { array_contains: [scope] } } });
         return prismaUsers.map(fromPrismaUser) as User[];
@@ -82,7 +87,7 @@ class DefaultUserRepository implements UserRepository {
 const defaultUserRepository: UserRepository = new DefaultUserRepository();
 
 function fromPrismaUser(prismaUser: PrismaUser|null): User|undefined {
-    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, scopes: prismaUser.scopes as string[], avatar_url: prismaUser.avatar_url || undefined } : undefined;
+    return prismaUser != null ? { userId: prismaUser.user_id, username: prismaUser.username, scopes: prismaUser.scopes as ScopeTypes[], avatar_url: prismaUser.avatar_url || undefined } : undefined;
 }
 
 function toPrismaUser({userId, username, scopes, avatar_url}: User): PrismaUser {

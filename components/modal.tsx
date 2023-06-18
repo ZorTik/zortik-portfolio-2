@@ -4,12 +4,13 @@ import {PropsWithChildren} from "react";
 export type ModalProps = PropsWithChildren & {
     title: string,
     shown: boolean,
+    className?: string,
 }
 
-export function Modal({title, children, shown}: ModalProps) {
+export function Modal({title, children, shown, className}: ModalProps) {
     return shown ? (
-        <div className="absolute w-full h-[100vh] top-0 left-0 bg-black/70 z-50">
-            <div className="absolute -translate-x-1/2 -translate-y-1/2 top-[35vh] left-1/2">
+        <div className="absolute w-full h-[100vh] top-0 left-0 bg-black/70 z-40">
+            <div className={`${className} absolute -translate-x-1/2 -translate-y-1/2 top-[35vh] left-1/2`}>
                 <h1>{title}</h1>
                 {children}
             </div>

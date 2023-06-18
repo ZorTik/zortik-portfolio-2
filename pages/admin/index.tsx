@@ -6,7 +6,7 @@ export default function Admin() {
     return (
         <AdminLayout path="/" title={'Home'}>
             <div>
-                <h2 className="my-4 text-neutral-300 text-lg">Please select category</h2>
+                <h2 className="my-4 text-neutral-300 text-lg">Please select category:</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 w-full">
                     {defaultAdminNav
                         .filter(node => node.path !== "/")
