@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import {
+    AUTH_CALLBACK_URL_COOKIE_NAME,
     TOKEN_COOKIE_NAME,
     USER_COOKIE_NAME,
     USER_NAME_COOKIE_NAME
@@ -24,13 +25,19 @@ export async function middleware(request: NextRequest) {
     if (user && pathname.startsWith('/auth')) {
         return NextResponse.redirect(`${nextUrl.origin}/admin`);
     } else if (!user && pathname.startsWith('/auth')) {
-        return NextResponse.next();
+        const next = NextResponse.next();
+        if (nextUrl.searchParams.has('callback_url')) {
+            next.cookies.set(AUTH_CALLBACK_URL_COOKIE_NAME, nextUrl.searchParams.get('callback_url') ?? "", { path: '/', });
+        } else {
+            next.cookies.delete(AUTH_CALLBACK_URL_COOKIE_NAME);
+        }
+        return next;
     }
 
     if (!user && nextUrl.pathname.startsWith(`${nextUrl.origin}/api`)) {
         return NextResponse.json({status: '401', message: 'Unauthorized'}, {status: 401});
     } else if (!user && restrictedPaths.some(p => pathname.startsWith(p))) {
-        return NextResponse.redirect(`${nextUrl.origin}/auth/login`);
+        return NextResponse.redirect(`${nextUrl.origin}/auth/login?callback_url=${pathname}`);
     }
 
     //headers.set(USER_HEADER_NAME, JSON.stringify(user));

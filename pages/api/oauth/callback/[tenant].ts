@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {getUserPrivateKey, getUserProvider, getUserTenant} from "@/security/user";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
-import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
+import {AUTH_CALLBACK_URL_COOKIE_NAME, TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 import absoluteUrl from "next-absolute-url";
 import {User} from "@/security/user.types";
 
@@ -12,7 +12,8 @@ export default async function handler(
 ) {
     const {query} = req;
     const tenantId = query.tenant as string;
-    const fallbackUrl = query.fallback_url ?? '/auth/login';
+    const callbackUrl = req.cookies[AUTH_CALLBACK_URL_COOKIE_NAME];
+    const fallbackUrl = (query.fallback_url ?? '/auth/login') + (callbackUrl ? `?callback_url=${callbackUrl}` : '');
     const tenant = getUserTenant(tenantId);
 
     const fallback = (err: Error|string) => {
@@ -46,5 +47,5 @@ export default async function handler(
         serialize(TOKEN_COOKIE_NAME, token, { httpOnly: true, path: '/', }),
         serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: true, path: '/', })
     ]);
-    res.redirect(`/admin?msg=Logged in as ${user.username}`);
+    res.redirect(`${callbackUrl ?? "/admin"}?msg=Logged in as ${user.username}`);
 }

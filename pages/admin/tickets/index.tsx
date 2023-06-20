@@ -131,7 +131,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         e.preventDefault();
         const text = message;
         const room = chat;
-        if (!text || !room || user == null || frozen) return;
+        if (!text || !room || user == null || frozen || chat?.state === "CLOSED") return;
         setMessage("");
         setFrozen(true);
         await onMessageInput({ room_id: room.id, user_id: user.userId, content: text, }, chat);
@@ -158,13 +158,19 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
                 </div>
             </div>
             <form className="flex flex-row mt-4 w-full space-x-4" onSubmit={handleSubmitMessage}>
-                <FormInput
-                    placeholder="Write a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="!border-0 !bg-black rounded-2xl p-6 h-full w-full !mb-0"
-                />
-                <Button variant="success" className="w-[100px]"><FontAwesomeIcon icon={faPlus} /></Button>
+                {chat?.state !== "CLOSED" ? (
+                    <>
+                        <FormInput
+                            placeholder="Write a message..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="!border-0 !bg-black rounded-2xl p-6 h-full w-full !mb-0"
+                        />
+                        <Button variant="success" className="w-[100px]"><FontAwesomeIcon icon={faPlus} /></Button>
+                    </>
+                ) : (
+                    <p className="text-neutral-600 h-fit mt-auto mb-auto">This conversation is closed.</p>
+                )}
             </form>
         </div>
     )
@@ -200,7 +206,7 @@ function ChatMessageComponent({message, participants}: { message: ChatMessage, p
                 <Image src={author.avatar_url} alt={author.username} width={32} height={32} className="rounded w-8 h-8" />
             ) : <FontAwesomeIcon icon={faUser} className="w-8 h-8 text-neutral-400" /> }
             <div className="flex-1">
-                <p className="text-neutral-300 w-full flex">{author?.username ?? "Unknown user"}&nbsp;
+                <p className="text-neutral-300 w-full flex">{author?.username ?? "Deleted user"}&nbsp;
                     <span className="text-neutral-800 ml-auto">{time}</span>
                 </p>
                 <p className="text-neutral-400">{message.content}</p>
@@ -224,7 +230,7 @@ export default function Tickets() {
         if (chat) {
             fetchRestrictedApiUrl(`/api/chat/${chat!!.id}/participants`)
                 .then(res => res.json())
-                .then(data => setParticipants(data));
+                .then(data => setParticipants(data.filter((p: any) => p != null)));
             setLoaded(true);
         } else {
             setParticipants([]);
@@ -301,7 +307,9 @@ export default function Tickets() {
                     scrollable
                 >
                     <div className="flex flex-col items-center w-full space-y-2">
-                        {roomsSWR.data ? (roomsSWR.data as ChatRoom[]).map((itChat, key) => (
+                        {roomsSWR.data ? (roomsSWR.data as ChatRoom[])
+                            .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+                            .map((itChat, key) => (
                             <Card
                                 key={key}
                                 href="#"
