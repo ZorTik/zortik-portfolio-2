@@ -1,4 +1,5 @@
 import {MouseEventHandler, PropsWithChildren} from "react";
+import {useRouter} from "next/router";
 
 export type CardProps = PropsWithChildren & {
     className?: string,
@@ -8,11 +9,16 @@ export type CardProps = PropsWithChildren & {
 }
 
 export default function Card({className, children, href, useBlank, onClick}: CardProps) {
-    const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    const { push } = useRouter();
+    const handleClick: MouseEventHandler<HTMLDivElement> = async (e) => {
         onClick?.(e);
         if (!href) return;
         e.preventDefault();
-        window.open(href, useBlank && useBlank ? "_blank" : "_self");
+        if (!useBlank) {
+            await push(href);
+        } else {
+            window.open(href, "_blank");
+        }
     }
     return <div onClick={handleClick} className={`${className ?? ""} p-8 border border-solid border-zinc-900 rounded-2xl space-y-8 flex flex-col ${href ? "hover:bg-black" : ""}`} role={href ? "button" : "none"}>{children}</div>
 }

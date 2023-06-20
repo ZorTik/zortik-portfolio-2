@@ -103,5 +103,7 @@ function toPrismaCredentials(credentials: Credentials): PrismaCredentials {
 }
 
 export {
-    defaultUserRepository
+    defaultUserRepository,
+    fromPrismaUser,
+    toPrismaUser,
 }

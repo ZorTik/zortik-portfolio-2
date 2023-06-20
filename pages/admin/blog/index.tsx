@@ -29,7 +29,7 @@ export default function AdminBlog() {
     const [resolvedPage, setResolvedPage] = useState<number>(-1);
     const [page, setPage] = useState<number>(0);
     const [maxPage, setMaxPage] = useState<number>(0);
-    const {data, isLoading, error} = useSWR<{value: BlogArticle[]}>('/api/blog/posts', (url) => {
+    const {data, isLoading, error, mutate} = useSWR<{value: BlogArticle[]}>('/api/blog/posts', (url) => {
         const fetchingPage = page;
         const resolvedData: {value: BlogArticle[]} = data ?? { value: [] };
         if ((fetchingPage != resolvedPage || resolvedPage == -1) && !frozen) {
@@ -57,7 +57,9 @@ export default function AdminBlog() {
     const handleArticleDelete = (e: any, article: BlogArticle) => {
         if (frozen) return;
         setFrozen(true);
-        fetchRestrictedApiUrl(`/api/blog/${article.id}`, { method: "DELETE", }).finally(() => setFrozen(false));
+        fetchRestrictedApiUrl(`/api/blog/${article.id}`, { method: "DELETE", })
+            .then(() => mutate())
+            .finally(() => setFrozen(false));
     }
 
     return (
@@ -99,7 +101,7 @@ export default function AdminBlog() {
                                     <td className="p-5 text-orange-500 hidden sm:table-cell">{article.id}</td>
                                     <td className="p-5">{article.title}</td>
                                     <td className="p-5 hidden md:table-cell">{article.description.substring(0, 80)}...</td>
-                                    <td className="p-5 flex flex-row justify-center items-center space-x-1 h-[80px]">
+                                    <td className="p-5 flex flex-row justify-center items-center space-x-2 h-[80px]">
                                         {frozen ? <BarLoader color="white" width="50px" /> : (<>
                                             <Dropdown button={<FontAwesomeIcon icon={faGear} style={{
                                                 width: "1.25em", height: "1.25em",

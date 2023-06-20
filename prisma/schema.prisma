@@ -51,17 +51,23 @@ model Credentials {
 }
 
 model ChatRoom {
-  id           Int      @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   title        String
-  createdAt    DateTime @default(now())
+  created_at   DateTime      @default(now())
   creator_id   String
-  participants Json     @default("[]")
+  participants Json          @default("[]")
+  state        ChatRoomState @default(OPEN)
 }
 
 model ChatMessage {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  room_id   Int
-  user_id   String
-  content   String
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  room_id    Int
+  user_id    String
+  content    String
+}
+
+enum ChatRoomState {
+  OPEN
+  CLOSED
 }

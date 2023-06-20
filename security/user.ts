@@ -5,8 +5,9 @@ import {getUserRepository, UserRepository} from "@/data/user";
 import {randomBytes, randomUUID} from "crypto";
 import {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/data/prisma";
-import {allScopes, defaultScopes} from "@/security/scope";
+import {allScopes, defaultScopes, hasScopeAccess} from "@/security/scope";
 import GitHubUserTenant from "@/security/tenant/github";
+import {ChatRoom} from "@/data/chat.types";
 
 export type TenantRequestContext = {req: NextApiRequest, res: NextApiResponse, getCallbackUrl: (tenant: string) => string};
 
@@ -88,4 +89,8 @@ export async function generateUser({ userId, username }: UserGenerationRequireme
 
 export function generateUserId() {
     return randomUUID();
+}
+
+export function hasChatAccess(user: User, chat: ChatRoom): boolean {
+    return hasScopeAccess(user, "tickets:write:others") || chat.creator_id === user.userId || chat.participants.includes(user.userId);
 }
