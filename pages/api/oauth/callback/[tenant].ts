@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
 import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 import absoluteUrl from "next-absolute-url";
+import {User} from "@/security/user.types";
 
 export default async function handler(
     req: NextApiRequest,
@@ -25,12 +26,19 @@ export default async function handler(
         fallback('Code not found');
         return;
     }
-    const user = await tenant.authorize(query.code as string, getUserProvider(tenantId), {
-        req, res,
-        getCallbackUrl: (tenant: string) => `${absoluteUrl(req).origin}/api/oauth/callback/${tenant}`
-    });
-    if (!user) {
-        fallback('User not found or unauthorized access.');
+    let user: User|undefined = undefined;
+    try {
+        user = await tenant.authorize(query.code as string, getUserProvider(tenantId), {
+            req, res,
+            getCallbackUrl: (tenant: string) => `${absoluteUrl(req).origin}/api/oauth/callback/${tenant}`
+        });
+        if (!user) {
+            fallback('User not found or unauthorized access.');
+            return;
+        }
+    } catch(e) {
+        console.error(e);
+        fallback('Something went wrong!');
         return;
     }
     const token = jwt.sign({ user_id: user.userId }, (await getUserPrivateKey(user.userId, {generate: true}))!!, { expiresIn: '1h' });

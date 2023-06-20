@@ -24,7 +24,7 @@ export default function Dropdown({button, label, className, children, arrowClass
     }, [open, id, setDropdownShown]);
     return (
         <div className="relative">
-            <Button variant={variant} onClick={() => setOpen(!open)} className={`${className} flex border-0`}>{button} <FontAwesomeIcon width={10} height={10} className={`${arrowClassName} translate-y-1 ml-2`} icon={faAngleDown} /></Button>
+            <Button variant={variant} onClick={() => setOpen(!open)} className={`${className} flex items-center border-0`}>{button} <FontAwesomeIcon width={10} height={10} className={`${arrowClassName} ml-2`} icon={faAngleDown} /></Button>
             <div id={id} className={`z-20 absolute w-[200%] -left-1/2 top-[3.2em] ${open ? "block" : "hidden"} animate-fade-in-top-tiny rounded-md bg-slate-100 text-black`}>
                 <div className="px-2 py-2"><p className="text-[14px] text-slate-500">{label}</p></div>
                 <div className="pb-1">{children}</div>

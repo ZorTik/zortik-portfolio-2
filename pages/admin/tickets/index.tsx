@@ -31,7 +31,7 @@ type ChatComponentProps = {
     chat?: ChatRoom,
     participants: User[],
     messages: ChatMessage[],
-    onMessageInput: (message: ChatMessage) => Promise<void>,
+    onMessageInput: (message: ChatMessage, chat: ChatRoom) => Promise<void>,
 }
 
 function CreateChatDropdown({markPending}: { markPending: () => void }) {
@@ -134,7 +134,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         if (!text || !room || user == null || frozen) return;
         setMessage("");
         setFrozen(true);
-        await onMessageInput({ room_id: room.id, user_id: user.userId, content: text, });
+        await onMessageInput({ room_id: room.id, user_id: user.userId, content: text, }, chat);
         scrollBottom();
         setFrozen(false);
     }
@@ -142,7 +142,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setTimeout(() => scrollBottom(), 500);
     }, [chat, messages, participants]);
     return (
-        <div className="w-6/12 h-[calc(68vh-74px)] lg:h-[68vh]">
+        <div className="w-full lg:w-6/12 h-[calc(68vh-74px)] lg:h-[68vh]">
             <div className="w-full h-full bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
@@ -211,13 +211,15 @@ function ChatMessageComponent({message, participants}: { message: ChatMessage, p
 
 export default function Tickets() {
     const [pendingUpdate, setPendingUpdate] = useState<boolean>(true);
-    const roomsSWR = useApiSWR<ChatRoom[]>('/api/chats/for/user', {}, { refreshInterval: 3000 }, () => setPendingUpdate(false));
+    const [fetchClosed, setFetchClosed] = useState<boolean>(false);
+    const roomsSWR = useApiSWR<ChatRoom[]>(`/api/chats/for/user?includeClosed=${fetchClosed ? "true" : "false"}`, {}, { refreshInterval: 3000 }, () => setPendingUpdate(false));
     const [chat, setChat] = useState<ChatRoom|undefined>();
     const [participants, setParticipants] = useState<User[]>([]);
     const [roomsLoaded, setRoomsLoaded] = useState<boolean>(false);
     const [loaded, setLoaded] = useState<boolean>(false);
     const messagesSWR = useApiSWR<ChatMessage[]>(`/api/chat/${chat?.id}/messages`, {}, { refreshInterval: 500, }, undefined, () => chat != undefined);
     const {user} = useUser();
+    const {pushNotification} = useNotifications();
     useEffect(() => {
         if (chat) {
             fetchRestrictedApiUrl(`/api/chat/${chat!!.id}/participants`)
@@ -229,34 +231,73 @@ export default function Tickets() {
             setLoaded(false);
         }
     }, [chat]);
-    const handleChatOpen = (e?: MouseEvent<HTMLDivElement>, chat?: ChatRoom) => {
+    const handleChatSelect = (e?: MouseEvent<HTMLDivElement>, chat?: ChatRoom) => {
         e?.preventDefault();
         setChat(chat);
     }
-    const handleMessageInput = async (message: ChatMessage) => {
-        await fetchRestrictedApiUrl(`/api/chat/${message.room_id}/messages`, {
+    const handleChatClose = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom) => {
+        e.preventDefault();
+        if (!chat) return;
+        await fetchRestrictedApiUrl(`/api/chat/${chat.id}`, {
             method: "PATCH",
+            body: JSON.stringify({ state: "CLOSED" }),
+        });
+        handleChatSelect(undefined, undefined);
+        pushNotification("Chat has been closed");
+    }
+    const handleChatReopen = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom) => {
+        e.preventDefault();
+        if (!chat) return;
+        await fetchRestrictedApiUrl(`/api/chat/${chat.id}`, {
+            method: "PATCH",
+            body: JSON.stringify({ state: "OPEN" }),
+        });
+        handleChatSelect(undefined, undefined);
+        pushNotification("Chat has been reopened");
+    }
+    const handleMessageInput = async (message: ChatMessage, messageChatRoom: ChatRoom) => {
+        if (messageChatRoom.state === "CLOSED") {
+            pushNotification("This chat is closed");
+            return;
+        }
+        await fetchRestrictedApiUrl(`/api/chat/${message.room_id}/messages`, {
+            method: "POST",
             body: JSON.stringify([message]),
         });
         await messagesSWR.mutate((data) => [...data ?? [], message], {
             revalidate: true, populateCache: true,
         });
     }
+    const handleFetchClosed = async (e: MouseEvent<HTMLButtonElement>, fetchClosed: boolean) => {
+        e.preventDefault();
+        handleChatSelect(undefined, undefined);
+        setFetchClosed(fetchClosed);
+        await roomsSWR.mutate(undefined, { revalidate: true, populateCache: true, });
+    }
     useEffect(() => {
         if (roomsLoaded) return;
         if (roomsSWR.data && roomsSWR.data.length > 0) {
-            handleChatOpen(undefined, roomsSWR.data[0]);
+            handleChatSelect(undefined, roomsSWR.data[0]);
             setRoomsLoaded(true);
         }
     }, [roomsLoaded, roomsSWR.data]);
     return (
         <AdminLayout title={"Tickets"} path={"/tickets"}>
-            <div className="w-full flex">
+            <div className={`w-full flex !flex-col lg:!flex-row pb-8 lg:pb-0`}>
                 <AdminCard
                     title="Conversations"
                     subtitle="Your open chats with me"
-                    className="w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
-                    head={<CreateChatDropdown markPending={() => setPendingUpdate(true)} />}
+                    className="w-full !px-0 lg:!p-8 lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
+                    head={(
+                        <div className="flex w-full justify-between">
+                            <CreateChatDropdown markPending={() => setPendingUpdate(true)} />
+                            <Dropdown button={<FontAwesomeIcon icon={faGear} />} label={"Select option"}>
+                                <DropdownButton onClick={(e) => handleFetchClosed(e, !fetchClosed)}>
+                                    {fetchClosed ? "Hide closed" : "Show closed"}
+                                </DropdownButton>
+                            </Dropdown>
+                        </div>
+                    )}
                     scrollable
                 >
                     <div className="flex flex-col items-center w-full space-y-2">
@@ -265,9 +306,12 @@ export default function Tickets() {
                                 key={key}
                                 href="#"
                                 className={`animate-fade-in-top w-full ${chat?.id === itChat.id ? "!bg-black" : ""}`}
-                                onClick={(e) => handleChatOpen(e, chat?.id === itChat.id ? undefined : itChat)}
+                                onClick={(e) => handleChatSelect(e, chat?.id === itChat.id ? undefined : itChat)}
                             >
-                                <h1 className="text-white">{itChat.title}</h1>
+                                <div className="flex items-center space-x-2">
+                                    <h1 className="text-white">{itChat.title}</h1>
+                                    { itChat?.state === "CLOSED" ? <Badge>Closed</Badge> : null }
+                                </div>
                             </Card>
                         )) : null}
                         {pendingUpdate ? <BarLoader color="white" width="50%" /> : null}
@@ -277,7 +321,7 @@ export default function Tickets() {
                 <AdminCard
                     title="Chat Participants"
                     subtitle="People that are involved in the current conversation"
-                    className="w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny flex flex-col">
+                    className="w-full lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny flex flex-col">
                     {participants ? participants.map((participant, key) => (
                         <div className="flex space-x-2 items-center" key={key}>
                             {participant.avatar_url
@@ -290,7 +334,11 @@ export default function Tickets() {
                     <div className="w-fit ml-auto mt-auto">
                         {chat && user && hasScopeAccess(user, "tickets:write:others") ? (
                             <Dropdown button={<TransparentButton className="hover:!text-white"><FontAwesomeIcon icon={faGear} /></TransparentButton>} label={"Chat Actions"}>
-                                <DropdownButton>Close Chat</DropdownButton>
+                                {chat.state === "OPEN" ? (
+                                    <DropdownButton onClick={(e) => handleChatClose(e, chat)}>Close Chat</DropdownButton>
+                                ) : (
+                                    <DropdownButton onClick={(e) => handleChatReopen(e, chat)}>Reopen Chat</DropdownButton>
+                                )}
                             </Dropdown>
                         ) : null}
                     </div>

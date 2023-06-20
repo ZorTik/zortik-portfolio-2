@@ -15,9 +15,15 @@ const handler = requireUser(async (req, res, apiUser) => {
         return;
     }
     const method = req.method?.toLowerCase();
+
+    if (method !== "get" && room.state === "CLOSED") {
+        res.status(403).json({ status: '403', message: 'Chat is closed' });
+        return;
+    }
+
     if (method === "get") {
         res.status(200).json(await prisma.chatMessage.findMany({ where: { room_id: id }, orderBy: { created_at: 'asc' } }));
-    } else if (method === "patch") {
+    } else if (method === "post") {
         const messages = (JSON.parse(req.body) as ChatMessage[]);
         if (messages.some(message => message.content === undefined
             || message.user_id !== user.userId

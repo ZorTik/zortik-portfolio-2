@@ -8,7 +8,7 @@ const fetcher = (init?: RequestInit, onFetch?: (data: any) => void) => (url: str
         return data;
     });
 
-export function useApiSWR<T>(url: string, init?: RequestInit, config?: SWRConfiguration<T>, onFetch?: (data: T) => void, condition?: () => boolean) {
+export function useApiSWR<T>(url: string|(() => string), init?: RequestInit, config?: SWRConfiguration<T>, onFetch?: (data: T) => void, condition?: () => boolean) {
     const shouldFetch = condition ? condition() : true;
     return useSWR<T>(() => shouldFetch ? url : null, fetcher(init, onFetch), config);
 }
