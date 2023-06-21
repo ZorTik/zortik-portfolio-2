@@ -1,35 +1,32 @@
 import MainLayout from "@/components/layout/main";
-import {findBlogPost} from "@/data/blog";
-import {GetServerSidePropsContext} from "next";
 import {BlogArticle} from "@/components/blog_home/articlecard";
-import {prepareJsonRender} from "@/util/json";
 import Button from "@/components/button";
-import {MouseEventHandler, useEffect, useState} from "react";
-import {useRouter} from "next/router";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {MouseEventHandler} from "react";
 import {MdPreview} from "md-editor-rt";
 
 import "md-editor-rt/lib/preview.css"
+import {GetServerSidePropsContext} from "next";
+import {getCookie} from "cookies-next";
+import {USER_NAME_COOKIE_NAME} from "@/data/constants";
+import {handleGetArticle} from "@/pages/api/blog/[id]";
+import {prepareJsonRender} from "@/util/json";
 
-export default function BlogArticlePage() {
-    const [article, setArticle] = useState<BlogArticle|undefined>(undefined);
-    const [fetching, setFetching] = useState<boolean>(true);
-    const {query} = useRouter();
+export async function getServerSideProps({query, req, res}: GetServerSidePropsContext) {
+    const id = Number(query.id);
+    if (isNaN(id)) return { notFound: true };
+
+    const userId = getCookie(USER_NAME_COOKIE_NAME, { req, res }) || undefined;
+    return { props: { article: prepareJsonRender(await handleGetArticle(id, userId as string|undefined, true)) } }
+}
+
+export default function BlogArticlePage({article}: { article?: BlogArticle }) {
     const handleBackClick: MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
         window.open("/blog", "_self");
     }
 
-    useEffect(() => {
-        setFetching(true)
-        fetchRestrictedApiUrl(`/api/blog/${query.id}?statisticsEnabled=true`, { method: 'GET' })
-            .then(res => res.json())
-            .then(res => setArticle(res))
-            .finally(() => setFetching(false));
-    }, [query]);
-
     return (
-        <MainLayout className="flex flex-col items-center" {...{title: article ? article.title : (fetching ? "" : "Article Not Found :(")}}>
+        <MainLayout className="flex flex-col items-center" {...{title: article ? article.title : "Article Not Found :("}}>
             <p className="text-neutral-800">By ZorTik | {new Date(Date.parse(article?.createdAt as any)).toLocaleDateString()}</p>
             {article ? (
                 <article className="w-full lg:w-auto lg:min-w-[800px]">
