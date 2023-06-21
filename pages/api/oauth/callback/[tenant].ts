@@ -47,5 +47,5 @@ export default async function handler(
         serialize(TOKEN_COOKIE_NAME, token, { httpOnly: true, path: '/', }),
         serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: true, path: '/', })
     ]);
-    res.redirect(302, `${callbackUrl ?? "/admin"}?msg=Logged in as ${user.username}`);
+    res.redirect(308, `${callbackUrl ?? "/admin"}?msg=Logged in as ${user.username}`);
 }
