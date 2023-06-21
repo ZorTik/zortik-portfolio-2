@@ -35,7 +35,7 @@ export default function MainLayout(
             <DefaultHead />
             <LayoutWrapper className={`${interLight.className} min-h-screen`}>
                 <Navbar links={links} >
-                    {user ? <NavbarLink href={"/admin"}>Panel</NavbarLink> : <NavbarLink href={"/auth/login"}>Login</NavbarLink>}
+                    {user ? <NavbarLink href={"/admin"} programmatically>Panel</NavbarLink> : <NavbarLink href={"/auth/login"} programmatically>Login</NavbarLink>}
                 </Navbar>
                 <LoadingIndicator />
                 <PopupAlert />

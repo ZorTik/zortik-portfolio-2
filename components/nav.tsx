@@ -1,4 +1,4 @@
-import {PropsWithChildren, useState} from "react";
+import {MouseEventHandler, PropsWithChildren, useState} from "react";
 import Link, {LinkProps} from "next/link";
 import {useRouter} from "next/router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -7,11 +7,22 @@ import {faBars} from "@fortawesome/free-solid-svg-icons";
 export type NavbarLinkMeta = string;
 
 export type NavbarProps = PropsWithChildren & {
-    links: { [name: string]: NavbarLinkMeta }
+    links: { [name: string]: NavbarLinkMeta },
 };
 
-export function NavbarLink(props: LinkProps & PropsWithChildren & { active?: boolean }) {
-    return <Link {...{...props, active: undefined }} className={`text-lg hover:text-emerald-500 ${(props.active ?? false) ? `text-emerald-400` : `text-white`}`}>{props.children}</Link>
+export function NavbarLink(props: LinkProps & PropsWithChildren & { active?: boolean, target?: string, programmatically?: boolean }) {
+    const handleNavbarClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
+        e.preventDefault();
+        window.open(props.href as string, props.target ?? "_self");
+    }
+    return (
+        <Link {...{...props, active: undefined, programmatically: undefined }}
+              onClick={props.programmatically ? handleNavbarClick : undefined}
+              className={`text-lg hover:text-emerald-500 ${(props.active ?? false) ? `text-emerald-400` : `text-white`}`}
+        >
+            {props.children}
+        </Link>
+    )
 }
 
 export default function Navbar({children, links}: NavbarProps) {
