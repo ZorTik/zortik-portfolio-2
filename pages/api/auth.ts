@@ -1,16 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {generateCode} from "@/security/server";
 import {generateUserId} from "@/security/user";
+import {AUTH_CALLBACK_URL_COOKIE_NAME} from "@/data/constants";
 
 // Authentication form handler for /auth/** routes.
 export default async function handler(
-    {method, body, query}: NextApiRequest,
+    {method, body, query, cookies}: NextApiRequest,
     res: NextApiResponse
 ) {
     const fallback = query.fallback_url ?? '/auth/login';
     const redirectFallback = (err: Error|string) => {
         const errorMessage = typeof err === "string" ? err : ((err as Error).message);
-        res.redirect(`${fallback}?msg=${errorMessage}`);
+        res.redirect(`${fallback}?msg=${errorMessage}${cookies[AUTH_CALLBACK_URL_COOKIE_NAME] ? `&callback_url=${cookies[AUTH_CALLBACK_URL_COOKIE_NAME]}` : ''}`);
     }
     if (!method || method.toLowerCase() !== "post") {
         res.status(405).json({status: '405', message: 'Method not allowed.'});
