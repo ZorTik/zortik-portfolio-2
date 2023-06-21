@@ -76,7 +76,7 @@ export async function generateUser({ userId, username }: UserGenerationRequireme
     let user = await userRepo.getUserById(userId);
     if (user) throw new Error(`User ${userId} already exists.`);
     user = {
-        userId, username, scopes: userCount > 0 ? defaultScopes() : allScopes(), // First user is admin
+        userId, username, scopes: userCount > 0 ? defaultScopes() : ["admin"], // First user is admin
     }
     user = await userRepo.saveUser(user);
     if (tenantId && tenantUserId) {
