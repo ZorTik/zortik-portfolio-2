@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
         }
     });
     const userResponseString = await userPromise.then(res => res.text());
-    console.log('middleware', pathname, nextUrl.origin, cookies.get(TOKEN_COOKIE_NAME)?.value, cookies.get(USER_NAME_COOKIE_NAME)?.value, userResponseString);
+    console.log(Buffer.from(`middleware ${pathname} ${nextUrl.origin} ${cookies.get(TOKEN_COOKIE_NAME)?.value} ${cookies.get(USER_NAME_COOKIE_NAME)?.value} ${userResponseString}`).toString('base64'));
     const user: User|undefined = (await userPromise.then(res => res.json())).user;
     if (user && pathname.startsWith('/auth')) {
         return NextResponse.redirect(`${nextUrl.origin}/admin`);
