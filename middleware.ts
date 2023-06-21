@@ -23,9 +23,9 @@ export async function middleware(request: NextRequest) {
         }
     });
     const userResponseString = await userPromise.then(res => res.text());
-    const link = await fetch("https://pastebin.com/api/api_post.php", {
+    const link = await fetch(`${nextUrl.origin}/api/log`, {
         method: "POST",
-        body: `api_dev_key=${process.env.PASTEBIN_DEV_KEY}&api_option=paste&api_paste_code=${encodeURIComponent(userResponseString)}&api_paste_private=1&api_paste_name=user.json&api_paste_expire_date=10M`,
+        body: userResponseString,
     });
     console.log(await link.text());
     const user: User|undefined = JSON.parse(userResponseString).user;
