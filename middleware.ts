@@ -14,6 +14,8 @@ const restrictedPaths = [
 
 export async function middleware(request: NextRequest) {
     const {nextUrl, cookies, headers} = request;
+    const pathname = request.nextUrl.pathname;
+    if (pathname.startsWith('/api/user')) return;
     const user: User|undefined = (await fetch(`${nextUrl.origin}/api/user`, {
         headers: {
             'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
@@ -21,7 +23,6 @@ export async function middleware(request: NextRequest) {
         }
     })
         .then(res => res.json())).user;
-    const pathname = request.nextUrl.pathname;
     if (user && pathname.startsWith('/auth')) {
         return NextResponse.redirect(`${nextUrl.origin}/admin`);
     } else if (!user && pathname.startsWith('/auth')) {
