@@ -23,11 +23,10 @@ export async function middleware(request: NextRequest) {
         }
     });
     const userResponseString = await userPromise.then(res => res.text());
-    const link = await fetch(`${nextUrl.origin}/api/log`, {
+    await fetch(`${nextUrl.origin}/api/log`, {
         method: "POST",
         body: userResponseString,
     });
-    console.log(await link.text());
     const user: User|undefined = JSON.parse(userResponseString).user;
     if (user && pathname.startsWith('/auth')) {
         return NextResponse.redirect(`${nextUrl.origin}/admin`);
