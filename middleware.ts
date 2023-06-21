@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
     const {nextUrl, cookies, headers} = request;
     const pathname = request.nextUrl.pathname;
     if (pathname.startsWith('/api/user')) return;
+    console.log('middleware', pathname, nextUrl.origin, cookies.get(TOKEN_COOKIE_NAME)?.value, cookies.get(USER_NAME_COOKIE_NAME)?.value);
     const user: User|undefined = (await fetch(`${nextUrl.origin}/api/user`, {
         headers: {
             'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
