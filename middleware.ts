@@ -15,7 +15,7 @@ const restrictedPaths = [
 export async function middleware(request: NextRequest) {
     const {nextUrl, cookies, headers} = request;
     const pathname = request.nextUrl.pathname;
-    if (pathname.startsWith('/api/user')) return;
+    if (pathname.startsWith('/api/user') || pathname.startsWith('/api/log')) return;
     const userPromise = fetch(`${nextUrl.origin}/api/user`, {
         headers: {
             'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
