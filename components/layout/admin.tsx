@@ -79,7 +79,7 @@ export default function AdminLayout(
                 <PopupAlert />
                 <Protected
                     scopes={findRequiredScopes(path, navItems)}
-                    or={<p className="text-white">Restricted Access</p>}
+                    or={<p className="text-gray-600">Restricted Access</p>}
                 >
                     <div className="px-8 lg:px-14 pb-14 mt-10 space-y-6">
                         <h1 className="text-gray-200 text-4xl">{title}</h1>

@@ -1,15 +1,17 @@
 import {ScopeTypes} from "@/security/scope.types";
 import {PropsWithChildren, ReactNode} from "react";
 import {useUser} from "@/hooks/user";
+import {hasScopeAccess} from "@/security/scope";
 
 export type ProtectedProps = PropsWithChildren & {
     scopes: ScopeTypes[],
-    or?: ReactNode
+    or?: ReactNode,
+    orLoading?: ReactNode,
 }
 
-export default function Protected({scopes, children, or}: ProtectedProps) {
+export default function Protected({scopes, children, or, orLoading}: ProtectedProps) {
     const { user, isLoading } = useUser();
-    return user != null && (scopes.every(scope => user.scopes.includes(scope)) || user.scopes.includes('admin')) ? (
+    return user != null && scopes.every(scope => hasScopeAccess(user, scope)) ? (
         <>{children}</>
-    ) : (isLoading ? null : or ?? null);
+    ) : (isLoading ? orLoading ?? null : or ?? null);
 }

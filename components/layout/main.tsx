@@ -40,7 +40,7 @@ export default function MainLayout(
                 <LoadingIndicator />
                 <PopupAlert />
                 <div className="flex flex-col min-h-[calc(100vh-var(--nav-max-height))]">
-                    <div className={`container mx-auto py-8 md:py-24 px-8 md:px-12 ${className ?? ""}`}>
+                    <div className={`container mx-auto pt-8 pb-24 md:py-24 px-8 md:px-12 ${className ?? ""}`}>
                         {title ? <p className="text-white text-5xl text-center pb-8">{title}</p> : null}
                         {children}
                     </div>
