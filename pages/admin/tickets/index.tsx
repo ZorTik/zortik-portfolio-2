@@ -1,7 +1,7 @@
 import AdminLayout from "@/components/layout/admin";
 import AdminCard from "@/components/admin/card";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCrown, faGear, faPlus, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faCrown, faGear, faPaperPlane, faPlus, faUser} from "@fortawesome/free-solid-svg-icons";
 import Button, {TransparentButton} from "@/components/button";
 import Form, {FormInput, FormLabel} from "@/components/form";
 import Dropdown, {DropdownButton} from "@/components/dropdown";
@@ -142,8 +142,8 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setTimeout(() => scrollBottom(), 500);
     }, [chat, messages, participants]);
     return (
-        <div className="w-full lg:w-6/12 h-[calc(68vh-74px)] lg:h-[68vh]">
-            <div className="w-full h-full bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
+        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-[68vh] mb-8 lg:mb-0">
+            <div className="w-full h-[calc(100%-60px)] lg:h-full bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
                         <p className="text-neutral-600 h-fit mt-auto mb-auto">No Chat Open</p>
@@ -157,7 +157,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
                     <div ref={messagesEndRef} />
                 </div>
             </div>
-            <form className="flex flex-row mt-4 w-full space-x-4" onSubmit={handleSubmitMessage}>
+            <form className="flex flex-row mt-4 w-full space-x-3 h-[60px]" onSubmit={handleSubmitMessage}>
                 {chat?.state !== "CLOSED" ? (
                     <>
                         <FormInput
@@ -166,7 +166,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
                             onChange={(e) => setMessage(e.target.value)}
                             className="!border-0 !bg-black rounded-2xl p-6 h-full w-full !mb-0"
                         />
-                        <Button variant="success" className="w-[100px]"><FontAwesomeIcon icon={faPlus} /></Button>
+                        <Button variant="success" className="w-[100px] bg-gradient-to-b"><FontAwesomeIcon icon={faPaperPlane} /></Button>
                     </>
                 ) : (
                     <p className="text-neutral-600 h-fit mt-auto mb-auto">This conversation is closed.</p>
@@ -289,11 +289,11 @@ export default function Tickets() {
     }, [roomsLoaded, roomsSWR.data]);
     return (
         <AdminLayout title={"Tickets"} path={"/tickets"}>
-            <div className={`w-full flex !flex-col lg:!flex-row pb-8 lg:pb-0`}>
+            <div className={`w-full flex !flex-col-reverse lg:!flex-row pb-8 lg:pb-0`}>
                 <AdminCard
                     title="Conversations"
                     subtitle="Your open chats with me"
-                    className="w-full !px-0 lg:!p-8 lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
+                    className="w-full !px-0 lg:!p-8 lg:w-4/12 xl:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
                     head={(
                         <div className="flex w-full justify-between">
                             <CreateChatDropdown markPending={() => setPendingUpdate(true)} />
@@ -329,7 +329,7 @@ export default function Tickets() {
                 <AdminCard
                     title="Chat Participants"
                     subtitle="People that are involved in the current conversation"
-                    className="w-full lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny flex flex-col">
+                    className="w-full lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny flex-col hidden xl:flex">
                     {participants ? participants.map((participant, key) => (
                         <div className="flex space-x-2 items-center" key={key}>
                             {participant.avatar_url
