@@ -75,7 +75,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
     }
     return (
         <div className="w-fit">
-            <Dropdown variant="success" button={"Create Chat"} label={"Select Participant"} className="mt-6">
+            <Dropdown variant="success" button={"Create Chat"} label={"Select Participant"}>
                 {participants.map((participant, key) => (
                     <DropdownButton
                         onClick={(e) => {
@@ -295,7 +295,7 @@ export default function Tickets() {
                     subtitle="Your open chats with me"
                     className="w-full !px-0 lg:!p-8 lg:w-4/12 xl:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
                     head={(
-                        <div className="flex w-full justify-between">
+                        <div className="flex w-full justify-between pt-8 items-center">
                             <CreateChatDropdown markPending={() => setPendingUpdate(true)} />
                             <Dropdown button={<FontAwesomeIcon icon={faGear} />} label={"Select option"}>
                                 <DropdownButton onClick={(e) => handleFetchClosed(e, !fetchClosed)}>

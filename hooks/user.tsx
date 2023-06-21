@@ -11,7 +11,7 @@ function UserProvider({children, userCookie}: {children: any, userCookie: Cookie
     const [loaded, setLoaded] = useState<boolean>(false);
     useEffect(() => {
         let thatCookie: any = userCookie;
-        if (thatCookie == null || typeof thatCookie !== "string") {
+        if (thatCookie == null || typeof thatCookie !== "string" || thatCookie.length == 0) {
             thatCookie = null;
         } else {
             thatCookie = JSON.parse(thatCookie);
