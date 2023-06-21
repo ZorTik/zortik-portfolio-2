@@ -35,9 +35,11 @@ function NavButton({node, subnode}: {node: AdminPathNode, subnode?: boolean}) {
     const modifiedPathName = !pathname.endsWith("/") ? pathname + "/" : pathname;
     const active = modifiedPathName.startsWith(`/admin/${node.path.substring(1)}`) && (node.path !== "/" || modifiedPathName === "/admin/");
     const [subnavShown, setSubnavShown] = useState<boolean>(active);
-    const link = <Link className={`${isSubNode ? "ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] pl-4 md:pl-6 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>
-        {node.icon ? <FontAwesomeIcon icon={node.icon} className="mr-2" width={20} /> : null} {node.name}
-    </Link>;
+    const link = (
+        <Link className={`${isSubNode ? "lg:ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] lg:pl-6 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>
+            {node.icon ? <FontAwesomeIcon icon={node.icon} className="mr-2" width={20} /> : null} {node.name}
+        </Link>
+    );
     return (
         <Protected scopes={node.scopes ?? []}>
             <div className="py-2">
@@ -66,6 +68,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
             <div className="lg:hidden p-5">
                 <Button onClick={() => setShown(!shown)}><FontAwesomeIcon icon={faBars} width={25} height={25} /></Button>
                 <div className={`${shown ? "" : "hidden"} fixed top-0 left-0 w-full h-[100vh] z-50 lg:hidden flex flex-col justify-center items-center text-center animate-fade-in-top bg-black`}>
+                    <NavProfile />
                     {nav.map((node, i) => <NavButton node={node} key={i} />)}
                     <Button className="fixed top-10 left-10" onClick={() => setShown(false)}>Close</Button>
                 </div>

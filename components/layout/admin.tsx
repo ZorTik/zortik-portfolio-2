@@ -81,7 +81,7 @@ export default function AdminLayout(
                     scopes={findRequiredScopes(path, navItems)}
                     or={<p className="text-white">Restricted Access</p>}
                 >
-                    <div className="px-14 pb-14 mt-10 space-y-6">
+                    <div className="px-8 lg:px-14 pb-14 mt-10 space-y-6">
                         <h1 className="text-gray-200 text-4xl">{title}</h1>
                         <div>
                             <AdminCarousel nav={navItems ?? []} />
