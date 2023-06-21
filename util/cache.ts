@@ -36,9 +36,7 @@ class Cache {
 
     remove(pred: (key: string, value: Cached<any>) => boolean) {
         for (const key in this.data) {
-            if (pred(key, this.data[key])) {
-                delete this.data[key];
-            }
+            if (pred(key, this.data[key])) delete this.data[key];
         }
     }
 }
