@@ -16,14 +16,15 @@ export async function middleware(request: NextRequest) {
     const {nextUrl, cookies, headers} = request;
     const pathname = request.nextUrl.pathname;
     if (pathname.startsWith('/api/user')) return;
-    console.log('middleware', pathname, nextUrl.origin, cookies.get(TOKEN_COOKIE_NAME)?.value, cookies.get(USER_NAME_COOKIE_NAME)?.value);
-    const user: User|undefined = (await fetch(`${nextUrl.origin}/api/user`, {
+    const userPromise = fetch(`${nextUrl.origin}/api/user`, {
         headers: {
             'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
             'X-Z-Username': cookies.get(USER_NAME_COOKIE_NAME)?.value ?? "",
         }
-    })
-        .then(res => res.json())).user;
+    });
+    const userResponseString = await userPromise.then(res => res.text());
+    console.log('middleware', pathname, nextUrl.origin, cookies.get(TOKEN_COOKIE_NAME)?.value, cookies.get(USER_NAME_COOKIE_NAME)?.value, userResponseString);
+    const user: User|undefined = (await userPromise.then(res => res.json())).user;
     if (user && pathname.startsWith('/auth')) {
         return NextResponse.redirect(`${nextUrl.origin}/admin`);
     } else if (!user && pathname.startsWith('/auth')) {
