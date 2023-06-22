@@ -4,6 +4,7 @@ import {getUserPrivateKey} from "@/security/user";
 import jwt from "jsonwebtoken";
 import {getUserRepository} from "@/data/user";
 import {ScopeTypes} from "@/security/scope.types";
+import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 
 export type RequireUserHandler = (req: NextApiRequest, res: NextApiResponse, user: User|null) => Promise<unknown>;
 export type RequireScopesEndpointScopes = {
@@ -20,10 +21,9 @@ const requireUser = (
     optionalUserScopes: (keyof RequireScopesEndpointScopes)[] = [],
 ): NextApiHandler => {
     return async (req, res) => {
-        const { headers } = req;
         let user: User|null = null;
-        const token = headers['x-z-token'] as string|undefined;
-        const username = headers['x-z-username'] as string|undefined;
+        const token = req.headers['x-z-token'] as string|undefined ?? req.cookies[TOKEN_COOKIE_NAME];
+        const username = req.headers['x-z-username'] as string|undefined ?? req.cookies[USER_NAME_COOKIE_NAME];
         const optionallyExcluded = optionalUserScopes.includes(req.method!!.toLowerCase() as keyof RequireScopesEndpointScopes);
         if (token && username) {
             try {

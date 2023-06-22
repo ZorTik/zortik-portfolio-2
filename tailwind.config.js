@@ -20,6 +20,7 @@ module.exports = {
         'fade-in-left': 'fade-in-left 100ms ease-in-out',
         'fade-in-right': 'fade-in-right 100ms ease-in-out',
         'fade-out-top': 'fade-out-top 100ms ease-in-out',
+        'background': 'background 3s ease infinite',
       },
       keyframes: {
         'logo-anim': {
@@ -50,7 +51,12 @@ module.exports = {
         'fade-out-top': {
           '0%': { opacity: 1, transform: 'translateY(0%)' },
           '100%': { opacity: 0, transform: 'translateY(-50%)' },
-        }
+        },
+        'background': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
       },
     },
   },

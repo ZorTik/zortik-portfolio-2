@@ -15,7 +15,7 @@ import {useNotifications} from "@/hooks/notifications";
 import ConfirmDialog from "@/components/confirm";
 import Badge from "@/components/badge";
 import {useApiSWR} from "@/hooks/api";
-import {ChatMessage, ChatRoom} from "@/data/chat.types";
+import {ChatMessage, ChatRoom, ChatRoomState} from "@/data/chat.types";
 import Card from "@/components/card";
 import {BarLoader} from "react-spinners";
 import Delimiter from "@/components/delimiter";
@@ -142,7 +142,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setTimeout(() => scrollBottom(), 500);
     }, [chat, messages, participants]);
     return (
-        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-[68vh] mb-8 lg:mb-0">
+        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-full mb-8 lg:mb-0">
             <div className="w-full h-[calc(100%-60px)] lg:h-full bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
@@ -241,25 +241,15 @@ export default function Tickets() {
         e?.preventDefault();
         setChat(chat);
     }
-    const handleChatClose = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom) => {
+    const handleChatStateChange = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom, state?: ChatRoomState) => {
         e.preventDefault();
         if (!chat) return;
         await fetchRestrictedApiUrl(`/api/chat/${chat.id}`, {
             method: "PATCH",
-            body: JSON.stringify({ state: "CLOSED" }),
+            body: JSON.stringify({ state: state }),
         });
         handleChatSelect(undefined, undefined);
-        pushNotification("Chat has been closed");
-    }
-    const handleChatReopen = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom) => {
-        e.preventDefault();
-        if (!chat) return;
-        await fetchRestrictedApiUrl(`/api/chat/${chat.id}`, {
-            method: "PATCH",
-            body: JSON.stringify({ state: "OPEN" }),
-        });
-        handleChatSelect(undefined, undefined);
-        pushNotification("Chat has been reopened");
+        pushNotification(`Chat has been ${state === "CLOSED" ? "closed" : "reopened"}`);
     }
     const handleMessageInput = async (message: ChatMessage, messageChatRoom: ChatRoom) => {
         if (messageChatRoom.state === "CLOSED") {
@@ -344,9 +334,9 @@ export default function Tickets() {
                         {chat && user && hasScopeAccess(user, "tickets:write:others") ? (
                             <Dropdown button={<TransparentButton className="hover:!text-white"><FontAwesomeIcon icon={faGear} /></TransparentButton>} label={"Chat Actions"}>
                                 {chat.state === "OPEN" ? (
-                                    <DropdownButton onClick={(e) => handleChatClose(e, chat)}>Close Chat</DropdownButton>
+                                    <DropdownButton onClick={(e) => handleChatStateChange(e, chat, "CLOSED")}>Close Chat</DropdownButton>
                                 ) : (
-                                    <DropdownButton onClick={(e) => handleChatReopen(e, chat)}>Reopen Chat</DropdownButton>
+                                    <DropdownButton onClick={(e) => handleChatStateChange(e, chat, "OPEN")}>Reopen Chat</DropdownButton>
                                 )}
                             </Dropdown>
                         ) : null}
