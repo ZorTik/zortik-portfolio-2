@@ -172,7 +172,7 @@ export default function Users() {
                 <RegisteredUsersStatisticCard />
                 <Hr />
                 <div>
-                    <Button variant="success">Add User</Button>
+                    <Button variant="success" href="/users/create">Add User</Button>
                 </div>
                 <UsersTable />
             </AdminCard>

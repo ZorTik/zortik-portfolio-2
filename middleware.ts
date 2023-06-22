@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
 
     //headers.set(USER_HEADER_NAME, JSON.stringify(user));
     const next = NextResponse.next();
-    next.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { path: '/', });
+    next.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { path: '/', }); // Deprecated
     next.cookies.set(TOKEN_COOKIE_NAME, cookies.get(TOKEN_COOKIE_NAME)?.value ?? "", { path: '/', });
     next.cookies.set(USER_NAME_COOKIE_NAME, cookies.get(USER_NAME_COOKIE_NAME)?.value ?? "", { path: '/', });
     return next;

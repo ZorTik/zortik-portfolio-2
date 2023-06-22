@@ -1,13 +1,16 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {ApiEndpointUser} from "@/security/user.types";
-import {CookieValueTypes} from "cookies-next";
+import {getCookie} from "cookies-next";
+import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 
 export type UserContextType = { user: ApiEndpointUser|null, isLoading: boolean };
-export type UserProviderProps = {children: any, jwtCookie: CookieValueTypes, userIdCookie: CookieValueTypes};
+export type UserProviderProps = PropsWithChildren;
 
 const Context = createContext<UserContextType>({ user: null, isLoading: true });
 
-function UserProvider({children, jwtCookie, userIdCookie}: UserProviderProps) {
+function UserProvider({children}: UserProviderProps) {
+    const jwtCookie = getCookie(TOKEN_COOKIE_NAME);
+    const userIdCookie = getCookie(USER_NAME_COOKIE_NAME);
     const [userCookieState, setUserCookieState] = useState<any>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     useEffect(() => {
