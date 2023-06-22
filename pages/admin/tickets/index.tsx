@@ -315,6 +315,7 @@ export default function Tickets() {
                                 href="#"
                                 className={`animate-fade-in-top w-full ${chat?.id === itChat.id ? "!bg-black" : ""}`}
                                 onClick={(e) => handleChatSelect(e, chat?.id === itChat.id ? undefined : itChat)}
+                                solidBackground
                             >
                                 <div className="flex items-center space-x-2">
                                     <h1 className="text-white">{itChat.title}</h1>

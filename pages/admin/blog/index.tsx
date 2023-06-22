@@ -21,6 +21,7 @@ import Card from "@/components/card";
 import {StatisticCard} from "@/components/statistic_card";
 import {fetchRestrictedApiUrl} from "@/util/api";
 import Dropdown, {DropdownButton} from "@/components/dropdown";
+import AdminCard from "@/components/admin/card";
 
 export default function AdminBlog() {
     const [frozen, setFrozen] = useState<boolean>(false);
@@ -64,77 +65,76 @@ export default function AdminBlog() {
 
     return (
         <AdminLayout path="/blog" title={"Blog"}>
-            <Card className="2xl:w-7/12">
-                <div className="flex flex-col space-y-8 h-full">
-                    <div>
-                        <h1 className="text-white text-xl">Published Articles</h1>
-                        <h2 className="text-md text-neutral-500">General article listing</h2>
-                    </div>
-                    <ConfirmDialog
-                        title={"Delete Article?"} shown={deleteDialogShown}
-                        onAccept={(e) => {
-                            setDeleteDialogShown(false);
-                            actionLatch.latch(e);
-                        }}
-                        onCancel={() => {
-                            setDeleteDialogShown(false);
-                            setActionLatch({ latch: () => {} });
-                        }}
-                    ><p>Are you sure you want to delete this article? You wont be able to restore it.</p></ConfirmDialog>
-                    <div>
-                        <Button variant="success" href="/admin/blog/edit">Create Article</Button>
-                    </div>
-                    {isLoading ? <p className="text-white">Loading...</p> : null}
-                    {error ? <p className="text-white">Error: {error}</p> : null}
-                    {data ? (
-                        <table className="w-full text-left animate-fade-in-top-tiny">
-                            <thead className="text-gray-600">
-                            <tr>
-                                <th className="px-2 pb-1">#</th>
-                                <th className="px-2 pb-1">title</th>
-                                <th className="px-2 pb-1 hidden md:block">description</th>
-                            </tr>
-                            </thead>
-                            <tbody className="bg-black rounded">
-                            {data.value?.map((article, index) => (
-                                <tr key={index} className="text-white border-b border-b-gray-900">
-                                    <td className="p-5 text-orange-500 hidden sm:table-cell">{article.id}</td>
-                                    <td className="p-5">{article.title}</td>
-                                    <td className="p-5 hidden md:table-cell">{article.description.substring(0, 80)}...</td>
-                                    <td className="p-5 flex flex-row justify-center items-center space-x-2 h-[80px]">
-                                        {frozen ? <BarLoader color="white" width="50px" /> : (<>
-                                            <Dropdown button={<FontAwesomeIcon icon={faGear} style={{
-                                                width: "1.25em", height: "1.25em",
-                                            }} />} label={"Settings"}>
-                                                <DropdownButton href={`/admin/blog/edit?id=${article.id}`}>Edit Article</DropdownButton>
-                                            </Dropdown>
-                                            <TransparentButton onClick={(e) => {
-                                                e.preventDefault();
-                                                window.open(`/blog/${article.id}`, `_blank`);
-                                            }}><FontAwesomeIcon icon={faEye} style={{
-                                                width: "1.25em", height: "1.25em",
-                                            }} /></TransparentButton>
-                                            <TransparentButton onClick={(e) => {
-                                                e.preventDefault();
-                                                setDeleteDialogShown(true);
-                                                setActionLatch({ latch: () => handleArticleDelete(e, article) });
-                                            }}><FontAwesomeIcon icon={faTrash} style={{
-                                                width: "1.25em", height: "1.25em",
-                                            }} /></TransparentButton>
-                                        </>)}
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    ) : null}
-                    <div className="flex flex-row justify-center items-center !mt-auto animate-fade-in-bottom pt-6">
-                        <TransparentButton disabled={frozen || page === 0} onClick={() => setPage(page - 1)}><FontAwesomeIcon icon={faArrowLeft} className="text-gray-400 hover:text-white" /></TransparentButton>
-                        <p className="text-gray-500 mx-4">Page {page + 1}/{maxPage}</p>
-                        <TransparentButton disabled={frozen || page >= maxPage - 1} onClick={() => setPage(page + 1)}><FontAwesomeIcon icon={faArrowRight} className="text-gray-400 hover:text-white" /></TransparentButton>
-                    </div>
+            <AdminCard
+                className="2xl:w-7/12"
+                title="Published Articles"
+                subtitle="General article listing"
+                solidBackground
+            >
+                <ConfirmDialog
+                    title={"Delete Article?"} shown={deleteDialogShown}
+                    onAccept={(e) => {
+                        setDeleteDialogShown(false);
+                        actionLatch.latch(e);
+                    }}
+                    onCancel={() => {
+                        setDeleteDialogShown(false);
+                        setActionLatch({ latch: () => {} });
+                    }}
+                ><p>Are you sure you want to delete this article? You wont be able to restore it.</p></ConfirmDialog>
+                <div>
+                    <Button variant="success" href="/admin/blog/edit">Create Article</Button>
                 </div>
-            </Card>
+                {isLoading ? <p className="text-white">Loading...</p> : null}
+                {error ? <p className="text-white">Error: {error}</p> : null}
+                {data ? (
+                    <table className="w-full text-left animate-fade-in-top-tiny">
+                        <thead className="text-gray-600">
+                        <tr>
+                            <th className="px-2 pb-1">#</th>
+                            <th className="px-2 pb-1">title</th>
+                            <th className="px-2 pb-1 hidden md:block">description</th>
+                        </tr>
+                        </thead>
+                        <tbody className="bg-black rounded">
+                        {data.value?.map((article, index) => (
+                            <tr key={index} className="text-white border-b border-b-gray-900">
+                                <td className="p-5 text-orange-500 hidden sm:table-cell">{article.id}</td>
+                                <td className="p-5">{article.title}</td>
+                                <td className="p-5 hidden md:table-cell">{article.description.substring(0, 80)}...</td>
+                                <td className="p-5 flex flex-row justify-center items-center space-x-2 h-[80px]">
+                                    {frozen ? <BarLoader color="white" width="50px" /> : (<>
+                                        <Dropdown button={<FontAwesomeIcon icon={faGear} style={{
+                                            width: "1.25em", height: "1.25em",
+                                        }} />} label={"Settings"}>
+                                            <DropdownButton href={`/admin/blog/edit?id=${article.id}`}>Edit Article</DropdownButton>
+                                        </Dropdown>
+                                        <TransparentButton onClick={(e) => {
+                                            e.preventDefault();
+                                            window.open(`/blog/${article.id}`, `_blank`);
+                                        }}><FontAwesomeIcon icon={faEye} style={{
+                                            width: "1.25em", height: "1.25em",
+                                        }} /></TransparentButton>
+                                        <TransparentButton onClick={(e) => {
+                                            e.preventDefault();
+                                            setDeleteDialogShown(true);
+                                            setActionLatch({ latch: () => handleArticleDelete(e, article) });
+                                        }}><FontAwesomeIcon icon={faTrash} style={{
+                                            width: "1.25em", height: "1.25em",
+                                        }} /></TransparentButton>
+                                    </>)}
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                ) : null}
+                <div className="flex flex-row justify-center items-center !mt-auto animate-fade-in-bottom pt-6">
+                    <TransparentButton disabled={frozen || page === 0} onClick={() => setPage(page - 1)}><FontAwesomeIcon icon={faArrowLeft} className="text-gray-400 hover:text-white" /></TransparentButton>
+                    <p className="text-gray-500 mx-4">Page {page + 1}/{maxPage}</p>
+                    <TransparentButton disabled={frozen || page >= maxPage - 1} onClick={() => setPage(page + 1)}><FontAwesomeIcon icon={faArrowRight} className="text-gray-400 hover:text-white" /></TransparentButton>
+                </div>
+            </AdminCard>
             <StatsCard />
         </AdminLayout>
     )
@@ -172,11 +172,12 @@ function StatsCard() {
     }
 
     return (
-        <Card className="2xl:w-5/12">
-            <div>
-                <h1 className="text-white text-xl">Stats</h1>
-                <h2 className="text-md text-neutral-500">Information about blog performance</h2>
-            </div>
+        <AdminCard
+            className="2xl:w-5/12"
+            title="Stats"
+            subtitle="Information about blog performance"
+            solidBackground
+        >
             <div className="flex flex-row flex-wrap gap-8 sm:gap-0 sm:space-x-8">
                 <StatisticCard faIcon={faBook} title={"Blogs"} value={`${articles}`} />
                 <StatisticCard faIcon={faChartSimple} title={"All Views"} value={`${allViews}`} />
@@ -203,7 +204,7 @@ function StatsCard() {
                     </LineChart>
                 </ResponsiveContainer>
             </div>
-        </Card>
+        </AdminCard>
     )
 }
 

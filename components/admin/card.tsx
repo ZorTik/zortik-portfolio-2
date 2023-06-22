@@ -11,7 +11,7 @@ export type AdminCardProps = CardProps & {
 export default function AdminCard(props: AdminCardProps) {
     const {scrollable} = props;
     return (
-        <Card {...props}>
+        <Card {...props} className={`${props.className} ${props.href ? "hover:!bg-black" : ""}`}>
             <div className="flex flex-col space-y-8 h-full">
                 <div>
                     <h1 className="text-white text-xl">{props.title}</h1>

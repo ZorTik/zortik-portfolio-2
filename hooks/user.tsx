@@ -14,6 +14,10 @@ function UserProvider({children}: UserProviderProps) {
     const [userCookieState, setUserCookieState] = useState<any>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     useEffect(() => {
+        if (jwtCookie == null || userIdCookie == null) {
+            setUserCookieState(null);
+            return;
+        }
         fetch('/api/user', {
             headers: {
                 'X-Z-Token': `${jwtCookie ?? ""}`,

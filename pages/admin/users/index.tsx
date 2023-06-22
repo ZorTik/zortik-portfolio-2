@@ -168,7 +168,7 @@ function UsersTable() {
 export default function Users() {
     return (
         <AdminLayout title={"Users"} path={"/users"}>
-            <AdminCard title="Users" subtitle="Users listing" className="w-full">
+            <AdminCard title="Users" subtitle="Users listing" className="w-full" solidBackground>
                 <RegisteredUsersStatisticCard />
                 <Hr />
                 <div>
