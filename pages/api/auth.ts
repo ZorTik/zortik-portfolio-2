@@ -9,9 +9,8 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const fallback = query.fallback_url ?? '/auth/login';
-    const redirectFallback = (err: Error|string) => {
-        const errorMessage = typeof err === "string" ? err : ((err as Error).message);
-        res.redirect(`${fallback}?msg=${encodeURIComponent(errorMessage)}${cookies[AUTH_CALLBACK_URL_COOKIE_NAME] ? `&callback_url=${cookies[AUTH_CALLBACK_URL_COOKIE_NAME]}` : ''}`);
+    const redirectFallback = (err_id: string) => {
+        res.redirect(`${fallback}?msg=${err_id}${cookies[AUTH_CALLBACK_URL_COOKIE_NAME] ? `&callback_url=${cookies[AUTH_CALLBACK_URL_COOKIE_NAME]}` : ''}`);
     }
     if (!method || method.toLowerCase() !== "post") {
         res.status(405).json({status: '405', message: 'Method not allowed.'});
@@ -25,17 +24,17 @@ export default async function handler(
         .then(res => res.success);
 
     if (typeof rcPassed !== "boolean" || !rcPassed) {
-        redirectFallback('reCAPTCHA failed.');
+        redirectFallback('recaptcha_failed');
         return;
     }
 
     const username = body.username;
     const password = body.password;
     if (!username || !password) {
-        redirectFallback('Username or password not found.');
+        redirectFallback('invalid_usr_pwd');
         return;
     } else if (!query.action) {
-        redirectFallback('Action query param not found.');
+        redirectFallback('invalid_login_action');
         return;
     }
     const principal = Buffer.from(`${username}:${password}`).toString('base64');
@@ -45,14 +44,16 @@ export default async function handler(
             const code = await generateCode(principal, { createUser: false });
             res.redirect(`/api/oauth/callback/local?code=${code}`);
         } catch(e) {
-            redirectFallback(e as Error);
+            console.error(e);
+            redirectFallback((e as Error).message.toLowerCase().includes("invalid credentials") ? 'invalid_usr_pwd' : 'something_went_wrong');
         }
     } else if (action === "register") {
         try {
             const code = await generateCode(principal, { createUser: generateUserId() });
             res.redirect(`/api/oauth/callback/local?code=${code}`);
         } catch(e) {
-            redirectFallback(e as Error);
+            console.error(e);
+            redirectFallback('something_went_wrong');
         }
     } else {
         res.status(400).json({status: '400', message: 'Invalid action.'});

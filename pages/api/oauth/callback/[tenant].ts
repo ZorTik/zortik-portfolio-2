@@ -16,15 +16,15 @@ export default async function handler(
     const fallbackUrl = (query.fallback_url ?? '/auth/login') + (callbackUrl ? `?callback_url=${callbackUrl}` : '');
     const tenant = getUserTenant(tenantId);
 
-    const fallback = (err: Error|string) => {
-        res.redirect(`${absoluteUrl(req).origin}${fallbackUrl}?msg=${err}`);
+    const fallback = (err_id: string) => {
+        res.redirect(`${absoluteUrl(req).origin}${fallbackUrl}?msg=${err_id}`);
     }
 
     if (!tenant) {
-        fallback('Tenant not found');
+        fallback('unknown_tenant');
         return;
     } else if (!query.code) {
-        fallback('Code not found');
+        fallback('invalid_request');
         return;
     }
     let user: User|undefined = undefined;
@@ -34,18 +34,18 @@ export default async function handler(
             getCallbackUrl: (tenant: string) => `${absoluteUrl(req).origin}/api/oauth/callback/${tenant}`
         });
         if (!user) {
-            fallback('User not found or unauthorized access.');
+            fallback('authorization_error');
             return;
         }
     } catch(e) {
         console.error(e);
-        fallback('Something went wrong!');
+        fallback('something_went_wrong');
         return;
     }
     const token = jwt.sign({ user_id: user.userId }, (await getUserPrivateKey(user.userId, {generate: true}))!!, { expiresIn: '1h' });
     res.setHeader('Set-Cookie', [
-        serialize(TOKEN_COOKIE_NAME, token, { httpOnly: true, path: '/', }),
-        serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: true, path: '/', })
+        serialize(TOKEN_COOKIE_NAME, token, { httpOnly: false, path: '/', }),
+        serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: false, path: '/', })
     ]);
-    res.redirect(301, `${callbackUrl ?? "/admin"}?msg=Logged in as ${user.username}`);
+    res.redirect(301, `${callbackUrl ?? "/admin"}?msg=logged_in`);
 }

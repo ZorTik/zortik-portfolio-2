@@ -42,7 +42,7 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
             method: article ? `put` : `post`,
             body: JSON.stringify(articleToSave)
         })
-            .then(() => window.open(`/admin/blog?msg=Blog ${article ? "edited" : "created"}!`, "_self"))
+            .then(() => window.open(`/admin/blog?msg=blog_${article ? "edited" : "created"}!`, "_self"))
             .catch(() => pushNotification("Something went wrong!"));
     }
 

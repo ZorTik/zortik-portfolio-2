@@ -10,5 +10,5 @@ export default async function handler(
         `${USER_NAME_COOKIE_NAME}=; HttpOnly; Path=/; Max-Age=0`,
         `${TOKEN_COOKIE_NAME}=; HttpOnly; Path=/; Max-Age=0`,
     ]);
-    redirect('/?msg=Logged out successfully');
+    redirect('/?msg=logged_out');
 }
