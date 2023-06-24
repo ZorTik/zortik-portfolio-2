@@ -179,9 +179,9 @@ function StatsCard() {
             solidBackground
         >
             <div className="flex flex-row flex-wrap gap-8 sm:gap-0 sm:space-x-8">
-                <StatisticCard faIcon={faBook} title={"Blogs"} value={`${articles}`} />
-                <StatisticCard faIcon={faChartSimple} title={"All Views"} value={`${allViews}`} />
-                <StatisticCard faIcon={faUser} title={"Audience"} value={`${audience}`} />
+                <StatisticCard faIcon={faBook} title={"Blogs"} value={`${articles ?? -1}`} />
+                <StatisticCard faIcon={faChartSimple} title={"All Views"} value={`${allViews ?? -1}`} />
+                <StatisticCard faIcon={faUser} title={"Audience"} value={`${audience ?? -1}`} />
             </div>
             <hr className="border-gray-900" />
             <div className="flex flex-row justify-between">

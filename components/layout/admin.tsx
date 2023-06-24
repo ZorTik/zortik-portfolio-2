@@ -10,6 +10,7 @@ import {faBook, faHouse, faTicket, faUser} from "@fortawesome/free-solid-svg-ico
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 import {DefaultHead} from "@/components/head";
 import {SkeletonCard} from "@/components/card";
+import LayoutWrapper from "@/components/layout/layout_wrapper";
 
 export type AdminPathNode = {
     name: string,
@@ -76,29 +77,31 @@ export default function AdminLayout(
     return (
         <>
             <DefaultHead />
-            <div className="w-full flex flex-col lg:flex-row">
-                <AdminNav className="w-fit" nav={navItems ?? []} />
-                <div className="w-full min-h-[100vh]">
-                    <LoadingIndicator />
-                    <PopupAlert />
-                    <Protected
-                        scopes={findRequiredScopes(path, navItems)}
-                        or={<p className="text-gray-600">Restricted Access</p>}
-                    >
-                        <div className="pb-14 mt-8 space-y-6">
-                            <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
-                            <div>
-                                <AdminCarousel nav={navItems ?? []} />
-                                <div className="w-full">
-                                    <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 bg-dotted-spacing-4 bg-dotted-neutral-800 py-6 px-8 lg:px-14`}>
-                                        {children}
+            <LayoutWrapper>
+                <div className="w-full flex flex-col lg:flex-row">
+                    <AdminNav className="w-fit" nav={navItems ?? []} />
+                    <div className="w-full min-h-[100vh]">
+                        <LoadingIndicator />
+                        <PopupAlert />
+                        <Protected
+                            scopes={findRequiredScopes(path, navItems)}
+                            or={<p className="text-gray-600">Restricted Access</p>}
+                        >
+                            <div className="pb-14 mt-8 space-y-6">
+                                <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
+                                <div>
+                                    <AdminCarousel nav={navItems ?? []} />
+                                    <div className="w-full">
+                                        <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 bg-dotted-spacing-4 bg-dotted-neutral-800 py-6 px-8 lg:px-14`}>
+                                            {children}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Protected>
+                        </Protected>
+                    </div>
                 </div>
-            </div>
+            </LayoutWrapper>
         </>
     )
 }

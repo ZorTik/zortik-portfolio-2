@@ -37,7 +37,7 @@ function NavButton({node, subnode}: {node: AdminPathNode, subnode?: boolean}) {
     const [subnavShown, setSubnavShown] = useState<boolean>(active);
     const link = (
         <Link className={`${isSubNode ? "lg:ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] lg:pl-6 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>
-            {node.icon ? <FontAwesomeIcon icon={node.icon} className="mr-2" width={20} /> : null} {node.name}
+            {node.name}
         </Link>
     );
     return (
@@ -70,7 +70,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
                 <div className={`${shown ? "" : "hidden"} fixed top-0 left-0 w-full h-[100vh] z-50 lg:hidden flex flex-col justify-center items-center text-center animate-fade-in-top bg-black`}>
                     <NavProfile />
                     {nav.map((node, i) => <NavButton node={node} key={i} />)}
-                    <Button className="fixed top-10 left-10" onClick={() => setShown(false)}>Close</Button>
+                    <Button className="fixed top-8 left-8" onClick={() => setShown(false)}>Close</Button>
                 </div>
             </div>
             <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-3 py-8 ${className ?? ""} bg-black hidden lg:inline-flex`}>

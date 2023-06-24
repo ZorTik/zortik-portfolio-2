@@ -3,6 +3,7 @@ import {PropsWithChildren, ReactNode, useEffect, useState} from "react";
 import {faAngleDown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useDropdowns} from "@/hooks/dropdown";
+import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
 export type DropdownProps = PropsWithChildren & {
     button: ReactNode,
@@ -31,6 +32,10 @@ export default function Dropdown({button, label, className, children, arrowClass
             </div>
         </div>
     )
+}
+
+export function DropdownIcon(props: { icon: IconProp }) {
+    return <FontAwesomeIcon icon={props.icon} className="w-4 h-4" />
 }
 
 export function DropdownButton(props: ButtonProps) {

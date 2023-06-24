@@ -7,15 +7,7 @@ import {Footer} from "@/components/footer";
 import {LoadingIndicator} from "@/components/loading";
 import PopupAlert from "@/components/popupalert";
 import {useUser} from "@/hooks/user";
-
-const interBold = Poppins({ weight: '600', subsets: ['latin'] });
-const interLight = Poppins({ weight: '300', subsets: ['latin'] });
-
-const LayoutWrapper = styled("main")`
-  .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
-      ${interBold.style}
-  }
-`;
+import LayoutWrapper from "@/components/layout/layout_wrapper";
 
 export type LayoutProps = PropsWithChildren & {
     title?: string,
@@ -33,7 +25,7 @@ export default function MainLayout(
     return (
         <>
             <DefaultHead />
-            <LayoutWrapper className={`${interLight.className} min-h-screen`}>
+            <LayoutWrapper>
                 <Navbar links={links} >
                     {user ? <NavbarLink href={"/admin"} programmatically>Panel</NavbarLink> : <NavbarLink href={"/auth/login"} programmatically>Login</NavbarLink>}
                 </Navbar>

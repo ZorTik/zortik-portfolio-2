@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCrown, faGear, faPaperPlane, faPlus, faUser} from "@fortawesome/free-solid-svg-icons";
 import Button, {TransparentButton} from "@/components/button";
 import Form, {FormInput, FormLabel} from "@/components/form";
-import Dropdown, {DropdownButton} from "@/components/dropdown";
+import Dropdown, {DropdownButton, DropdownIcon} from "@/components/dropdown";
 import {FormEventHandler, useEffect, useRef, useState} from "react";
 import {User} from "@/security/user.types";
 import {fetchRestrictedApiUrl} from "@/util/api";
@@ -143,7 +143,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
     }, [chat, messages, participants]);
     return (
         <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-full mb-8 lg:mb-0">
-            <div className="w-full h-[calc(100%-60px)] lg:h-full bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
+            <div className="w-full h-[calc(100%-76px)] bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
                         <p className="text-neutral-600 h-fit mt-auto mb-auto">No Chat Open</p>
@@ -166,7 +166,9 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
                             onChange={(e) => setMessage(e.target.value)}
                             className="!border-0 !bg-black rounded-2xl p-6 h-full w-full !mb-0"
                         />
-                        <Button variant="success" className="w-[100px] bg-gradient-to-b"><FontAwesomeIcon icon={faPaperPlane} /></Button>
+                        <Button variant="success" className="w-[100px] bg-gradient-to-b text-center flex justify-center items-center">
+                            <FontAwesomeIcon icon={faPaperPlane} className="w-5 h-5" />
+                        </Button>
                     </>
                 ) : (
                     <p className="text-neutral-600 h-fit mt-auto mb-auto">This conversation is closed.</p>
@@ -287,7 +289,7 @@ export default function Tickets() {
                     head={(
                         <div className="flex w-full justify-between pt-8 items-center">
                             <CreateChatDropdown markPending={() => setPendingUpdate(true)} />
-                            <Dropdown button={<FontAwesomeIcon icon={faGear} />} label={"Select option"}>
+                            <Dropdown button={<DropdownIcon icon={faGear} />} label={"Select option"}>
                                 <DropdownButton onClick={(e) => handleFetchClosed(e, !fetchClosed)}>
                                     {fetchClosed ? "Hide closed" : "Show closed"}
                                 </DropdownButton>
@@ -332,7 +334,7 @@ export default function Tickets() {
                     )) : null}
                     <div className="w-fit ml-auto mt-auto">
                         {chat && user && hasScopeAccess(user, "tickets:write:others") ? (
-                            <Dropdown button={<TransparentButton className="hover:!text-white"><FontAwesomeIcon icon={faGear} /></TransparentButton>} label={"Chat Actions"}>
+                            <Dropdown button={<DropdownIcon icon={faGear} />} label={"Chat Actions"}>
                                 {chat.state === "OPEN" ? (
                                     <DropdownButton onClick={(e) => handleChatStateChange(e, chat, "CLOSED")}>Close Chat</DropdownButton>
                                 ) : (
