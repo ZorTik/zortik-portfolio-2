@@ -11,6 +11,7 @@ import {IconProp} from "@fortawesome/fontawesome-svg-core";
 import {DefaultHead} from "@/components/head";
 import {SkeletonCard} from "@/components/card";
 import LayoutWrapper from "@/components/layout/layout_wrapper";
+import {BarLoader} from "react-spinners";
 
 export type AdminPathNode = {
     name: string,
@@ -86,6 +87,11 @@ export default function AdminLayout(
                         <Protected
                             scopes={findRequiredScopes(path, navItems)}
                             or={<p className="text-gray-600">Restricted Access</p>}
+                            orLoading={(
+                                <div className="w-full h-full flex justify-center items-center">
+                                    <BarLoader width="150px" color="gray" />
+                                </div>
+                            )}
                         >
                             <div className="pb-14 mt-8 space-y-6">
                                 <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>

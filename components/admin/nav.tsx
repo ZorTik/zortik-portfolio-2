@@ -73,7 +73,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
                     <Button className="fixed top-8 left-8" onClick={() => setShown(false)}>Close</Button>
                 </div>
             </div>
-            <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-3 py-8 ${className ?? ""} bg-black hidden lg:inline-flex`}>
+            <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-3 py-8 ${className ?? ""} bg-black hidden lg:inline-flex min-w-[180px]`}>
                 <NavProfile />
                 {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 <Button className="mt-auto" href="/">Go Back</Button>
