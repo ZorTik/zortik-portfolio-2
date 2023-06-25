@@ -3,6 +3,7 @@ import Button from "@/components/button";
 import Form, {FormClientSideSubmitHandler, FormInput, FormLabel} from "@/components/form";
 import {createRef, useEffect, useState} from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import {useRouter} from "next/router";
 
 export async function getServerSideProps() {
     const sitekey = process.env.RECAPTCHA_PUBLIC_SITE_KEY as string;
@@ -12,6 +13,7 @@ export async function getServerSideProps() {
 export default function Register({sitekey}: { sitekey: string }) {
     const [redirect, setRedirect] = useState<boolean>(false);
     const [rc, setRc] = useState<string>('');
+    const {query} = useRouter();
     const recaptchaRef = createRef<ReCAPTCHA>();
     const formSubmitRef = createRef<HTMLFormElement>();
     useEffect(() => {
@@ -45,7 +47,7 @@ export default function Register({sitekey}: { sitekey: string }) {
                     <FormLabel htmlFor="password">Password</FormLabel>
                     <FormInput id="password" type="password" name="password" required />
                 </Form>
-                <Button onClick={() => window.open('/auth/login', '_self')}>Login Instead</Button>
+                <Button onClick={() => window.open('/auth/login' + (query.callback_url ? `?callback_url=${query.callback_url}` : ``), '_self')}>Login Instead</Button>
             </CenterLayout>
             <ReCAPTCHA
                 ref={recaptchaRef}

@@ -1,3 +1,3 @@
 export default function Hr() {
-    return <hr className="border-gray-900" />
+    return <hr className="border-neutral-900" />
 }

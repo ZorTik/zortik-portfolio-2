@@ -9,7 +9,7 @@ import {Table, TableBody, TableBodyRow, TableHead} from "@/components/table";
 import {User} from "@/security/user.types";
 import {useState} from "react";
 import Image from "next/image";
-import Dropdown, {DropdownButton} from "@/components/dropdown";
+import Dropdown, {DropdownButton, DropdownIcon} from "@/components/dropdown";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Button, {TransparentButton} from "@/components/button";
 import {Modal, ModalBody, ModalFooter} from "@/components/modal";
@@ -117,7 +117,7 @@ function UsersTable() {
                             <td className="px-2 py-2">
                                 <div className="w-fit">
                                     {!frozen ? (
-                                        <Dropdown button={<FontAwesomeIcon icon={faGear} />} label={"User Actions"}>
+                                        <Dropdown button={<DropdownIcon icon={faGear} />} label={"User Actions"}>
                                             <DropdownButton onClick={() => setMoreInfoModalsShown({ ...moreInfoModalsShown, [user.userId]: true })}>More Info</DropdownButton>
                                             <DropdownButton onClick={() => {
                                                 if (frozen) return;
@@ -168,11 +168,11 @@ function UsersTable() {
 export default function Users() {
     return (
         <AdminLayout title={"Users"} path={"/users"}>
-            <AdminCard title="Users" subtitle="Users listing" className="w-full">
+            <AdminCard title="Users" subtitle="Users listing" className="w-full" solidBackground>
                 <RegisteredUsersStatisticCard />
                 <Hr />
                 <div>
-                    <Button variant="success">Add User</Button>
+                    <Button variant="success" href="/users/create">Add User</Button>
                 </div>
                 <UsersTable />
             </AdminCard>

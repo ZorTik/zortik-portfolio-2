@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 import {
     AUTH_CALLBACK_URL_COOKIE_NAME,
     TOKEN_COOKIE_NAME,
-    USER_COOKIE_NAME,
     USER_NAME_COOKIE_NAME
 } from "@/data/constants";
 import {User} from "@/security/user.types";
@@ -13,7 +12,7 @@ const restrictedPaths = [
 ]
 
 export async function middleware(request: NextRequest) {
-    const {nextUrl, cookies, headers} = request;
+    const {nextUrl, cookies} = request;
     const user: User|undefined = (await fetch(`${nextUrl.origin}/api/user`, {
         headers: {
             'X-Z-Token': cookies.get(TOKEN_COOKIE_NAME)?.value ?? "",
@@ -40,10 +39,5 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(`${nextUrl.origin}/auth/login?callback_url=${pathname}`);
     }
 
-    //headers.set(USER_HEADER_NAME, JSON.stringify(user));
-    const next = NextResponse.next();
-    next.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), { path: '/', });
-    next.cookies.set(TOKEN_COOKIE_NAME, cookies.get(TOKEN_COOKIE_NAME)?.value ?? "", { path: '/', });
-    next.cookies.set(USER_NAME_COOKIE_NAME, cookies.get(USER_NAME_COOKIE_NAME)?.value ?? "", { path: '/', });
-    return next;
+    return NextResponse.next();
 }

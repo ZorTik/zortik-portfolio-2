@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npx prisma generate && npx prisma migrate dev --name dev && next dev",
+    "dev_start": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -52,6 +53,7 @@
     "styled-components": "^6.0.0-rc.3",
     "swr": "^2.1.5",
     "tailwindcss": "3.3.2",
+    "tailwindcss-dotted-background": "^1.1.0",
     "typescript": "5.1.3"
   }
 }

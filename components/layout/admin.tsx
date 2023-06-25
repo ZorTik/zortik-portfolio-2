@@ -8,6 +8,10 @@ import {useRouter} from "next/router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBook, faHouse, faTicket, faUser} from "@fortawesome/free-solid-svg-icons";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
+import {DefaultHead} from "@/components/head";
+import {SkeletonCard} from "@/components/card";
+import LayoutWrapper from "@/components/layout/layout_wrapper";
+import {BarLoader} from "react-spinners";
 
 export type AdminPathNode = {
     name: string,
@@ -31,7 +35,9 @@ export const defaultAdminNav: AdminPathNode[] = [
         ],
     },
     { icon: faTicket, name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
-    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read", "users:write"] },
+    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read", "users:write"], children: [
+            { name: "Add User", path: "/users/create" },
+        ] },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
@@ -62,7 +68,7 @@ function AdminCarousel({nav}: { nav: AdminPathNode[] }) {
         }
         setValue(renderCarousel(pathname, nav).join(" / "));
     }, [nav, pathname]);
-    return <p className="text-neutral-700 mb-3 flex items-center"><FontAwesomeIcon icon={faHouse} width={16} height={16} className="mr-1" /> {value}</p>
+    return <p className="text-neutral-700 mb-3 flex items-center mx-8 lg:mx-14"><FontAwesomeIcon icon={faHouse} width={16} height={16} className="mr-1" /> {value}</p>
 }
 
 export default function AdminLayout(
@@ -70,26 +76,38 @@ export default function AdminLayout(
 ) {
     const navItems = nav ?? defaultAdminNav;
     return (
-        <div className="w-full flex flex-col lg:flex-row">
-            <AdminNav className="w-fit" nav={navItems ?? []} />
-            <div className="w-full">
-                <LoadingIndicator />
-                <PopupAlert />
-                <Protected
-                    scopes={findRequiredScopes(path, navItems)}
-                    or={<p className="text-white">Restricted Access</p>}
-                >
-                    <div className="px-14 pb-14 mt-10 space-y-6">
-                        <h1 className="text-gray-200 text-4xl">{title}</h1>
-                        <div>
-                            <AdminCarousel nav={navItems ?? []} />
-                            <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0`}>
-                                {children}
+        <>
+            <DefaultHead />
+            <LayoutWrapper>
+                <div className="w-full flex flex-col lg:flex-row">
+                    <AdminNav className="w-fit" nav={navItems ?? []} />
+                    <div className="w-full min-h-[100vh]">
+                        <LoadingIndicator />
+                        <PopupAlert />
+                        <Protected
+                            scopes={findRequiredScopes(path, navItems)}
+                            or={<p className="text-gray-600">Restricted Access</p>}
+                            orLoading={(
+                                <div className="w-full h-full flex justify-center items-center">
+                                    <BarLoader width="150px" color="gray" />
+                                </div>
+                            )}
+                        >
+                            <div className="pb-14 mt-8 space-y-6">
+                                <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
+                                <div>
+                                    <AdminCarousel nav={navItems ?? []} />
+                                    <div className="w-full">
+                                        <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 bg-dotted-spacing-4 bg-dotted-neutral-800 py-6 px-8 lg:px-14`}>
+                                            {children}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </Protected>
                     </div>
-                </Protected>
-            </div>
-        </div>
+                </div>
+            </LayoutWrapper>
+        </>
     )
 }

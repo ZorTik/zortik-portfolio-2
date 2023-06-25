@@ -7,15 +7,7 @@ import {Footer} from "@/components/footer";
 import {LoadingIndicator} from "@/components/loading";
 import PopupAlert from "@/components/popupalert";
 import {useUser} from "@/hooks/user";
-
-const interBold = Poppins({ weight: '600', subsets: ['latin'] });
-const interLight = Poppins({ weight: '300', subsets: ['latin'] });
-
-const LayoutWrapper = styled("main")`
-  .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
-      ${interBold.style}
-  }
-`;
+import LayoutWrapper from "@/components/layout/layout_wrapper";
 
 export type LayoutProps = PropsWithChildren & {
     title?: string,
@@ -23,7 +15,7 @@ export type LayoutProps = PropsWithChildren & {
 }
 
 export const links: { [name: string]: string } = {
-    Domov: '/', Blog: '/blog', 'Contact Me': '/#contact'
+    Domov: '/', Blog: '/blog', 'Contact': '#contact'
 }
 
 export default function MainLayout(
@@ -33,14 +25,14 @@ export default function MainLayout(
     return (
         <>
             <DefaultHead />
-            <LayoutWrapper className={`${interLight.className} min-h-screen`}>
+            <LayoutWrapper>
                 <Navbar links={links} >
-                    {user ? <NavbarLink href={"/admin"}>Panel</NavbarLink> : <NavbarLink href={"/auth/login"}>Login</NavbarLink>}
+                    {user ? <NavbarLink href={"/admin"} programmatically>Panel</NavbarLink> : <NavbarLink href={"/auth/login"} programmatically>Login</NavbarLink>}
                 </Navbar>
                 <LoadingIndicator />
                 <PopupAlert />
                 <div className="flex flex-col min-h-[calc(100vh-var(--nav-max-height))]">
-                    <div className={`container mx-auto py-8 md:py-24 px-8 md:px-12 ${className ?? ""}`}>
+                    <div className={`container mx-auto pt-8 pb-24 md:py-24 px-8 md:px-12 ${className ?? ""}`}>
                         {title ? <p className="text-white text-5xl text-center pb-8">{title}</p> : null}
                         {children}
                     </div>

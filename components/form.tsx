@@ -40,11 +40,9 @@ export default function Form(props: FormProps) {
     }
     return (
         <form
-            {...{
-                ...props,
-                clientSideSubmit: undefined,
-                clientSideSubmitButtonName: undefined,
-            }}
+            {...Object.entries(props)
+                .filter(([key]) => !["clientSideSubmit", "clientSideSubmitButtonName", "innerRef"].includes(key))
+                .reduce((acc, [key, value]) => ({...acc, [key]: value}), {}) as FormHTMLAttributes<HTMLFormElement>}
             ref={props.innerRef}
             className={`flex flex-col space-y-3 ${props.className ?? ""}`}
         >
