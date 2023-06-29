@@ -8,6 +8,7 @@ import prisma from "@/data/prisma";
 import {allScopes, defaultScopes, hasScopeAccess} from "@/security/scope";
 import GitHubUserTenant from "@/security/tenant/github";
 import {ChatRoom} from "@/data/chat.types";
+import DiscordUserTenant from "@/security/tenant/discord";
 
 export type TenantRequestContext = {req: NextApiRequest, res: NextApiResponse, getCallbackUrl: (tenant: string) => string};
 
@@ -50,6 +51,7 @@ const tenants: { [key: string]: UserTenant } = {
     local: new LocalUserTenant(),
     google: new GoogleUserTenant(),
     github: new GitHubUserTenant(),
+    discord: new DiscordUserTenant(),
 };
 
 export function getUserTenant(id: string): UserTenant|undefined {
