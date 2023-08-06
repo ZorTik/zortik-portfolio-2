@@ -16,6 +16,7 @@ export type FormClientSideSubmitHandler = (e: MouseEvent<HTMLButtonElement>, fin
 export type FormProps = FormHTMLAttributes<HTMLFormElement> & ClassAttributes<HTMLFormElement> & {
     clientSideSubmit?: FormClientSideSubmitHandler,
     clientSideSubmitButtonName?: string,
+    clientSideSubmitButtonCss?: string,
     innerRef?: RefObject<HTMLFormElement>,
 }
 
@@ -48,7 +49,7 @@ export default function Form(props: FormProps) {
         >
             {props.children}
             {props.clientSideSubmit
-                ? <FormSubmitButton disabled={cssInProgress} onClick={handleClientSideSubmit}>{
+                ? <FormSubmitButton disabled={cssInProgress} onClick={handleClientSideSubmit} className={props.clientSideSubmitButtonCss}>{
                     cssInProgress ? <BarLoader width="100%" color="black" /> : props.clientSideSubmitButtonName ?? "Submit"
                 }</FormSubmitButton>
                 : null

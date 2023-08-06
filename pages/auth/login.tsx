@@ -27,6 +27,9 @@ export default function Login({sitekey}: { sitekey: string }) {
     const handleGitHubLogin: MouseEventHandler<HTMLButtonElement> = () => {
         window.open('/api/login/github', '_self');
     }
+    const handleDiscordLogin: MouseEventHandler<HTMLButtonElement> = () => {
+        window.open('/api/login/discord', '_self');
+    }
     const handleBasicLogin: FormClientSideSubmitHandler = async (e, finishProcess) => {
         e.preventDefault();
         if (!recaptchaRef.current) {
@@ -58,6 +61,7 @@ export default function Login({sitekey}: { sitekey: string }) {
                 <div className="flex flex-col space-y-3">
                     <Button variant="none" onClick={handleGoogleLogin} className="bg-blue-900">Login using Google</Button>
                     <Button variant="none" onClick={handleGitHubLogin} className="bg-neutral-900">Login Using GitHub</Button>
+                    <Button variant="none" onClick={handleDiscordLogin} className="bg-[#304796]">Login Using Discord</Button>
                 </div>
             </CenterLayout>
             <ReCAPTCHA

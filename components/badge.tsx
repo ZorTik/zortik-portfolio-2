@@ -1,9 +1,11 @@
-import {PropsWithChildren} from "react";
+import {HTMLAttributes, PropsWithChildren} from "react";
 
-export type BadgeProps = PropsWithChildren & {
-    className?: string
+export type BadgeProps = HTMLAttributes<HTMLDivElement> & {
+    className?: string,
+    active?: boolean,
 }
 
-export default function Badge({children, className}: BadgeProps) {
-    return <div className={`h-fit w-fit bg-[#131313ff] rounded-2xl px-8 py-1 flex flex-row items-center space-x-1 text-white text-sm ${className ?? ""}`}>{children}</div>
+export default function Badge(props: BadgeProps) {
+    const {className, active, role} = props;
+    return <div {...{...props, active: undefined}} className={`h-fit w-fit hover:bg-[#131313ff] border ${active ?? true ? "border-transparent bg-[#131313ff]" : "border-[#131313ff]"} rounded-2xl ${role === "button" ? "px-3" : "px-8"} py-1 flex flex-row items-center space-x-1 text-white text-sm ${className ?? ""}`} />;
 }

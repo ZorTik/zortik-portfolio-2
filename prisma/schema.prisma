@@ -14,7 +14,7 @@ datasource db {
   provider = "postgresql"
   url = env("DATABASE_PRISMA_URL")
   directUrl = env("DATABASE_URL_NON_POOLING")
-  shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING")
+  //shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING")
 }
 
 model Article {
@@ -77,4 +77,12 @@ model ChatMessage {
 enum ChatRoomState {
   OPEN
   CLOSED
+}
+
+model EventWebhook {
+  id         Int      @id @default(autoincrement())
+  name       String
+  endpoint   String
+  types      Json     @default("[]")
+  created_at DateTime @default(now())
 }
