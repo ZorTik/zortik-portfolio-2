@@ -1,8 +1,10 @@
 import prisma from "@/data/prisma";
 import {EndpointHookOptions, EventNotification, RegisterListenerOptions, EventListener} from "@/lib/eventbus/eventbus.types";
+import {randomUUID} from "crypto";
 
 const listeners: Map<String, EventListener> = new Map();
 const webhooks: Map<String, EndpointHookOptions> = new Map();
+const webhooksCodes: string[] = [];
 let initialized = false;
 
 async function init() {
@@ -35,11 +37,19 @@ export async function busRegister(name: string, options: RegisterListenerOptions
             if (!options.types.includes(event.type)) {
                 return;
             }
+            const code = randomUUID();
+            webhooksCodes.push(code);
+            setTimeout(() => {
+                webhooksCodes.splice(webhooksCodes.indexOf(code), 1);
+            }, 1000 * 60 * 5);
             const endpoint = options.endpoint;
             await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(event)
+                body: JSON.stringify({
+                    ...event,
+                    verify_code: code
+                })
             });
         };
     }
@@ -64,6 +74,10 @@ export async function deleteEndpointHook(id: number) {
         listeners.delete(webhook.name);
         webhooks.delete(webhook.name);
     }
+}
+
+export function verifyEndpointNotification(code: string): boolean {
+    return webhooksCodes.includes(code);
 }
 
 export async function getWebhooks() {
