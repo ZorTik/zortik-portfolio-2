@@ -23,6 +23,9 @@ function NavProfile() {
             <Dropdown label="Profile" button={(
                 <div className="flex flex-row align-items justify-center"><p>{user.username}</p></div>
             )} >
+                <Protected scopes={["admin"]}>
+                    <DropdownButton href="/admin/settings">Settings</DropdownButton>
+                </Protected>
                 <DropdownButton href="/api/logout">Logout</DropdownButton>
             </Dropdown>
         </div>

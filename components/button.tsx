@@ -1,9 +1,11 @@
 import {ButtonHTMLAttributes, ClassAttributes, MouseEventHandler} from "react";
+import {BarLoader} from "react-spinners";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ClassAttributes<HTMLButtonElement> & {
     href?: string,
     target?: string,
     variant?: ButtonVariant,
+    loading?: boolean,
 }
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "warning" | "success" | "info" | "light" | "dark" | "none";
@@ -30,9 +32,13 @@ export default function Button(props: ButtonProps) {
             window.open(href, props.target ?? "_self");
         }
     }
-    return <button {...{
-        ...props, href: undefined,
-    }} onClick={handleClick} className={`${props.className} ${variantClassName} border border-solid rounded-3xl border-black px-3 py-1`}>{props.children}</button>
+    return (
+        <button {...{
+            ...props, href: undefined,
+        }} onClick={handleClick} className={`${props.className} ${variantClassName} border border-solid rounded-3xl border-black px-3 py-1`}>
+            {props.loading ?? false ? <BarLoader width="100%" color="white" /> : props.children}
+        </button>
+    )
 }
 
 export function BigButton(props: ButtonProps) {

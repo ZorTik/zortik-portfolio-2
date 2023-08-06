@@ -97,8 +97,8 @@ export default function AdminLayout(
                                 <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
                                 <div>
                                     <AdminCarousel nav={navItems ?? []} />
-                                    <div className="w-full">
-                                        <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 bg-dotted-spacing-4 bg-dotted-neutral-800 py-6 px-8 lg:px-14`}>
+                                    <div className="w-full bg-dotted-spacing-4 bg-dotted-neutral-800 lg:min-h-[735px]">
+                                        <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 py-6 px-8 lg:px-14`}>
                                             {children}
                                         </div>
                                     </div>
