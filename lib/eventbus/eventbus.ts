@@ -46,10 +46,7 @@ export async function busRegister(name: string, options: RegisterListenerOptions
             await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...event,
-                    verify_code: code
-                })
+                body: JSON.stringify({ ...event, verify_code: code })
             });
         };
     }
@@ -77,7 +74,7 @@ export async function deleteEndpointHook(id: number) {
 }
 
 export function verifyEndpointNotification(code: string): boolean {
-    return webhooksCodes.includes(code);
+    return webhooksCodes.splice(webhooksCodes.indexOf(code), 1).length > 0;
 }
 
 export async function getWebhooks() {
