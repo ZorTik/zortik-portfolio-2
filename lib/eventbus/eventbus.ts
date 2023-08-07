@@ -23,7 +23,11 @@ async function init() {
 export async function busNotify(event: EventNotification) {
     await init();
     for (const registration of listeners.values()) {
-        await registration(event);
+        try {
+            await registration(event);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
@@ -46,9 +50,10 @@ export async function busRegister(name: string, options: RegisterListenerOptions
             await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...event, verify_code: code })
+                body: JSON.stringify({ ...event, verify_token: code })
             });
         };
+        webhooks.set(name, options);
     }
     if (listener) {
         listeners.set(name, listener);
@@ -61,8 +66,8 @@ export async function createEndpointHook(name: string, { endpoint, types }: Endp
     if (webhooks.has(name)) {
         throw new Error("Webhook already exists!");
     }
-    await prisma.eventWebhook.create({ data: { name, endpoint, types } });
-    await busRegister(name, { endpoint, types });
+    const dbObject = await prisma.eventWebhook.create({ data: { name, endpoint, types } });
+    await busRegister(name, { id: dbObject.id, name, endpoint, types });
 }
 
 export async function deleteEndpointHook(id: number) {

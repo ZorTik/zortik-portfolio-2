@@ -2,7 +2,7 @@ import Section from "@/components/section";
 import Image from "next/image";
 import Card from "@/components/card";
 
-export type TechnologyLevel = "Beginner" | "Experienced" | "Expert"
+export type TechnologyLevel = "Beginner" | "Intermediate" | "Experienced" | "Expert"
 export type Technology = {
     icon: string,
     name: string,

@@ -59,7 +59,7 @@ function AddWebhookForm({refreshWebhooks}: { refreshWebhooks: () => void }) {
             <FormLabel htmlFor="endpoint">Endpoint</FormLabel>
             <FormInput name="endpoint" onChange={(e) => setEndpoint(e.currentTarget.value)} />
             <FormLabel>Events</FormLabel>
-            {Object.keys(EventTypes).map((evtType, i) => (
+            {Object.values(EventTypes).map((evtType, i) => (
                 <Badge active={events.includes(evtType)} role="button" key={i} onClick={(e) => {
                     e.preventDefault();
                     if (events.includes(evtType)) {
@@ -68,7 +68,7 @@ function AddWebhookForm({refreshWebhooks}: { refreshWebhooks: () => void }) {
                         setEvents([...events, evtType]);
                     }
                 }}>
-                    {(EventTypes as any)[evtType]}
+                    {evtType}
                 </Badge>
             ))}
         </Form>
