@@ -4,6 +4,8 @@ export type EventNotification = {
 }
 export type EventListener = (event: EventNotification) => Promise<void>;
 export type EndpointHookOptions = {
+    id: number,
+    name: string,
     endpoint: string;
     types: string[];
 }

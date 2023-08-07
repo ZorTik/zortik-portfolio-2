@@ -4,7 +4,7 @@ import {NotableWork} from "@/components/home/notable";
 const technologies: Technology[] = [
     { icon: "/javalang.png", name: "Java", level: "Expert" },
     { icon: "/typescript.png", name: "JavaScript/TypeScript", level: "Experienced" },
-    { icon: "/pythonlang.png", name: "Python", level: "Beginner" },
+    { icon: "/pythonlang.png", name: "Python", level: "Intermediate" },
     { icon: "/golang.svg", name: "Go", level: "Beginner" }
 ];
 const works: NotableWork[] = [

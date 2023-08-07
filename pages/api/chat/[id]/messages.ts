@@ -35,7 +35,7 @@ const handler = requireUser(async (req, res, apiUser) => {
         await prisma.chatMessage.createMany({ data: messages });
         await busNotify({
             type: EventTypes.CHAT_MESSAGES_CREATED,
-            payload: messages
+            payload: { messages, participants: room.participants }
         });
         res.status(200).json({ status: '200', message: 'OK' });
     } else {

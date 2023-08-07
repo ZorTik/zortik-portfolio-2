@@ -142,7 +142,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setTimeout(() => scrollBottom(), 500);
     }, [chat, messages, participants]);
     return (
-        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-full mb-8 lg:mb-0">
+        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-[690px] mb-8 lg:mb-0">
             <div className="w-full h-[calc(100%-76px)] bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
