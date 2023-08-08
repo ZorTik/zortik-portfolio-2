@@ -4,6 +4,7 @@ import {hasChatAccess} from "@/security/user";
 import {ChatMessage, ChatRoom} from "@/data/chat.types";
 import {busNotify} from "@/lib/eventbus/eventbus";
 import {EventTypes} from "@/lib/eventbus/eventbus.types";
+import {getUserRepository} from "@/data/user";
 
 const handler = requireUser(async (req, res, apiUser) => {
     const user = apiUser!!;
@@ -24,7 +25,7 @@ const handler = requireUser(async (req, res, apiUser) => {
     if (method === "get") {
         res.status(200).json(await prisma.chatMessage.findMany({ where: { room_id: id }, orderBy: { created_at: 'asc' } }));
     } else if (method === "post") {
-        const messages = (JSON.parse(req.body) as ChatMessage[]);
+        let messages = (JSON.parse(req.body) as ChatMessage[]);
         if (messages.some(message => message.content === undefined
             || message.user_id !== user.userId
             || message.room_id != id)
@@ -33,9 +34,14 @@ const handler = requireUser(async (req, res, apiUser) => {
             return;
         }
         await prisma.chatMessage.createMany({ data: messages });
+        const messagesPayload = [];
+        for (const message of messages) {
+            const message_user = await getUserRepository().getUserById(message.user_id);
+            messagesPayload.push({ ...message, username: message_user?.username });
+        }
         await busNotify({
             type: EventTypes.CHAT_MESSAGES_CREATED,
-            payload: { messages, participants: room.participants }
+            payload: { messages: messagesPayload, participants: room.participants }
         });
         res.status(200).json({ status: '200', message: 'OK' });
     } else {
