@@ -3,6 +3,7 @@ import {BlogArticle} from "@/components/blog_home/articlecard";
 import Button from "@/components/button";
 import {MouseEventHandler} from "react";
 import {MdPreview} from "md-editor-rt";
+import styled from "styled-components";
 
 import "md-editor-rt/lib/preview.css"
 import {GetServerSidePropsContext} from "next";
@@ -27,11 +28,12 @@ export default function BlogArticlePage({article}: { article?: BlogArticle }) {
 
     return (
         <MainLayout className="flex flex-col items-center" {...{title: article ? article.title : "Article Not Found :("}}>
-            <p className="text-neutral-800 text-xl">By ZorTik | {new Date(Date.parse(article?.createdAt as any)).toLocaleDateString()}</p>
+            <p className="text-neutral-700 text-xl">By ZorTik | {new Date(Date.parse(article?.createdAt as any)).toLocaleDateString()}</p>
             {article ? (
-                <article className="w-full lg:w-auto lg:min-w-[800px]">
+                <article className="w-full lg:w-2/3">
                     <MdPreview language="en-US" theme="dark" style={{
-                        backgroundColor: "transparent"
+                        backgroundColor: "transparent",
+                        fontSize: "38px",
                     }} modelValue={article.content} />
                     <div className="w-full text-center mt-28">
                         <Button onClick={handleBackClick}>Back to listing</Button>

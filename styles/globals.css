@@ -24,3 +24,7 @@ h1, h2 {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+article[id="md-editor-rt-preview"] > p {
+  font-size: 24px !important;
+}
