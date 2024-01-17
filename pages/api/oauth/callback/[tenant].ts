@@ -20,7 +20,7 @@ export default async function handler(
         res.redirect(`${absoluteUrl(req).origin}${fallbackUrl}?msg=${err_id}`);
     }
 
-    if (!tenant) {
+    if (!tenant || !tenant.enabled()) {
         fallback('unknown_tenant');
         return;
     } else if (!query.code) {

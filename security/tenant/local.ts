@@ -8,6 +8,10 @@ class LocalUserTenant implements UserTenant {
         if (!credentials) return undefined;
         return await userProvider.userRepository.getUserByCredentials(credentials);
     }
+
+    enabled(): boolean {
+        return true;
+    }
 }
 
 export default LocalUserTenant;

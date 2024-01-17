@@ -16,6 +16,7 @@ export interface UserTenant {
     // Authorize a user in the tenant with authorization code, register if not locally present and return his data.
     // Throws an error if remote user is not found.
     authorize(code: string, userProvider: TenantUserProvider, ctx: TenantRequestContext): Promise<User|undefined>;
+    enabled(): boolean;
 }
 
 export class TenantUserProvider {

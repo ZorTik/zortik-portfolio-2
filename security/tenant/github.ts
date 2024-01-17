@@ -31,4 +31,8 @@ export default class GitHubUserTenant implements UserTenant {
         return user;
     }
 
+    enabled(): boolean {
+        return process.env.GITHUB_CLIENT_ID != undefined && process.env.GITHUB_CLIENT_SECRET != undefined;
+    }
+
 }

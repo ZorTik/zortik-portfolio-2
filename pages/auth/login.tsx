@@ -43,7 +43,7 @@ export default function Login({sitekey}: { sitekey: string }) {
     }
     return (
         <>
-            <CenterLayout title={'Login'} className="flex flex-col">
+            <CenterLayout title={'Login'} className="flex flex-col px-16">
                 <Form
                     innerRef={formSubmitRef}
                     method="post"
