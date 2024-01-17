@@ -219,7 +219,7 @@ function ChatMessageComponent({message, participants}: { message: ChatMessage, p
 
 export default function Tickets() {
     const [pendingUpdate, setPendingUpdate] = useState<boolean>(true);
-    const [fetchClosed, setFetchClosed] = useState<boolean>(false);
+    const [fetchClosed, setFetchClosed] = useState<boolean>(true);
     const roomsSWR = useApiSWR<ChatRoom[]>(`/api/chats/for/user?includeClosed=${fetchClosed ? "true" : "false"}`, {}, { refreshInterval: 3000 }, () => setPendingUpdate(false));
     const [chat, setChat] = useState<ChatRoom|undefined>();
     const [participants, setParticipants] = useState<User[]>([]);
