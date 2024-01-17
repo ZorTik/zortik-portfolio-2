@@ -33,7 +33,7 @@ export default function Register({sitekey}: { sitekey: string }) {
     }
     return (
         <>
-            <CenterLayout title={'Register'}>
+            <CenterLayout title={'Register'} className="px-16">
                 <Form
                     innerRef={formSubmitRef}
                     method="post"

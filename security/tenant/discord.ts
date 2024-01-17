@@ -31,4 +31,8 @@ export default class DiscordUserTenant implements UserTenant {
         return user;
     }
 
+    enabled(): boolean {
+        return process.env.DISCORD_CLIENT_ID != undefined && process.env.DISCORD_CLIENT_SECRET != undefined;
+    }
+
 }
