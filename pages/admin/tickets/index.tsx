@@ -309,16 +309,17 @@ export default function Tickets() {
                                 onClick={(e) => handleChatSelect(e, chat?.id === itChat.id ? undefined : itChat)}
                                 solidBackground
                             >
-                                <div className="flex items-center space-x-2">
+                                <div className="flex flex-row-reverse items-center justify-end">
+                                    {itChat?.state === "CLOSED" ? <Badge className="ml-auto rounded-md">Closed</Badge> : null}
                                     <h1 className="text-white">{itChat.title}</h1>
-                                    { itChat?.state === "CLOSED" ? <Badge>Closed</Badge> : null }
                                 </div>
                             </Card>
-                        )) : null}
-                        {pendingUpdate ? <BarLoader color="white" width="50%" /> : null}
+                            )) : null}
+                        {pendingUpdate ? <BarLoader color="white" width="50%"/> : null}
                     </div>
                 </AdminCard>
-                <Chat chat={loaded ? chat : undefined} onMessageInput={handleMessageInput} participants={participants} messages={messagesSWR.data ?? []} />
+                <Chat chat={loaded ? chat : undefined} onMessageInput={handleMessageInput} participants={participants}
+                      messages={messagesSWR.data ?? []} />
                 <AdminCard
                     title="Chat Participants"
                     subtitle="People that are involved in the current conversation"
