@@ -80,7 +80,7 @@ function UsersTable() {
                                                 .then(() => pushNotification(`Scope ${scope} removed from user ${user.userId}!`))
                                                 .finally(() => setPending(true));
                                         })
-                                }} className="ml-1"><FontAwesomeIcon icon={faXmark} /></TransparentButton></Badge>
+                                }} className="ml-1 w-2.5 h-2.5 -translate-y-[1px]"><FontAwesomeIcon icon={faXmark} /></TransparentButton></Badge>
                             ))} {(
                                 <Dropdown
                                     button={<p>Add Scope</p>}
