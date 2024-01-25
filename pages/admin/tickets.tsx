@@ -21,6 +21,7 @@ import {BarLoader} from "react-spinners";
 import Delimiter from "@/components/delimiter";
 import {hasScopeAccess} from "@/security/scope";
 import {duration} from "moment";
+import ProfilePicture from "@/components/pfp";
 
 type CreateChatRoomRequest = {
     title?: string;
@@ -87,9 +88,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
                         disabled={roomRequest !== undefined}
                     >
                         {participant.username}
-                        {participant.avatar_url
-                            ? <Image src={participant.avatar_url} alt={participant.username} width={20} height={20} className="rounded" />
-                            : <FontAwesomeIcon icon={faUser} />}
+                        <ProfilePicture user={participant} size={20} className="rounded" />
                     </DropdownButton>
                 ))}
             </Dropdown>
@@ -204,9 +203,7 @@ function ChatMessageComponent({message, participants}: { message: ChatMessage, p
     }, [message.created_at]);
     return loaded ? (
         <div className={`w-full flex items-center px-4 space-x-4`}>
-            { author?.avatar_url ? (
-                <Image src={author.avatar_url} alt={author.username} width={32} height={32} className="rounded w-8 h-8" />
-            ) : <FontAwesomeIcon icon={faUser} className="w-8 h-8 text-neutral-400" /> }
+            {author ? <ProfilePicture user={author} size={32} className="!rounded w-8 h-8" /> : null}
             <div className="flex-1">
                 <p className="text-neutral-300 w-full flex">{author?.username ?? "Deleted user"}&nbsp;
                     <span className="text-neutral-800 ml-auto">{time}</span>
@@ -326,9 +323,7 @@ export default function Tickets() {
                     className="w-full lg:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny flex-col hidden xl:flex">
                     {participants ? participants.map((participant, key) => (
                         <div className="flex space-x-2 items-center" key={key}>
-                            {participant.avatar_url
-                                ? <Image src={participant.avatar_url} alt={participant.username} width={20} height={20} className="rounded !w-[20px] !h-[20px]" />
-                                : <FontAwesomeIcon icon={faUser} className="!w-[20px] !h-[20px] text-neutral-400" />}
+                            <ProfilePicture user={participant} size={20} className="!rounded !w-[20px] !h-[20px]" />
                             <p className="text-white">{participant.username}</p>
                             {participant.userId === chat?.creator_id ? <FontAwesomeIcon icon={faCrown} className="text-yellow-400 !w-[20px] !h-[20px]" /> : null}
                         </div>

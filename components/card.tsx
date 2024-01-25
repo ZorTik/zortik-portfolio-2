@@ -7,9 +7,10 @@ export type CardProps = PropsWithChildren & {
     useBlank?: boolean,
     onClick?: MouseEventHandler<HTMLDivElement>,
     solidBackground?: boolean,
+    noBorder?: boolean,
 }
 
-export default function Card({className, children, href, useBlank, onClick, solidBackground}: CardProps) {
+export default function Card({className, children, href, useBlank, onClick, solidBackground, noBorder}: CardProps) {
     const { push } = useRouter();
     const handleClick: MouseEventHandler<HTMLDivElement> = async (e) => {
         onClick?.(e);
@@ -24,7 +25,7 @@ export default function Card({className, children, href, useBlank, onClick, soli
     return (
         <div
             onClick={handleClick}
-            className={`${className ?? ""} p-8 border border-solid border-zinc-900 rounded-2xl space-y-8 flex flex-col ${solidBackground ? "!bg-[#060606]" : ""} ${href ? "hover:bg-black" : ""}`}
+            className={`${className ?? ""} p-8 ${noBorder ? "" : "border border-solid border-zinc-900"} rounded-2xl space-y-8 flex flex-col ${solidBackground ? "!bg-[#060606]" : ""} ${href ? "hover:bg-black" : ""}`}
             role={href ? "button" : "none"}
         >
             {children}

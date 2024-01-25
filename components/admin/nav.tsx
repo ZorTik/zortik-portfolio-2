@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleDown, faBars, faBurger} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
 import Protected from "@/components/protected";
+import ProfilePicture from "@/components/pfp";
 
 export type AdminNavProps = {
     nav: AdminPathNode[],
@@ -19,10 +20,11 @@ function NavProfile() {
     const { user } = useUser();
     return user ? (
         <div className="mb-12 px-8 flex flex-row justify-center items-center">
-            <Image src={`${user.avatar_url ?? "/logo.png"}`} alt={"Picture"} width={30} height={30} className="rounded-full w-[30px] h-[30px]" />
+            <ProfilePicture user={user} size={30} className="rounded-full w-[30px] h-[30px]" />
             <Dropdown label="Profile" button={(
                 <div className="flex flex-row align-items justify-center"><p>{user.username}</p></div>
             )} >
+                <DropdownButton href="/admin/profile">User Settings</DropdownButton>
                 <Protected scopes={["admin"]}>
                     <DropdownButton href="/admin/settings">Settings</DropdownButton>
                 </Protected>
