@@ -90,6 +90,16 @@ export async function generateUser({ userId, username }: UserGenerationRequireme
     return user;
 }
 
+export async function isLocalAccount(user: User|string) {
+    let userId: string;
+    if (typeof user === "string") {
+        userId = user;
+    } else {
+        userId = user.userId;
+    }
+    return (await prisma.userTenantLink.findFirst({ where: { user_id: userId } })) == null;
+}
+
 export function generateUserId() {
     return randomUUID();
 }
