@@ -26,7 +26,7 @@ function NavProfile() {
             )} >
                 <DropdownButton href="/admin/profile">User Settings</DropdownButton>
                 <Protected scopes={["admin"]}>
-                    <DropdownButton href="/admin/settings">Settings</DropdownButton>
+                    <DropdownButton href="/admin/settings">Panel Settings</DropdownButton>
                 </Protected>
                 <DropdownButton href="/api/logout">Logout</DropdownButton>
             </Dropdown>

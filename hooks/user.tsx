@@ -16,17 +16,18 @@ function UserProvider({children}: UserProviderProps) {
     useEffect(() => {
         if (!jwtCookie || !idCookie) {
             setUserCookieState(null);
-            return;
+            setLoaded(true);
+        } else {
+            fetch('/api/user', {
+                headers: {
+                    'X-Z-Token': jwtCookie ?? '',
+                    'X-Z-Username': idCookie ?? '',
+                }
+            })
+                .then(res => res.json())
+                .then(data => setUserCookieState(data.user ?? null))
+                .finally(() => setLoaded(true));
         }
-        fetch('/api/user', {
-            headers: {
-                'X-Z-Token': jwtCookie ?? '',
-                'X-Z-Username': idCookie ?? '',
-            }
-        })
-            .then(res => res.json())
-            .then(data => setUserCookieState(data.user ?? null))
-            .finally(() => setLoaded(true));
     }, [idCookie, jwtCookie]);
     return <Context.Provider value={{ user: userCookieState, isLoading: !loaded }}>{children}</Context.Provider>
 }
