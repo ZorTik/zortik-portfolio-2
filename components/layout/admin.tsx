@@ -35,9 +35,7 @@ export const defaultAdminNav: AdminPathNode[] = [
         ],
     },
     { icon: faTicket, name: "Tickets", description: "Create or manage tickets", path: "/tickets" },
-    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read", "users:write"], children: [
-            { name: "Add User", path: "/users/create" },
-        ] },
+    { icon: faUser, name: "Users", description: "Users Management", path: "/users", scopes: ["users:read", "users:write"], },
 ];
 
 function findRequiredScopes(path: string, nav: AdminPathNode[]): ScopeTypes[] {
