@@ -17,20 +17,20 @@ export default function CenterLayout({title, children, className, backHref}: Cen
             <DefaultHead />
             <LoadingIndicator />
             <PopupAlert />
-            <div className="w-full min-h-screen bg-[url('/bg.jpg')] bg-top bg-fixed">
-                <div className="w-full h-[100vh] bg-gradient-to-r from-black via-transparent to-black">
-                    <div className="absolute left-1/2 top-0 transform -translate-x-1/2 h-[100vh] bg-black px-40 xl:px-60">
-                        <div
-                            className="w-full sm:w-fit h-fit flex flex-col justify-center pb-16 mt-[5vh]">
-                            <h1 className="text-gray-200 text-5xl font-bold mb-12 text-center">{title}</h1>
-                            <Card className={`rounded-none sm:rounded-2xl text-gray-200 ${className ?? ""}`}
-                                  solidBackground>
-                                {children}
-                            </Card>
-                            <Button className="mt-12 animate-fade-in-top" href={backHref ?? "/"}>Go Back</Button>
-                        </div>
+            <div className="flex flex-row w-full min-h-screen bg-black xl:bg-[url('/bg.jpg')] bg-top bg-fixed">
+                <div className="lg:w-1/4 bg-gradient-to-l from-black" />
+                <div className="flex flex-col items-center w-full lg:w-1/2 h-[100vh] bg-black lg:px-40 xl:px-60">
+                    <div
+                        className="w-full sm:w-fit h-fit flex flex-col justify-center pb-16 mt-[5vh]">
+                        <h1 className="text-gray-200 text-5xl font-bold mb-12 text-center">{title}</h1>
+                        <Card className={`rounded-none sm:rounded-2xl text-gray-200 ${className ?? ""}`}
+                              solidBackground>
+                            {children}
+                        </Card>
+                        <Button className="mt-12 animate-fade-in-top" href={backHref ?? "/"}>Go Back</Button>
                     </div>
                 </div>
+                <div className="lg:w-1/4 bg-gradient-to-r from-black" />
             </div>
         </>
     )

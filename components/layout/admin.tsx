@@ -66,7 +66,7 @@ function AdminCarousel({nav}: { nav: AdminPathNode[] }) {
         }
         setValue(renderCarousel(pathname, nav).join(" / "));
     }, [nav, pathname]);
-    return <p className="text-neutral-700 mb-3 flex items-center mx-8 lg:mx-14"><FontAwesomeIcon icon={faHouse} width={16} height={16} className="mr-1" /> {value}</p>
+    return <p className="text-neutral-700 flex items-center mx-8 lg:mx-14"><FontAwesomeIcon icon={faHouse} width={16} height={16} className="mr-1" /> {value}</p>
 }
 
 export default function AdminLayout(
@@ -91,14 +91,17 @@ export default function AdminLayout(
                                 </div>
                             )}
                         >
-                            <div className="pb-14 mt-8 space-y-6">
-                                <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
-                                <div>
-                                    <AdminCarousel nav={navItems ?? []} />
-                                    <div className="w-full bg-dotted-spacing-4 bg-dotted-neutral-800 lg:min-h-[735px]">
-                                        <div className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 py-6 px-8 lg:px-14`}>
-                                            {children}
-                                        </div>
+                            <div className="space-y-2">
+                                <div className="bg-[url('/bg.jpg')] bg-[center_top_22rem]">
+                                    <div className="w-full h-full space-y-4 pt-6 pb-4 bg-gradient-to-t from-[--background-color]">
+                                        <h1 className="text-gray-200 text-4xl mx-8 lg:mx-14">{title}</h1>
+                                        <AdminCarousel nav={navItems ?? []}/>
+                                    </div>
+                                </div>
+                                <div className="w-full bg-dotted-spacing-4 bg-dotted-neutral-800 lg:min-h-[735px]">
+                                    <div
+                                        className={`${className} flex flex-col space-y-6 2xl:flex-row 2xl:space-x-6 2xl:space-y-0 py-6 px-8 lg:px-14`}>
+                                        {children}
                                     </div>
                                 </div>
                             </div>
