@@ -18,6 +18,7 @@ export default function AdminCard(props: AdminCardProps) {
                     {props.subtitle ? <h2 className="text-md text-neutral-500">{props.subtitle}</h2> : null}
                     {props.head}
                 </div>
+                {props.solidBackground && <hr className="border-gray-900"/>}
                 {scrollable ? (
                     <div className="overflow-y-scroll hide-scrollbar">
                         {props.children}

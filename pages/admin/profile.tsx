@@ -2,7 +2,7 @@ import AdminLayout from "@/components/layout/admin";
 import AdminCard from "@/components/admin/card";
 import {useUser} from "@/hooks/user";
 import Button from "@/components/button";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import {ChangeEventHandler, FormEventHandler, useState} from "react";
 import ProfilePicture from "@/components/pfp";
 import Form, {FormInput, FormLabel, FormSubmitButton} from "@/components/form";
@@ -26,7 +26,7 @@ function PasswordChangeForm() {
             return;
         }
         setPending(true);
-        fetchRestrictedApiUrl('/api/user/changepassword', {
+        fetchApi('/api/user/changepassword', {
             method: "POST",
             body: JSON.stringify({ password }),
         }).then(res => res.json()).then((res) => {
@@ -65,7 +65,7 @@ export default function Profile() {
         setPfpUploading(true);
         const formData = new FormData();
         formData.append("image", file);
-        fetchRestrictedApiUrl('/api/user/pfp', {
+        fetchApi('/api/user/pfp', {
             method: "POST",
             body: formData,
         }).then((res) => {

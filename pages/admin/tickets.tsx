@@ -7,7 +7,7 @@ import Form, {FormInput, FormLabel} from "@/components/form";
 import Dropdown, {DropdownButton, DropdownIcon} from "@/components/dropdown";
 import {FormEventHandler, useEffect, useRef, useState} from "react";
 import {User} from "@/security/user.types";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import {MouseEvent} from "react";
 import Image from "next/image";
 import {useUser} from "@/hooks/user";
@@ -43,7 +43,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
     const {user} = useUser();
     const {pushNotification} = useNotifications();
     useEffect(() => {
-        fetchRestrictedApiUrl("/api/chats/searchparticipants", {
+        fetchApi("/api/chats/searchparticipants", {
             method: "POST",
             body: JSON.stringify({query: participantsQuery, filter: { page: 0, per_page: 5 }}),
         })
@@ -60,7 +60,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
             return;
         }
         setFrozen(true);
-        fetchRestrictedApiUrl("/api/chats/create", {
+        fetchApi("/api/chats/create", {
             method: "POST",
             body: JSON.stringify({ title: request.title, participant_ids: request.participants.map(p => p.userId) }),
         })
@@ -141,7 +141,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setTimeout(() => scrollBottom(), 500);
     }, [chat, messages, participants]);
     return (
-        <div className="w-full lg:w-7/12 xl:w-6/12 h-[calc(68vh-74px)] lg:h-[690px] mb-8 lg:mb-0">
+        <div className="w-full lg:w-7/12 xl:w-6/12 lg:mx-8 h-[calc(68vh-74px)] lg:h-[690px] mb-8 lg:mb-0">
             <div className="w-full h-[calc(100%-76px)] bg-black rounded-2xl overflow-y-scroll py-4 hide-scrollbar">
                 {!chat ? (
                     <div className="w-full h-full flex justify-center align-center">
@@ -227,7 +227,7 @@ export default function Tickets() {
     const {pushNotification} = useNotifications();
     useEffect(() => {
         if (chat) {
-            fetchRestrictedApiUrl(`/api/chat/${chat!!.id}/participants`)
+            fetchApi(`/api/chat/${chat!!.id}/participants`)
                 .then(res => res.json())
                 .then(data => setParticipants(data.filter((p: any) => p != null)));
             setLoaded(true);
@@ -243,7 +243,7 @@ export default function Tickets() {
     const handleChatStateChange = async (e: MouseEvent<HTMLButtonElement>, chat?: ChatRoom, state?: ChatRoomState) => {
         e.preventDefault();
         if (!chat) return;
-        await fetchRestrictedApiUrl(`/api/chat/${chat.id}`, {
+        await fetchApi(`/api/chat/${chat.id}`, {
             method: "PATCH",
             body: JSON.stringify({ state: state }),
         });
@@ -255,7 +255,7 @@ export default function Tickets() {
             pushNotification("This chat is closed");
             return;
         }
-        await fetchRestrictedApiUrl(`/api/chat/${message.room_id}/messages`, {
+        await fetchApi(`/api/chat/${message.room_id}/messages`, {
             method: "POST",
             body: JSON.stringify([message]),
         });
@@ -282,7 +282,7 @@ export default function Tickets() {
                 <AdminCard
                     title="Conversations"
                     subtitle="Your open chats with me"
-                    className="w-full !px-0 lg:!p-8 lg:w-4/12 xl:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
+                    className="w-full !px-0 lg:w-4/12 xl:w-3/12 h-[calc(68vh-74px)] lg:h-[68vh] border-0 animate-fade-in-top-tiny"
                     head={(
                         <div className="flex w-full justify-between pt-8 items-center">
                             <CreateChatDropdown markPending={() => setPendingUpdate(true)} />
@@ -307,7 +307,7 @@ export default function Tickets() {
                                 solidBackground
                             >
                                 <div className="flex flex-row-reverse items-center justify-end">
-                                    {itChat?.state === "CLOSED" ? <Badge className="ml-auto rounded-md">Closed</Badge> : null}
+                                    {itChat?.state === "CLOSED" ? <Badge className="ml-auto rounded-md !px-4">Closed</Badge> : null}
                                     <h1 className="text-white">{itChat.title}</h1>
                                 </div>
                             </Card>

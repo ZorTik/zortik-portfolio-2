@@ -38,22 +38,26 @@ function NavButton({node, subnode}: {node: AdminPathNode, subnode?: boolean}) {
     const isSubNode = subnode ?? false;
     const {pathname} = useRouter();
     const modifiedPathName = !pathname.endsWith("/") ? pathname + "/" : pathname;
+    const hasSubNodes = node.children != undefined && node.children.length > 0;
     const active = modifiedPathName.startsWith(`/admin/${node.path.substring(1)}`) && (node.path !== "/" || modifiedPathName === "/admin/");
     const [subnavShown, setSubnavShown] = useState<boolean>(active);
     const link = (
-        <Link className={`${isSubNode ? "lg:ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] lg:pl-6 font-medium ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>
-            {node.name}
+        <Link className={`flex flex-row items-center ${isSubNode ? "lg:ml-2 !font-light !text-neutral-300 hover:!text-neutral-100 !py-0.5" : ""} text-[#D6D6D6] font-medium w-full ${active ? "text-emerald-400" : "text-white hover:text-emerald-200"}`} href={`/admin${node.path}`}>
+            {node.icon && <span className={`p-1.5 rounded ${active ? "text-white bg-emerald-800" : ""}`}>
+                <FontAwesomeIcon icon={node.icon} width="24px" height="24px"/></span>}
+            <span className={`w-40 ${!subnode && "ml-auto !w-20"}`}>{node.name} {hasSubNodes ? (
+                <TransparentButton className="m-0 p-0 ml-1" onClick={() => setSubnavShown(!subnavShown)}>
+                    <FontAwesomeIcon width={10} height={10} className="ml-1" icon={faAngleDown} />
+                </TransparentButton>
+            ) : null}</span>
         </Link>
-    );
+                );
     return (
         <Protected scopes={node.scopes ?? []}>
-            <div className="py-2">
-                {link}
-                {node.children != undefined && node.children.length > 0 ? (
+            <div className={`${subnode ? "px-2" : "px-6"} py-3`}>
+                <div className="flex flex-row items-center">{link}</div>
+                {hasSubNodes ? (
                     <>
-                        <TransparentButton className="m-0 p-0" onClick={() => setSubnavShown(!subnavShown)}>
-                            <FontAwesomeIcon width={10} height={10} className="ml-1" icon={faAngleDown} />
-                        </TransparentButton>
                         {subnavShown ? (
                             <div className="animate-fade-in-top-tiny pt-2 flex flex-col">
                                 {node.children?.map((child, i) => <NavButton node={child} key={i} subnode />)}
@@ -78,7 +82,7 @@ export default function AdminNav({nav, className}: AdminNavProps) {
                     <Button className="fixed top-8 left-8" onClick={() => setShown(false)}>Close</Button>
                 </div>
             </div>
-            <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-3 py-8 ${className ?? ""} bg-black hidden lg:inline-flex min-w-[180px]`}>
+            <div className={`sticky top-0 left-0 flex flex-col justify-center max-h-screen min-h-screen px-6 py-8 ${className ?? ""} bg-black hidden lg:inline-flex min-w-[180px]`}>
                 <NavProfile />
                 {nav.map((node, i) => <NavButton node={node} key={i} />)}
                 <Button className="mt-auto" href="/">Go Back</Button>

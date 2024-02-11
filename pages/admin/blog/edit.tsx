@@ -5,7 +5,7 @@ import "easymde/dist/easymde.min.css";
 import {MdEditor} from "md-editor-rt";
 
 import 'md-editor-rt/lib/style.css';
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import {BlogArticle} from "@/components/blog_home/articlecard";
 import {useNotifications} from "@/hooks/notifications";
 import {GetServerSideProps} from "next";
@@ -38,7 +38,7 @@ export default function CreateBlog({article}: { article?: BlogArticle }) {
 
         // @ts-ignore
         const articleToSave: BlogArticle = { title, description, content };
-        fetchRestrictedApiUrl(`/api/blog${article ? `/${article.id}` : ""}`, {
+        fetchApi(`/api/blog${article ? `/${article.id}` : ""}`, {
             method: article ? `put` : `post`,
             body: JSON.stringify(articleToSave)
         })

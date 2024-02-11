@@ -12,7 +12,7 @@ export default function Admin() {
                         .filter(node => node.path !== "/")
                         .map((node, i) => (
                             <Protected scopes={node.scopes ?? []} key={i}>
-                                <Card href={"/admin" + node.path} className="animate-fade-in-top-tiny !flex-row items-center !space-y-0 !space-x-4 !bg-[#060606] hover:!bg-black">
+                                <Card href={"/admin" + node.path} className="animate-fade-in-top-tiny !flex-row items-center !space-y-0 !space-x-4 !bg-[#060606] hover:!bg-black px-8">
                                     {node.icon ? <FontAwesomeIcon icon={node.icon} className="w-10 h-10 text-emerald-900" /> : null}
                                     <div className="space-y-1">
                                         <p className="text-2xl text-neutral-100">{node.name}</p>

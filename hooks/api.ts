@@ -1,7 +1,7 @@
 import useSWR, {SWRConfiguration} from "swr";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 
-const fetcher = (init?: RequestInit, onFetch?: (data: any) => void) => (url: string) => fetchRestrictedApiUrl(url, init)
+const fetcher = (init?: RequestInit, onFetch?: (data: any) => void) => (url: string) => fetchApi(url, init)
     .then(res => res.json())
     .then(data => {
         if (onFetch) onFetch(data);

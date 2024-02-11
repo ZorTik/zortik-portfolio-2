@@ -1,7 +1,7 @@
 import {TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
 import {getCookie} from "cookies-next";
 
-export function fetchRestrictedApiUrl(url: string, init?: RequestInit) {
+export function fetchApi(url: string, init?: RequestInit) {
     return fetch(url, {
         ...init,
         headers: {

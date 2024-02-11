@@ -7,7 +7,7 @@ import {useState} from "react";
 import {EventTypes, webhookEndpointPattern} from "@/lib/eventbus/eventbus.types";
 import Badge from "@/components/badge";
 import {useNotifications} from "@/hooks/notifications";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import {BarLoader} from "react-spinners";
 import {TransparentButton} from "@/components/button";
 
@@ -32,7 +32,7 @@ function AddWebhookForm({refreshWebhooks}: { refreshWebhooks: () => void }) {
             finishProcess();
             return;
         }
-        fetchRestrictedApiUrl("/api/webhook", {
+        fetchApi("/api/webhook", {
             method: "POST",
             body: JSON.stringify({name, endpoint, types: events}),
         }).then((value) => {
@@ -87,7 +87,7 @@ export default function Settings() {
             return;
         }
         setDisabled(true);
-        await fetchRestrictedApiUrl(`/api/webhook?id=${webhook}`, {
+        await fetchApi(`/api/webhook?id=${webhook}`, {
             method: "DELETE",
         })
             .then((res) => {

@@ -19,7 +19,7 @@ import {BarLoader} from "react-spinners";
 import ConfirmDialog from "@/components/confirm";
 import Card from "@/components/card";
 import {StatisticCard} from "@/components/statistic_card";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import Dropdown, {DropdownButton} from "@/components/dropdown";
 import AdminCard from "@/components/admin/card";
 
@@ -50,7 +50,7 @@ export default function AdminBlog() {
     }, { refreshInterval: 50, });
 
     useEffect(() => {
-        fetchRestrictedApiUrl('/api/blog/statistics?strategy=articleCount')
+        fetchApi('/api/blog/statistics?strategy=articleCount')
             .then(res => res.json())
             .then(res => setMaxPage(((res.result - (res.result % 5)) / 5) + 1));
     }, [page]);
@@ -58,7 +58,7 @@ export default function AdminBlog() {
     const handleArticleDelete = (e: any, article: BlogArticle) => {
         if (frozen) return;
         setFrozen(true);
-        fetchRestrictedApiUrl(`/api/blog/${article.id}`, { method: "DELETE", })
+        fetchApi(`/api/blog/${article.id}`, { method: "DELETE", })
             .then(() => mutate())
             .finally(() => setFrozen(false));
     }
@@ -155,13 +155,13 @@ function StatsCard() {
     }, [graphStrategyIndex]);
 
     useEffect(() => {
-        fetchRestrictedApiUrl('/api/blog/statistics?strategy=viewsAll')
+        fetchApi('/api/blog/statistics?strategy=viewsAll')
             .then(res => res.json())
             .then(res => setAllViews(res.result));
-        fetchRestrictedApiUrl('/api/blog/statistics?strategy=audience')
+        fetchApi('/api/blog/statistics?strategy=audience')
             .then(res => res.json())
             .then(res => setAudience(res.result));
-        fetchRestrictedApiUrl('/api/blog/statistics?strategy=articleCount')
+        fetchApi('/api/blog/statistics?strategy=articleCount')
             .then(res => res.json())
             .then(res => setArticles(res.result));
     }, []);
@@ -217,7 +217,7 @@ async function fetchViewsTimeline(dayRelative: number, dayRelativeUntil: number 
     const to = new Date(Date.now());
     to.setHours(0, 0, 0, 0);
     to.setDate(to.getDate() + (dayRelativeUntil !== -1 ? dayRelativeUntil : dayRelative + 1));
-    return await fetchRestrictedApiUrl('/api/blog/statistics?strategy=viewsBetween', {
+    return await fetchApi('/api/blog/statistics?strategy=viewsBetween', {
         method: "POST",
         body: JSON.stringify({ from, to })
     })

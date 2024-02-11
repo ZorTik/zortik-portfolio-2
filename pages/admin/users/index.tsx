@@ -15,7 +15,7 @@ import Button, {TransparentButton} from "@/components/button";
 import {Modal, ModalBody, ModalFooter} from "@/components/modal";
 import Badge from "@/components/badge";
 import {BarLoader, CircleLoader, SkewLoader} from "react-spinners";
-import {fetchRestrictedApiUrl} from "@/util/api";
+import {fetchApi} from "@/util/api";
 import {useNotifications} from "@/hooks/notifications";
 import {useUser} from "@/hooks/user";
 import {scopes} from "@/security/scope";
@@ -54,17 +54,19 @@ function UsersTable() {
                 {data ? data.users.map((user, i) => (
                     <>
                         <TableBodyRow key={i}>
-                            <td className="px-2 py-2 flex items-center">
-                                {user.avatar_url ? (
-                                    <Image className="mr-4" src={user.avatar_url ?? ""} alt={user.username} width={20} height={20} />
-                                ) : <FontAwesomeIcon icon={faUser} className="mr-4 w-[20px] text-neutral-600" />}
-                                <p className="text-white">{user.username}</p>
+                            <td className="px-2 py-2">
+                                <div className="flex flex-row items-center pl-2">
+                                    {user.avatar_url ? (
+                                        <Image className="mr-4" src={user.avatar_url ?? ""} alt={user.username} width={20} height={20} />
+                                    ) : <FontAwesomeIcon icon={faUser} className="mr-4 w-[20px] text-neutral-600" />}
+                                    <p className="text-white">{user.username}</p>
+                                </div>
                             </td>
                             <td className="px-2 py-2 text-neutral-300">{user.userId}</td>
                             <td className="px-2 py-2 text-neutral-300 flex flex-wrap space-x-2">{user.scopes.map((scope, key) => (
                                 <Badge key={key}>{scopes.find(s => s.type === scope)?.name ?? scope} <TransparentButton onClick={() => {
                                     if (frozen) return;
-                                    fetchRestrictedApiUrl(`/api/user/${user.userId}`)
+                                    fetchApi(`/api/user/${user.userId}`)
                                         .then(res => res.json())
                                         .then(res => {
                                             if (userProps.user?.userId === res.userId) {
@@ -73,7 +75,7 @@ function UsersTable() {
                                             }
                                             const newScopes = res.scopes.filter((s: string) => s !== scope);
                                             setFrozen(true);
-                                            fetchRestrictedApiUrl(`/api/user/${user.userId}`, {
+                                            fetchApi(`/api/user/${user.userId}`, {
                                                 method: 'PATCH',
                                                 body: JSON.stringify({ scopes: newScopes })
                                             })
@@ -91,7 +93,7 @@ function UsersTable() {
                                     {scopes.map((scope, key) => (
                                         <DropdownButton onClick={() => {
                                             if (frozen) return;
-                                            fetchRestrictedApiUrl(`/api/user/${user.userId}`)
+                                            fetchApi(`/api/user/${user.userId}`)
                                                 .then(res => res.json())
                                                 .then(res => {
                                                     if (userProps.user?.userId === res.userId) {
@@ -103,7 +105,7 @@ function UsersTable() {
                                                     }
                                                     const newScopes = [...res.scopes, scope.type];
                                                     setFrozen(true);
-                                                    fetchRestrictedApiUrl(`/api/user/${user.userId}`, {
+                                                    fetchApi(`/api/user/${user.userId}`, {
                                                         method: 'PATCH',
                                                         body: JSON.stringify({ scopes: newScopes })
                                                     })
@@ -122,7 +124,7 @@ function UsersTable() {
                                             <DropdownButton onClick={() => {
                                                 if (frozen) return;
                                                 setFrozen(true);
-                                                fetchRestrictedApiUrl(`/api/user/${user.userId}`, { method: 'DELETE' })
+                                                fetchApi(`/api/user/${user.userId}`, { method: 'DELETE' })
                                                     .then(() => pushNotification(`User ${user.userId} deleted!`))
                                                     .finally(() => setPending(true));
                                             }}>Delete User</DropdownButton>
