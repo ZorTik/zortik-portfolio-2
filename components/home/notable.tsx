@@ -23,7 +23,7 @@ export function NotableWorkComponent({work}: {work: NotableWork}) {
 export default function NotableWorkSection({works}: NotableWorkSectionProps) {
     return (
         <Section title={"My Successes"}>
-            <div className="space-y-5 md:columns-2 md:flex-row md:space-y-0 md:space-x-5">
+            <div className="space-y-5 md:columns-2 md:flex-row md:space-y-0">
                 {works.map((work, index) => <NotableWorkComponent work={work} key={index} />)}
             </div>
         </Section>

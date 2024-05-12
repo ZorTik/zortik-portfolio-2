@@ -29,7 +29,7 @@ export function TechnologyComponent({technology}: {technology: Technology}) {
 export default function TechnologiesSection({technologies}: TechnologiesProps) {
     return (
         <Section title="Fluent in Languages">
-            <Card className="lg:flex-row lg:justify-between lg:space-y-0">
+            <Card className="lg:flex-row lg:justify-between lg:space-y-0 !px-8">
                 {technologies.map((technology, index) => <TechnologyComponent technology={technology} key={index} />)}
             </Card>
         </Section>

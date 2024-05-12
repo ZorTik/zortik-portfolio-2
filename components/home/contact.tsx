@@ -28,14 +28,6 @@ export default function ContactSection() {
                         <p>Instagram</p>
                     </ContactButton>
                 </div>
-                <Delimiter text={"Or"} className="w-[10%] !hidden lg:!flex" vertical />
-                <Delimiter text={"Or"} className="lg:!hidden" />
-                <div className="flex justify-center md:justify-start lg:justify-center w-full lg:w-[45%]">
-                    <Button href="/admin/tickets" variant="none" className="flex flex-row items-center space-x-2 w-fit !bg-neutral-900 hover:!bg-black px-10">
-                        <FontAwesomeIcon icon={faComment} className="w-5 h-5" />
-                        <p>Text me via Ticket</p>
-                    </Button>
-                </div>
             </div>
         </Section>
     )

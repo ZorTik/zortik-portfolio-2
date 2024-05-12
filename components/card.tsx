@@ -25,7 +25,7 @@ export default function Card({className, children, href, useBlank, onClick, soli
     return (
         <div
             onClick={handleClick}
-            className={`${className ?? ""} ${solidBackground ? "px-8" : ""} py-8 ${noBorder ? "" : "border border-solid border-zinc-900"} rounded-2xl space-y-8 flex flex-col ${solidBackground ? "!bg-[#060606]" : ""} ${href ? "hover:bg-black" : ""}`}
+            className={`${className ?? ""} px-8 py-8 ${noBorder ? "" : "border border-solid border-zinc-900"} rounded-2xl space-y-8 flex flex-col ${solidBackground ? "!bg-[#060606]" : ""} ${href ? "hover:bg-black" : ""}`}
             role={href ? "button" : "none"}
         >
             {children}
