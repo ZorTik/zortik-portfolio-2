@@ -15,7 +15,7 @@ export type LayoutProps = PropsWithChildren & {
 }
 
 export const links: { [name: string]: string } = {
-    Domov: '/', Blog: '/blog', 'Contact': '#contact'
+    Domov: '/', Blog: '/blog', 'Contact': '/#contact'
 }
 
 export default function MainLayout(
