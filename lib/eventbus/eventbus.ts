@@ -4,7 +4,7 @@ import {randomUUID} from "crypto";
 
 const listeners: Map<String, EventListener> = new Map();
 const webhooks: Map<String, EndpointHookOptions> = new Map();
-const webhooksCodes: string[] = [];
+export const webhooksCodes: string[] = [];
 let initialized = false;
 
 async function init() {
