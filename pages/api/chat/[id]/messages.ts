@@ -41,7 +41,7 @@ const handler = requireUser(async (req, res, apiUser) => {
         }
         await busNotify({
             type: EventTypes.CHAT_MESSAGES_CREATED,
-            payload: { messages: messagesPayload, participants: room.participants }
+            payload: { messages: messagesPayload, participants: room.participants, room }
         });
         res.status(200).json({ status: '200', message: 'OK' });
     } else {

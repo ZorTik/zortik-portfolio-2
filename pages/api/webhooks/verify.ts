@@ -14,5 +14,5 @@ export default function handler(
     }
     const code = req.query.code as string;
     const valid = verifyEndpointNotification(code);
-    res.status(200).json({ valid });
+    res.status(200).json({ valid, code });
 }
