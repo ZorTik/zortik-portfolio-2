@@ -79,7 +79,12 @@ export async function deleteEndpointHook(id: number) {
 }
 
 export function verifyEndpointNotification(code: string): boolean {
-    return webhooksCodes.splice(webhooksCodes.indexOf(code), 1).length > 0;
+    if (webhooksCodes.includes(code)) {
+        webhooksCodes.splice(webhooksCodes.indexOf(code), 1);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 export async function getWebhooks() {
