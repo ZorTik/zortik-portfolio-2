@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {verifyEndpointNotification, webhooksCodes} from "@/lib/eventbus/eventbus";
+import {verifyEndpointNotification, integrityCode} from "@/lib/eventbus/eventbus";
 
 export default function handler(
     req: NextApiRequest,
@@ -12,8 +12,7 @@ export default function handler(
         res.status(400).json({ error: "Missing 'code' in query params!" });
         return;
     }
-    const codes = [...webhooksCodes];
     const code = req.query.code as string;
     const valid = verifyEndpointNotification(code);
-    res.status(200).json({ valid, code, codes });
+    res.status(200).json({ valid, code, integrity_code: integrityCode });
 }
