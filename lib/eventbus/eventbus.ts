@@ -4,7 +4,6 @@ import {randomUUID, randomInt} from "crypto";
 
 const listeners: Map<String, EventListener> = new Map();
 const webhooks: Map<String, EndpointHookOptions> = new Map();
-const webhooksCodes: string[] = [];
 export const integrityCode = randomInt(1000, 9999);
 let initialized = false;
 
@@ -43,10 +42,7 @@ export async function busRegister(name: string, options: RegisterListenerOptions
                 return;
             }
             const code = randomUUID();
-            webhooksCodes.push(code);
-            /*setTimeout(() => {
-                webhooksCodes.splice(webhooksCodes.indexOf(code), 1);
-            }, 1000 * 60 * 5);*/
+            await prisma.webhookCode.create({ data: { code } });
             await fetch(options.endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -78,8 +74,9 @@ export async function deleteEndpointHook(id: number) {
     }
 }
 
-export function verifyEndpointNotification(code: string): boolean {
-    return webhooksCodes.splice(webhooksCodes.indexOf(code), 1).length > 0;
+export async function verifyEndpointNotification(code: string): Promise<boolean> {
+    const res = await prisma.webhookCode.deleteMany({ where: { code } });
+    return res.count > 0;
 }
 
 export async function getWebhooks() {

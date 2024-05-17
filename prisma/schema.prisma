@@ -5,16 +5,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//datasource db {
+// datasource db {
 //  provider = "mysql"
 //  url = env("DATABASE_PRISMA_URL")
 //}
 
 datasource db {
-  provider = "postgresql"
-  url = env("DATABASE_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_PRISMA_URL")
   directUrl = env("DATABASE_URL_NON_POOLING")
-  //shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING")
+  // shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING")
 }
 
 model Article {
@@ -34,9 +34,9 @@ model ArticleView {
 }
 
 model User {
-  user_id    String @id
+  user_id    String  @id
   username   String
-  scopes     Json   @default("[]")
+  scopes     Json    @default("[]")
   avatar_url String?
 }
 
@@ -85,4 +85,10 @@ model EventWebhook {
   endpoint   String
   types      Json     @default("[]")
   created_at DateTime @default(now())
+}
+
+model WebhookCode {
+  id         Int      @id @default(autoincrement())
+  code       String
+  expiration DateTime @default(dbgenerated("NOW() + interval '1 hour'"))
 }

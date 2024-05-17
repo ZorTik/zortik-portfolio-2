@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "prisma migrate dev --name init"
+    "migrate": "prisma migrate dev --name add_webhook_code"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",

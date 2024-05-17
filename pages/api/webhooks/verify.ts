@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {verifyEndpointNotification, integrityCode} from "@/lib/eventbus/eventbus";
 
-export default function handler(
+export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
@@ -13,6 +13,6 @@ export default function handler(
         return;
     }
     const code = req.query.code as string;
-    const valid = verifyEndpointNotification(code);
+    const valid = await verifyEndpointNotification(code);
     res.status(200).json({ valid, code, integrity_code: integrityCode });
 }
