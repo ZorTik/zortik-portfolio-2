@@ -44,9 +44,9 @@ export async function busRegister(name: string, options: RegisterListenerOptions
             }
             const code = randomUUID();
             webhooksCodes.push(code);
-            setTimeout(() => {
+            /*setTimeout(() => {
                 webhooksCodes.splice(webhooksCodes.indexOf(code), 1);
-            }, 1000 * 60 * 5);
+            }, 1000 * 60 * 5);*/
             await fetch(options.endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
