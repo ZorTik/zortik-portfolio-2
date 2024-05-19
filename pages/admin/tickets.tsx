@@ -122,6 +122,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
 
 function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps) {
     const [message, setMessage] = useState<string>("");
+    const [sentMessage, setSentMessage] = useState(undefined);
     const [frozen, setFrozen] = useState<boolean>(false);
     const {user} = useUser();
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -139,6 +140,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
     }
     useEffect(() => {
         setTimeout(() => scrollBottom(), 500);
+        setSentMessage(undefined);
     }, [chat, messages, participants]);
     return (
         <div className="w-full lg:w-7/12 xl:w-6/12 lg:mx-8 h-[calc(68vh-74px)] lg:h-[690px] mb-8 lg:mb-0">
@@ -153,6 +155,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
                     { participants.length > 0 && messages != undefined ? messages.map((message, key) => (
                         <ChatMessageComponent message={message} participants={participants} key={key} />
                     )) : null }
+                    { sentMessage && <ChatMessageComponent message={sentMessage} participants={participants} pending /> }
                     <div ref={messagesEndRef} />
                 </div>
             </div>
@@ -177,7 +180,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
     )
 }
 
-function ChatMessageComponent({message, participants}: { message: ChatMessage, participants: User[] }) {
+function ChatMessageComponent({message, participants, pending}: { message: ChatMessage, participants: User[], pending?: boolean }) {
     const [author, setAuthor] = useState<User|undefined>();
     const [loaded, setLoaded] = useState<boolean>(false);
     const [time, setTime] = useState<string>("");
@@ -208,7 +211,11 @@ function ChatMessageComponent({message, participants}: { message: ChatMessage, p
                 <p className="text-neutral-300 w-full flex">{author?.username ?? "Deleted user"}&nbsp;
                     <span className="text-neutral-800 ml-auto">{time}</span>
                 </p>
-                <p className="text-neutral-400">{message.content}</p>
+                { pending ? (
+                    <p className="text-neutral-500">{message.content}</p>
+                ) : (
+                    <p className="text-neutral-400">{message.content}</p>
+                ) }
             </div>
         </div>
     ) : null
