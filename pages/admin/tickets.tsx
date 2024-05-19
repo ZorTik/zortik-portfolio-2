@@ -136,6 +136,7 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         setMessage("");
         setFrozen(true);
         setSentMessage(msg);
+        scrollBottom();
         await onMessageInput(msg, chat);
         scrollBottom();
         setFrozen(false);
