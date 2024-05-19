@@ -122,7 +122,7 @@ function CreateChatDropdown({markPending}: { markPending: () => void }) {
 
 function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps) {
     const [message, setMessage] = useState<string>("");
-    const [sentMessage, setSentMessage] = useState(undefined);
+    const [sentMessage, setSentMessage] = useState<ChatMessage|undefined>(undefined);
     const [frozen, setFrozen] = useState<boolean>(false);
     const {user} = useUser();
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -132,9 +132,11 @@ function Chat({chat, participants, messages, onMessageInput}: ChatComponentProps
         const text = message;
         const room = chat;
         if (!text || !room || user == null || frozen || chat?.state === "CLOSED") return;
+        const msg = { room_id: room.id, user_id: user.userId, content: text, };
         setMessage("");
         setFrozen(true);
-        await onMessageInput({ room_id: room.id, user_id: user.userId, content: text, }, chat);
+        setSentMessage(msg);
+        await onMessageInput(msg, chat);
         scrollBottom();
         setFrozen(false);
     }
