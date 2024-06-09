@@ -1,27 +1,23 @@
-import fs from "fs";
 import {NextApiHandler} from "next";
+import {head} from "@vercel/blob";
+import fs from "fs";
 
 const handler: NextApiHandler = async (req, res) => {
     const { id } = req.query as { id: string };
-    const uploadDir = prepareAssetFolder();
     if (req.method === 'GET') {
-        let path = uploadDir + `/${id}.png`;
-        if (!fs.existsSync(path)) {
-            path = process.cwd() + '/public/logo.png';
-        }
         res.setHeader('Content-Type', 'image/png');
-        res.status(200).send(fs.createReadStream(path));
+        let content;
+        try {
+            const blob = await head('pfp/' + id);
+            content = await fetch((blob as any).downloadUrl).then(res => res.blob());
+        } catch (e) {
+            content = fs.readFileSync(process.cwd() + '/public/logo.png');
+            console.error(e);
+        }
+        res.status(200).send(content);
     } else {
         res.status(405).end();
     }
-}
-
-function prepareAssetFolder(): string {
-    const path = process.cwd() + `/public/pfp`;
-    if (!fs.existsSync(path)) {
-        fs.mkdirSync(path, { recursive: true });
-    }
-    return path;
 }
 
 export const config = {
