@@ -2,7 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {getUserPrivateKey, getUserProvider, getUserTenant} from "@/security/user";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
-import {AUTH_CALLBACK_URL_COOKIE_NAME, TOKEN_COOKIE_NAME, USER_NAME_COOKIE_NAME} from "@/data/constants";
+import {
+    AUTH_CALLBACK_URL_COOKIE_NAME,
+    TOKEN_COOKIE_NAME,
+    TOKEN_EXP_COOKIE_NAME,
+    USER_NAME_COOKIE_NAME
+} from "@/data/constants";
 import absoluteUrl from "next-absolute-url";
 import {User} from "@/security/user.types";
 
@@ -45,7 +50,8 @@ export default async function handler(
     const token = jwt.sign({ user_id: user.userId }, (await getUserPrivateKey(user.userId, {generate: true}))!!, { expiresIn: '1h' });
     res.setHeader('Set-Cookie', [
         serialize(TOKEN_COOKIE_NAME, token, { httpOnly: false, path: '/', }),
-        serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: false, path: '/', })
+        serialize(USER_NAME_COOKIE_NAME, user.userId, { httpOnly: false, path: '/', }),
+        serialize(TOKEN_EXP_COOKIE_NAME, (Date.now() + 3600 * 1000).toString(), { httpOnly: false, path: '/' })
     ]);
     res.redirect(301, `${callbackUrl ?? "/admin"}?msg=logged_in`);
 }

@@ -1,4 +1,5 @@
 export const TOKEN_COOKIE_NAME = "ZTOKEN";
+export const TOKEN_EXP_COOKIE_NAME = "ZTOKEN_EXP";
 export const USER_NAME_COOKIE_NAME = "ZUSERNAME";
 export const USER_COOKIE_NAME = "ZUSER";
 export const USER_HEADER_NAME = "X-Z-User";
